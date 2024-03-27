@@ -11,14 +11,14 @@ const kyawsanDb: Connection = connectDbs("kyawsan_DbUrl");
 const commonDb: Connection = connectDbs("common_DbUrl");
 
 export interface detailSaleDocument extends mongoose.Document {
-  stationDetailId: string;
-  dailyReportDate: string;
-  vocono: string;
-  carNo: string;
-  cashType: string;
-  casherCode: string;
-  couObjId: coustomerDocument["_id"];
-  isError: string;
+  stationDetailId: string;//in
+  dailyReportDate: string;//in
+  vocono: string; // in
+  carNo: string; //in
+  cashType: string; // in
+  casherCode: string; // in
+  couObjId: coustomerDocument["_id"]; // in
+  isError: string; // 
   accessDb: string;
   vehicleType: string;
   nozzleNo: string;
@@ -40,6 +40,8 @@ const detailSaleSchema = new Schema({
   },
   accessDb: { type: String, required: true },
   device: { type: String },
+  preset:{type:String,default:null},
+
   asyncAlready: { type: String, required: true, default: "0" },
   vocono: { type: String, required: true, unique: true }, //g
   carNo: { type: String, default: null }, //g
@@ -55,7 +57,6 @@ const detailSaleSchema = new Schema({
   casherCode: { type: String, required: true },
   couObjId: { type: Schema.Types.ObjectId, default: null },
   isError: { type: String },
-
   salePrice: { type: Number, required: true },
   saleLiter: { type: Number, required: true },
   totalPrice: { type: Number, required: true },

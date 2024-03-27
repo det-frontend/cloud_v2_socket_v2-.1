@@ -20,6 +20,7 @@ import stockBalanceRoute from "./router/stockbalance.routes";
 import closePermissionRoute from "./router/closePermission.routes";
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import setupSocket from "./utils/socketConnect";
+import casherCodeRoute from "./router/casherCode.routes";
 
 
 const app = express();
@@ -51,7 +52,6 @@ app.use("/api/collection", collectionRoute);
 
 app.use("/api/check-station", checkStationRoute);
 app.use("/api/temp", tempRoute);
-
 // each station db route
 
 app.use("/api/station-detail", stationDetailRoute); //that for define station's detail
@@ -67,6 +67,9 @@ app.use("/api/tank-data", tankDataRouter);
 app.use("/api/stock-balance", stockBalanceRoute);
 
 app.use("/api/close-permission", closePermissionRoute);
+
+app.use("/api/casher-code",casherCodeRoute)
+
 
 
 // app.use("/api/debt", debtRoute);

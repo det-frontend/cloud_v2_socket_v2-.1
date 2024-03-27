@@ -9,18 +9,22 @@ import { validateToken, validateUser } from "../middleware/validator";
 
 const coustomerRoute = require("express").Router();
 
+
+
 coustomerRoute.get(
   "/",
   validateToken,
   hasAnyPermit(["view"]),
   getCoustomerHandler
 );
+
 coustomerRoute.post(
   "/",
   validateToken,
   hasAnyPermit(["add"]),
   addCoustomerHandler
 );
+
 coustomerRoute.delete(
   "/",
   validateToken,

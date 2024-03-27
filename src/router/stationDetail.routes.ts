@@ -32,8 +32,6 @@ stationDetailRoute.get(
   getAllStationHandler
 );
 
-
-
 stationDetailRoute.post(
   "/",
   validateToken,

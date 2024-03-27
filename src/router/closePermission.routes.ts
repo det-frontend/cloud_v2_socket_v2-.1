@@ -16,4 +16,6 @@ closePermissionRoute.patch("/permission", validateToken, updatePermissionHandler
 closePermissionRoute.delete('/permission/delete', validateToken, roleValidator(['admin']), deletePermissionHandler
 );
 
+
+
 export default closePermissionRoute;``

@@ -11,15 +11,16 @@ const checkStationRoute = require("express").Router();
 
 checkStationRoute.get(
   "/",
-
   getCheckStationHandler
 );
+
 checkStationRoute.post(
   "/new",
   validateToken,
   roleValidator(["det"]),
   addCheckStationHandler
 );
+
 checkStationRoute.delete(
   "/",
   validateToken,

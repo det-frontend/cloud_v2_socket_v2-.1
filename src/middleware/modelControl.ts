@@ -10,12 +10,12 @@ export const modelController = async (
   try {
     // Fetch the collection based on the user's collectionId
 
+    console.log(req.params)
+
     const collection = await collectionGet({
       _id: req.body.user[0].collectionId,
     });
 
-    console.log(collection);
-    console.log(req.body.user);
 
     // If collection doesn't exist, throw an error
     // if (collection.length == 0) {
@@ -29,7 +29,6 @@ export const modelController = async (
     // console.log(result);
 
     if (collection.length == 0) {
-      console.log("adm ppr");
       if (
         (req.body.user[0].roles[0].name == "det" ||
           req.body.user[0].roles[0].name == "PPRD") &&
@@ -44,7 +43,6 @@ export const modelController = async (
       req.body.accessDb = accDb[0].collectionName;
       next();
     } else {
-      console.log('normal');
       req.body.accessDb = collection[0].collectionName;
       next(); // Proceed to the next middleware
     }
