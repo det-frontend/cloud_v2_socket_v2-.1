@@ -8,15 +8,20 @@ const controlDb = connectDbs("controlDbUrl");
 export interface collectionDocument extends mongoose.Document {
   collectionName: string;
   stationCollection: stationDetailDocument["_id"];
-  stationImg: string,
-  permission:string
+  stationImg: string;
+  permission: string;
 }
 
 const collectionSchema = new Schema({
   collectionName: { type: String, required: true, unique: true },
-  stationCollection: [{ stationId: { type: String, required: true }, stationName: { type: String, required: true } }],
+  stationCollection: [
+    {
+      stationId: { type: String, required: true },
+      stationName: { type: String, required: true },
+    },
+  ],
   stationImg: { type: String, required: true, unique: true },
-  permission:[]
+  permission: [],
 });
 
 const collectionModel = controlDb.model<collectionDocument>(

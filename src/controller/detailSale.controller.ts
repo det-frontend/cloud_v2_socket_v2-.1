@@ -38,9 +38,9 @@ export const getDetailSaleHandler = async (
     if (!pageNo) throw new Error("You need page number");
     let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
     let { data, count } = await detailSalePaginate(pageNo, req.query, model);
     fMsg(res, "DetailSale are here", data, model, count);
@@ -135,6 +135,8 @@ export const addDetailSaleHandler = async (
         },
         model
       );
+      console.log(prevResult, "this is prev result");
+      console.log(prevDate, "this is prev prevDate");
       await Promise.all(
         prevResult.map(async (ea) => {
           let obj: fuelBalanceDocument;
@@ -166,7 +168,15 @@ export const addDetailSaleHandler = async (
         })
       );
     }
-
+    console.log(
+      result.stationDetailId,
+      result.fuelType,
+      result.dailyReportDate,
+      result.saleLiter,
+      result.nozzleNo,
+      model,
+      "this is fuleCalc"
+    );
     await calcFuelBalance(
       {
         stationId: result.stationDetailId,
@@ -237,11 +247,11 @@ export const getDetailSaleByDateHandler = async (
       eDate = new Date();
     }
 
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
     //if date error ? you should use split with T or be sure detail Id
@@ -275,19 +285,18 @@ export const getDetailSaleDatePagiHandler = async (
     if (!eDate) {
       eDate = new Date();
     }
-  
 
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    
+
     let { data, count } = await detailSaleByDateAndPagi(
       query,
       startDate,
@@ -295,7 +304,6 @@ export const getDetailSaleDatePagiHandler = async (
       pageNo,
       model
     );
-
 
     fMsg(res, "detail sale between two date", data, model, count);
   } catch (e) {
@@ -317,7 +325,6 @@ export const statementReportHandler = async (
 
     let query = req.query;
 
-
     if (!req.query.stationDetailId) throw new Error("you need stataion");
     if (!sDate) throw new Error("you need date");
     if (!eDate) eDate = new Date();
@@ -325,11 +332,11 @@ export const statementReportHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
     let stationDetail = await getStationDetail(
@@ -338,8 +345,6 @@ export const statementReportHandler = async (
       },
       model
     );
-
-
 
     let finalData: any = [];
 
@@ -353,21 +358,18 @@ export const statementReportHandler = async (
 
       let result = await detailSaleByDate(query, startDate, endDate, model);
 
-
       let count = result.length;
 
       if (count == 0) {
         let lastData = await getLastDetailSale(query, model);
 
-
-
         let data = {
           stationId: stationDetail[0].name,
           nozzle: noz,
-          price: '-',
-          fuelType :  "-",
-          totalizer_opening: '-',
-          totalizer_closing: '-',
+          price: "-",
+          fuelType: "-",
+          totalizer_opening: "-",
+          totalizer_closing: "-",
           totalizer_different: 0,
           totalSaleLiter: 0,
           totalSalePrice: 0,
@@ -377,7 +379,6 @@ export const statementReportHandler = async (
 
         // return;
       } else {
-        
         let totalSaleLiter: number = result
           .map((ea) => ea["saleLiter"])
           .reduce((pv: number, cv: number): number => pv + cv, 0);
@@ -395,8 +396,10 @@ export const statementReportHandler = async (
         let data = {
           stationId: stationDetail[0].name,
           nozzle: noz,
-          fuelType : result[count - 1].fuelType,
-          price: result[count - 1].salePrice ? result[count - 1].salePrice:result[count - 2].salePrice,
+          fuelType: result[count - 1].fuelType,
+          price: result[count - 1].salePrice
+            ? result[count - 1].salePrice
+            : result[count - 2].salePrice,
           totalizer_opening: Number(result[0].totalizer_liter.toFixed(3)),
           totalizer_closing: Number(
             result[count - 1].totalizer_liter.toFixed(3)
@@ -417,22 +420,21 @@ export const statementReportHandler = async (
 
     fMsg(res, "final data", finalData, model);
   } catch (e) {
-   next(new Error(e));
+    next(new Error(e));
   }
 };
 
 export const calculateTotalPerDayHandler = async (
- req: Request,
- res: Response,
- next: NextFunction) => {
-  try { 
-
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
     delete req.query.sDate;
     delete req.query.eDate;
-
 
     if (!sDate) throw new Error("you need date");
     if (!eDate) eDate = new Date();
@@ -442,43 +444,44 @@ export const calculateTotalPerDayHandler = async (
 
     let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
     if (req.query.totalVehicle) {
-      const vehicleQuery = {createAt:{$gt:startDate,$lt:endDate}}
+      const vehicleQuery = { createAt: { $gt: startDate, $lt: endDate } };
       const result = await getTodayVechicleCount(vehicleQuery, model);
-      if(result) fMsg(res, "Total Vehicle", result, model);
-    } else if(req.query.fuelType){
-      const vehicleQuery = { createAt: { $gt: startDate, $lt: endDate }, fuelType: req.query.fuelType };
+      if (result) fMsg(res, "Total Vehicle", result, model);
+    } else if (req.query.fuelType) {
+      const vehicleQuery = {
+        createAt: { $gt: startDate, $lt: endDate },
+        fuelType: req.query.fuelType,
+      };
       const result = await sumTodayDatasService(vehicleQuery, model);
-      if (result) fMsg(res, `Total FuelType ${req.query.fuelType}`, result, model);
+      if (result)
+        fMsg(res, `Total FuelType ${req.query.fuelType}`, result, model);
     } else {
       const vehicleQuery = { createAt: { $gt: startDate, $lt: endDate } };
       const result = await sumTodayDatasService(vehicleQuery, model);
       if (result) fMsg(res, "Total Today Sum", result, model);
     }
-
-
-     } catch (e) {
+  } catch (e) {
     next(new Error(e));
   }
- };
+};
 
-
-export const calculateCategoriesTotalHandler = async (req: Request,
+export const calculateCategoriesTotalHandler = async (
+  req: Request,
   res: Response,
-  next: NextFunction) => {
+  next: NextFunction
+) => {
   try {
-
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
     delete req.query.sDate;
     delete req.query.eDate;
-
 
     if (!sDate) throw new Error("you need date");
     if (!eDate) eDate = new Date();
@@ -486,42 +489,41 @@ export const calculateCategoriesTotalHandler = async (req: Request,
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-    
-
-
     let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
-     
     let vehicleTypes: any = req.query.vehicleType;
 
-    vehicleTypes = vehicleTypes.split(',');
+    vehicleTypes = vehicleTypes.split(",");
 
+    const vehicleQuery = {
+      createAt: { $gt: startDate, $lt: endDate },
+      vehicleType: { $in: vehicleTypes },
+    };
 
-    const vehicleQuery = { createAt: { $gt: startDate, $lt: endDate }, vehicleType: { $in: vehicleTypes } }
-   
     const result = await sumTodayCategoryDatasService(vehicleQuery, model);
-     
+
     if (result) fMsg(res, "Total Vehicle", result, model);
-    
   } catch (e) {
     next(new Error(e));
   }
 };
 
-export const calculateStationTotalHandler = async (req: Request, res: Response, next: NextFunction) => {
-try {
-
+export const calculateStationTotalHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
     delete req.query.sDate;
     delete req.query.eDate;
-
 
     if (!sDate) throw new Error("you need date");
     if (!eDate) eDate = new Date();
@@ -529,123 +531,122 @@ try {
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-    
-
     let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
-  
-  const collection = await collectionGet({ collectionName: model });
-  let stationIds: any = req.query.stations;
-  
-  const stationCollection = collection[0].stationCollection;
+    const collection = await collectionGet({ collectionName: model });
+    let stationIds: any = req.query.stations;
 
+    const stationCollection = collection[0].stationCollection;
 
-  const arryStationCollection:any = [];
+    const arryStationCollection: any = [];
 
-  stationCollection.map((e: any) => {
-    return arryStationCollection.push(new ObjectId(e.stationId));
-  });
+    stationCollection.map((e: any) => {
+      return arryStationCollection.push(new ObjectId(e.stationId));
+    });
 
-  // stationIds = stationIds.split(',');
-  
- 
-    
-  // const stationDetailIds = [
-  //   new ObjectId(stationIds[0]),
-  //   new ObjectId(stationIds[1]),
-  //   new ObjectId(stationIds[2]),
-  //   new ObjectId(stationIds[3]),
-  //   new ObjectId(stationIds[4]),
-  //   new ObjectId(stationIds[5]),
-  // ];
+    // stationIds = stationIds.split(',');
 
+    // const stationDetailIds = [
+    //   new ObjectId(stationIds[0]),
+    //   new ObjectId(stationIds[1]),
+    //   new ObjectId(stationIds[2]),
+    //   new ObjectId(stationIds[3]),
+    //   new ObjectId(stationIds[4]),
+    //   new ObjectId(stationIds[5]),
+    // ];
 
-  const vehicleQuery = { createAt: { $gt: startDate, $lt: endDate }, stationDetailId: { $in: arryStationCollection } };
-   
-  const result = await sumTodayStationDatasService(vehicleQuery, model);
+    const vehicleQuery = {
+      createAt: { $gt: startDate, $lt: endDate },
+      stationDetailId: { $in: arryStationCollection },
+    };
 
-     
-  if (result) fMsg(res, "Total Stations", result, model);
-  
-    
+    const result = await sumTodayStationDatasService(vehicleQuery, model);
+
+    if (result) fMsg(res, "Total Stations", result, model);
   } catch (e) {
     next(new Error(e));
-  } 
+  }
 };
 
-export const sevenDayPreviousTotalHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const sevenDayPreviousTotalHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-     let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
-  function formatDate(date) {
-  const year = date.getFullYear();
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
+    function formatDate(date) {
+      const year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
 
-  if (month < 10) {
-    month = '0' + month;
-  }
+      if (month < 10) {
+        month = "0" + month;
+      }
 
-  if (day < 10) {
-    day = '0' + day;
-  }
+      if (day < 10) {
+        day = "0" + day;
+      }
 
-  return `${year}-${month}-${day}`;
-}
+      return `${year}-${month}-${day}`;
+    }
 
-function getDates(startDate, endDate) {
-  const dates:any = [];
-  let currentDate = new Date(startDate);
-  
-  while (currentDate <= endDate) {
-    dates.push(formatDate(new Date(currentDate)));
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
+    function getDates(startDate, endDate) {
+      const dates: any = [];
+      let currentDate = new Date(startDate);
 
-  return dates;
-}
+      while (currentDate <= endDate) {
+        dates.push(formatDate(new Date(currentDate)));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
 
-const today = new Date();
-const sevenDaysAgo = new Date(today);
-sevenDaysAgo.setDate(today.getDate() - 7);
+      return dates;
+    }
 
-const datesArray = getDates(sevenDaysAgo, today);
+    const today = new Date();
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 7);
 
-  const query = { dailyReportDate: { $in: datesArray } };
-    
-  const result = await sumTodayDatasService(query, model);
-   
+    const datesArray = getDates(sevenDaysAgo, today);
+
+    const query = { dailyReportDate: { $in: datesArray } };
+
+    const result = await sumTodayDatasService(query, model);
+
     if (result) fMsg(res, "Total seven day", result, model);
-
-
   } catch (e) {
     next(new Error(e));
   }
 };
 
-export const calcualteDatasForEachDayHanlder = async (req: Request, res: Response, next: NextFunction) => {
-  
-}
+export const calcualteDatasForEachDayHanlder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {};
 
-export const getDailyReportDateForEachDayHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const getDailyReportDateForEachDayHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
     delete req.query.sDate;
     delete req.query.eDate;
-
 
     if (!sDate) throw new Error("you need date");
     if (!eDate) eDate = new Date();
@@ -656,16 +657,20 @@ export const getDailyReportDateForEachDayHandler = async (req: Request, res: Res
 
     let model = req.body.accessDb;
 
-    const vehicleQuery = { createAt: { $gt: startDate, $lt: endDate }, stationDetailId:new ObjectId(`${req.query.stationDetailId}`) };
+    const vehicleQuery = {
+      createAt: { $gt: startDate, $lt: endDate },
+      stationDetailId: new ObjectId(`${req.query.stationDetailId}`),
+    };
 
-    
-    let result = await getDailyReportDateForEachDayService(vehicleQuery, pageNo, model);
+    let result = await getDailyReportDateForEachDayService(
+      vehicleQuery,
+      pageNo,
+      model
+    );
     console.log(result);
 
-    fMsg(res, 'Daily Report Date For EachDay', result);
-
+    fMsg(res, "Daily Report Date For EachDay", result);
   } catch (e) {
-    next(new Error(e))
+    next(new Error(e));
   }
 };
-
