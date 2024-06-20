@@ -10,12 +10,11 @@ export const modelController = async (
   try {
     // Fetch the collection based on the user's collectionId
 
-    console.log(req.params)
+    console.log(req.params);
 
     const collection = await collectionGet({
       _id: req.body.user[0].collectionId,
     });
-
 
     // If collection doesn't exist, throw an error
     // if (collection.length == 0) {
@@ -59,7 +58,8 @@ export const locSevModelControl = async (
   try {
     const collection = await collectionGet({});
 
-    let result = collection.filter((ea) =>   ea.stationCollection.find(
+    let result = collection.filter((ea) =>
+      ea.stationCollection.find(
         (ea) => ea.stationId == req.body.stationDetailId
       )
     );

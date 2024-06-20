@@ -22,9 +22,9 @@ export const getFuelBalance = async (
       .find(query)
       .lean()
       .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
-    })
+        path: "stationId",
+        model: dbDistribution({ accessDb: dbModel }),
+      })
       .select("-__v");
   } catch (e) {
     throw new Error(e);
@@ -34,7 +34,7 @@ export const getFuelBalance = async (
 export const addFuelBalance = async (
   body: fuelBalanceDocument,
   dbModel: string
-) => { 
+) => {
   try {
     const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
     const options = { timeZone: "Asia/Yangon", hour12: false };
@@ -172,8 +172,8 @@ export const fuelBalancePaginate = async (
     .limit(limitNo)
     .lean()
     .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
     })
     .select("-__v");
 
@@ -207,20 +207,20 @@ export const fuelBalanceByDate = async (
     .find(filter)
     .sort({ realTime: -1 })
     .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
     })
     .select("-__v");
 };
 
 export const fuelBalanceForStockBalance = async (
   d1: string,
-  id:any,
+  id: any,
   dbModel: string
 ): Promise<fuelBalanceDocument[]> => {
   const filter: FilterQuery<fuelBalanceDocument> = {
     createAt: d1,
-    stationId:id
+    stationId: id,
   };
 
   let selectedModel = dBSelector(
@@ -232,9 +232,8 @@ export const fuelBalanceForStockBalance = async (
   return await selectedModel
     .find(filter)
     .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
     })
     .select("-__v");
 };
-
