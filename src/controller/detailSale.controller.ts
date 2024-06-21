@@ -67,6 +67,8 @@ export const addDetailSaleHandler = async (
 
     let result = await addDetailSale(req.body, model);
 
+    console.log(result, " this is result from result");
+
     // next update code
 
     // if (result.cashType == "Debt") {
@@ -98,12 +100,12 @@ export const addDetailSaleHandler = async (
 
     //caculation
 
-    console.log("wkkk");
+    // console.log("wkkk");
 
     let checkDate = await getFuelBalance(
       {
-        stationId: req.body.stationDetailId,
-        createAt: req.body.dailyReportDate,
+        stationId: result.stationDetailId,
+        createAt: result.dailyReportDate,
       },
       model
     );
@@ -116,6 +118,8 @@ export const addDetailSaleHandler = async (
       model
     );
 
+    console.log(checkDate, "this is checkdate", checkDate.length);
+
     if (checkRpDate.length == 0) {
       await addDailyReport(
         {
@@ -127,18 +131,26 @@ export const addDetailSaleHandler = async (
     }
 
     if (checkDate.length == 0) {
+      console.log(
+        result.stationDetailId,
+        "thisihsihihil......................................."
+      );
       let prevDate = previous(new Date(req.body.dailyReportDate));
       let prevResult = await getFuelBalance(
         {
-          stationId: req.body.stationDetailId,
-          createAt: prevDate,
+          stationId: result.stationDetailId,
+          // createAt: prevDate,
         },
         model
       );
-      console.log(prevResult, "this is prev result");
-      console.log(prevDate, "this is prev prevDate");
+      console.log(
+        prevResult.reverse().slice(0, 4),
+        "this is prev result",
+        req.body.stationDetailId
+      );
+      // console.log(prevDate, "this is prev prevDate");
       await Promise.all(
-        prevResult.map(async (ea) => {
+        prevResult.slice(0, 4).map(async (ea) => {
           let obj: fuelBalanceDocument;
           if (ea.balance == 0) {
             obj = {
@@ -147,7 +159,7 @@ export const addDetailSaleHandler = async (
               capacity: ea.capacity,
               opening: ea.opening + ea.fuelIn,
               tankNo: ea.tankNo,
-              createAt: req.body.dailyReportDate,
+              createAt: result.dailyReportDate,
               nozzles: ea.nozzles,
               balance: ea.opening + ea.fuelIn,
             } as fuelBalanceDocument;
@@ -177,6 +189,7 @@ export const addDetailSaleHandler = async (
       model,
       "this is fuleCalc"
     );
+
     await calcFuelBalance(
       {
         stationId: result.stationDetailId,

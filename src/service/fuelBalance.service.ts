@@ -18,14 +18,16 @@ export const getFuelBalance = async (
       ksFuelBalanceModel,
       csFuelBalanceModel
     );
-    return await selectedModel
+    const result = await selectedModel
       .find(query)
       .lean()
-      .populate({
-        path: "stationId",
-        model: dbDistribution({ accessDb: dbModel }),
-      })
+      // .populate({
+      //   path: "stationId",
+      //   model: dbDistribution({ accessDb: dbModel }),
+      // })
       .select("-__v");
+    console.log("hhahah", result);
+    return result;
   } catch (e) {
     throw new Error(e);
   }
@@ -120,10 +122,10 @@ export const calcFuelBalance = async (
     );
 
     let result = await selectedModel.find(query);
-    if (result.length === 0) {
+    if (result.length == 0) {
       new Error("No fuel balance data found for the given query.");
     }
-    console.log(result, "this is result");
+    console.log(result, "this is result", result.length, query);
 
     let gg = result.find((ea: { nozzles: string[] }) =>
       ea.nozzles.includes(payload.toString())
