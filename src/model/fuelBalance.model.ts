@@ -23,14 +23,10 @@ export interface fuelBalanceDocument extends mongoose.Document {
 }
 
 const fuelBalanceSchema = new Schema({
-  // stationId: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: dbDistribution(this),
-  //   require: true,
-  // },
   stationId: {
     type: Schema.Types.ObjectId,
-    ref: "stationDetail",
+    ref: dbDistribution(this),
+    require: true,
   },
   accessDb: { type: String, required: true },
   fuelType: { type: String, required: true },
