@@ -200,6 +200,9 @@ export const fuelBalanceByDate = async (
       $lt: d2,
     },
   };
+  // console.log("====================================");
+  // console.log(d1, d2);
+  // console.log("====================================");
   let selectedModel = dBSelector(
     dbModel,
     ksFuelBalanceModel,

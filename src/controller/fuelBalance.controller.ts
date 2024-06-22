@@ -47,9 +47,9 @@ export const getFuelBalanceHandler = async (
 
     let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
     let { count, data } = await fuelBalancePaginate(
@@ -120,6 +120,7 @@ export const getFuelBalanceByDateHandler = async (
   try {
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
+    console.log(sDate, eDate, "ggggggggggggggggggggggggggggggggggggg");
 
     delete req.query.sDate;
     delete req.query.eDate;
@@ -135,14 +136,12 @@ export const getFuelBalanceByDateHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
-
-    
 
     let result = await fuelBalanceByDate(query, startDate, endDate, model);
     fMsg(res, "fuel balance between two date", result);
@@ -150,4 +149,3 @@ export const getFuelBalanceByDateHandler = async (
     next(new Error(e));
   }
 };
-
