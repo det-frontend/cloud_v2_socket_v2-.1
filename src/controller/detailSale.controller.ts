@@ -369,7 +369,13 @@ export const statementReportHandler = async (
         nozzleNo: noz,
       };
 
-      let result = await detailSaleByDate(query, startDate, endDate, model);
+      // let result = await detailSaleByDate(query, startDate, endDate, model);
+      const value = await detailSaleByDate(query, startDate, endDate, model);
+      let result = value.reverse();
+
+      console.log("=====dfdfdfdf===============================");
+      console.log(stationDetail);
+      console.log("====================================");
 
       let count = result.length;
 
@@ -378,6 +384,7 @@ export const statementReportHandler = async (
 
         let data = {
           stationId: stationDetail[0].name,
+          station: stationDetail,
           nozzle: noz,
           price: "-",
           fuelType: "-",
@@ -400,6 +407,11 @@ export const statementReportHandler = async (
           .map((ea) => ea["totalPrice"])
           .reduce((pv: number, cv: number): number => pv + cv, 0);
 
+        let pumptest: number = result
+          .filter((ea) => ea.vehicleType == "Pump Test")
+          .map((ea) => ea.totalPrice)
+          .reduce((pv: number, cv: number): number => pv + cv, 0);
+
         // console.log(
         //   result[0].totalizer_liter,
         //   result[count - 1].totalizer_liter,
@@ -408,6 +420,7 @@ export const statementReportHandler = async (
 
         let data = {
           stationId: stationDetail[0].name,
+          station: stationDetail,
           nozzle: noz,
           fuelType: result[count - 1].fuelType,
           price: result[count - 1].salePrice
@@ -418,21 +431,23 @@ export const statementReportHandler = async (
             result[count - 1].totalizer_liter.toFixed(3)
           ),
           totalizer_different: Number(
-            result[0].totalizer_liter - result[count - 1].totalizer_liter
+            result[count - 1].totalizer_liter - result[0].totalizer_liter
           ).toFixed(3),
           totalSaleLiter: Number(totalSaleLiter.toFixed(3)),
           totalSalePrice: Number(totalSalePrice.toFixed(3)),
+          pumptest: pumptest,
         };
         finalData.push(data);
       }
     }
 
-    console.log("0000000000");
-    console.log(finalData);
-    console.log("0000000000");
+    // console.log("0000000000");
+    // console.log(finalData);
+    // console.log("0000000000");
 
     fMsg(res, "final data", finalData, model);
   } catch (e) {
+    console.log(e);
     next(new Error(e));
   }
 };

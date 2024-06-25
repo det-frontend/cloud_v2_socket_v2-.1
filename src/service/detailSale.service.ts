@@ -26,9 +26,9 @@ export const getDetailSale = async (
     return await selectedModel
       .find(query)
 
-     .populate({
-        path: 'stationDetailId',
-        model:dbDistribution({accessDb:dbModel})
+      .populate({
+        path: "stationDetailId",
+        model: dbDistribution({ accessDb: dbModel }),
       })
       .select("-__v");
   } catch (e) {
@@ -125,9 +125,7 @@ export const detailSalePaginate = async (
   query: FilterQuery<detailSaleDocument>,
   dbModel: string
 ): Promise<{ count: number; data: detailSaleDocument[] }> => {
-
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-  
 
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
@@ -136,10 +134,10 @@ export const detailSalePaginate = async (
     .sort({ createAt: -1 })
     .skip(skipCount)
     .limit(limitNo)
-   .populate({
-        path: 'stationDetailId',
-        model:dbDistribution({accessDb:dbModel})
-      })
+    .populate({
+      path: "stationDetailId",
+      model: dbDistribution({ accessDb: dbModel }),
+    })
     .select("-__v");
   const count = await selectedModel.countDocuments(query);
 
@@ -162,15 +160,16 @@ export const detailSaleByDate = async (
     },
   };
 
+  console.log(d1, d2, "this is detail sale by date");
+
   let result = await selectedModel
     .find(filter)
     .sort({ createAt: -1 })
-     .populate({
-        path: 'stationDetailId',
-        model:dbDistribution({accessDb:dbModel})
-      })
+    .populate({
+      path: "stationDetailId",
+      model: dbDistribution({ accessDb: dbModel }),
+    })
     .select("-__v");
-  
 
   return result;
 };
@@ -189,8 +188,6 @@ export const detailSaleByDateAndPagi = async (
       csDetailSaleModel
     );
 
-
-
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
     const filter: FilterQuery<detailSaleDocument> = {
@@ -201,16 +198,14 @@ export const detailSaleByDateAndPagi = async (
       },
     };
 
-
-
     const dataQuery = selectedModel
       .find(filter)
       .sort({ createAt: -1 })
       .skip(skipCount)
       .limit(limitNo)
       .populate({
-        path: 'stationDetailId',
-        model:dbDistribution({accessDb:dbModel})
+        path: "stationDetailId",
+        model: dbDistribution({ accessDb: dbModel }),
       })
       .select("-__v");
 
@@ -225,225 +220,237 @@ export const detailSaleByDateAndPagi = async (
   }
 };
 
-export const getLastDetailSale = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
+export const getLastDetailSale = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-  return await selectedModel
-    .findOne(query)
-    .sort({ _id: -1, createAt: -1 });
+  return await selectedModel.findOne(query).sort({ _id: -1, createAt: -1 });
 };
 
-export const getTodayVechicleCount = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
+export const getTodayVechicleCount = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-  return await selectedModel.count(query)
+  return await selectedModel.count(query);
 };
 
-export const sumTodayDatasService = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
-let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-
-return await selectedModel.aggregate([
-  {
-    $match: query
-  }, 
-  {
-    $group: {
-      _id: "$dailyReportDate",
-      totalSaleLiter: {
-        $sum: "$saleLiter"
-      },
-      totalPrice: {
-        $sum: "$totalPrice"
-      },
-      count:{$sum:1}
-    }
-  }
-]);
-};
-
-export const sumTodayCategoryDatasService = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
-let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-
-return await selectedModel.aggregate([
-  {
-    $match: query
-  }, 
-  {
-    $group: {
-      _id: "$vehicleType",
-      totalSaleLiter: {
-        $sum: "$saleLiter"
-      },
-      totalPrice: {
-        $sum: "$totalPrice"
-      }
-    }
-  }
-]);
-};
-
-export const sumTodayFuelTypeService = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
+export const sumTodayDatasService = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
 
   return await selectedModel.aggregate([
     {
-      $match: query
+      $match: query,
+    },
+    {
+      $group: {
+        _id: "$dailyReportDate",
+        totalSaleLiter: {
+          $sum: "$saleLiter",
+        },
+        totalPrice: {
+          $sum: "$totalPrice",
+        },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+};
+
+export const sumTodayCategoryDatasService = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
+  let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
+
+  return await selectedModel.aggregate([
+    {
+      $match: query,
+    },
+    {
+      $group: {
+        _id: "$vehicleType",
+        totalSaleLiter: {
+          $sum: "$saleLiter",
+        },
+        totalPrice: {
+          $sum: "$totalPrice",
+        },
+      },
+    },
+  ]);
+};
+
+export const sumTodayFuelTypeService = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
+  let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
+
+  return await selectedModel.aggregate([
+    {
+      $match: query,
     },
     {
       $group: {
         _id: null,
         totalSaleLiter: {
-          $sum: "$saleLiter"
+          $sum: "$saleLiter",
         },
         totalPrice: {
-          $sum: "$totalPrice"
-        }
-      }
-    }
+          $sum: "$totalPrice",
+        },
+      },
+    },
   ]);
 };
 
-export const sumTodayStationDatasService = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
-let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-
-return await selectedModel.aggregate([
-  {
-    $match: query,
-  },
-  {
-    $lookup: {
-      from: "stationdetails",  // Name of the collection to perform the lookup
-      localField: "stationDetailId",
-      foreignField: "_id",
-      as: "stationdetails",  // Alias for the joined data
-    },
-  },
-  {
-    $unwind: "$stationdetails"  // Flatten the results from the lookup
-  },
-  {
-    $group: {
-      _id: "$stationDetailId",
-      totalSaleLiter: {
-        $sum: "$saleLiter",
-      },
-      totalPrice: {
-        $sum: "$totalPrice",
-      },
-      stationDetail: { $first: "$stationdetails" }  // Keep stationDetail in the result
-    },
-  },
-]);
-};
-
-export const sumSevenDayPrevious = async (query: FilterQuery<detailSaleDocument>, dbModel: string) => {
+export const sumTodayStationDatasService = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
 
-const today = new Date();
-const pipeline:any = [];
+  return await selectedModel.aggregate([
+    {
+      $match: query,
+    },
+    {
+      $lookup: {
+        from: "stationdetails", // Name of the collection to perform the lookup
+        localField: "stationDetailId",
+        foreignField: "_id",
+        as: "stationdetails", // Alias for the joined data
+      },
+    },
+    {
+      $unwind: "$stationdetails", // Flatten the results from the lookup
+    },
+    {
+      $group: {
+        _id: "$stationDetailId",
+        totalSaleLiter: {
+          $sum: "$saleLiter",
+        },
+        totalPrice: {
+          $sum: "$totalPrice",
+        },
+        stationDetail: { $first: "$stationdetails" }, // Keep stationDetail in the result
+      },
+    },
+  ]);
+};
 
-for (let i = 6; i >= 0; i--) {
-  const currentDate = new Date();
-  currentDate.setDate(today.getDate() - i);
+export const sumSevenDayPrevious = async (
+  query: FilterQuery<detailSaleDocument>,
+  dbModel: string
+) => {
+  let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
 
-  const startOfDay = new Date(currentDate);
-  startOfDay.setHours(0, 0, 0, 0);
+  const today = new Date();
+  const pipeline: any = [];
 
-  const endOfDay = new Date(currentDate);
-  endOfDay.setHours(23, 59, 59, 999);
+  for (let i = 6; i >= 0; i--) {
+    const currentDate = new Date();
+    currentDate.setDate(today.getDate() - i);
+
+    const startOfDay = new Date(currentDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(currentDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    pipeline.push({
+      $match: {
+        createAt: query,
+      },
+    });
+  }
 
   pipeline.push({
-    $match: {
-      createAt: query
-    }
+    $group: {
+      _id: { $dateToString: { format: "%Y-%m-%d", date: "$createAt" } },
+      totalSalePrice: { $sum: "$totalPrice" },
+      totalSaleLiter: { $sum: "$saleLiter" },
+    },
   });
-}
 
-pipeline.push({
-  $group: {
-    _id: { $dateToString: { format: "%Y-%m-%d", date: "$createAt" } },
-    totalSalePrice: { $sum: "$totalPrice" },
-    totalSaleLiter: { $sum: "$saleLiter" }
-  }
-});
-  
-pipeline.push({
-  $sort: {
-    "_id": 1  // Sort by date in ascending order
-  }
-});
+  pipeline.push({
+    $sort: {
+      _id: 1, // Sort by date in ascending order
+    },
+  });
 
-return await selectedModel.aggregate(pipeline);
-
-
-
-}
-
-
+  return await selectedModel.aggregate(pipeline);
+};
 
 export const getDailyReportDateForEachDayService = async (
   vehicleQuery: FilterQuery<detailSaleDocument>,
-  pageNo:number,
+  pageNo: number,
   dbModel: string
-)=>{
- 
- let selectedModel = dBSelector(
-    dbModel,
-    ksDetailSaleModel,
-    csDetailSaleModel
- );
-  
+) => {
+  let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
+
   const reqPage = pageNo == 1 ? 0 : pageNo - 1;
   const skipCount = limitNo * reqPage;
 
-  
   return await selectedModel.aggregate([
-  {
-    $match: vehicleQuery
-  },
-  {
-    $group: {
-      _id: {
-        dailyReportDate: "$dailyReportDate",
-        fuelType: "$fuelType"
-      },
-      totalSaleLiter: { $sum: "$saleLiter" },
-      totalPrice: { $sum: "$totalPrice" }
-    }
-  },
-  {
-    $group: {
-      _id: {
-        dailyReportDate: "$_id.dailyReportDate",
-        fuelType: "$_id.fuelType"
-      },
-      fuelData: {
-        $push: {
-          totalSaleLiter: "$totalSaleLiter",
-          totalPrice: "$totalPrice"
-        }
-      }
-    }
-  },
-  {
-    $group: {
-      _id: "$_id.dailyReportDate",
-      fuelData: {
-        $push: {
-          k: "$_id.fuelType",
-          v: "$fuelData"
-        }
-      }
-    }
+    {
+      $match: vehicleQuery,
     },
-  {
-    $sort: { _id: -1 }  // Sort by dailyReportDate in ascending order
-  },
-  {
-    $project: {
-      _id: 0,
-      dailyReportDate: { $dateToString: { format: "%Y-%m-%d", date: { $dateFromString: { dateString: "$_id" } } } },
-      fuelData: { $arrayToObject: "$fuelData" }
-    }
-  }
-]);
+    {
+      $group: {
+        _id: {
+          dailyReportDate: "$dailyReportDate",
+          fuelType: "$fuelType",
+        },
+        totalSaleLiter: { $sum: "$saleLiter" },
+        totalPrice: { $sum: "$totalPrice" },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          dailyReportDate: "$_id.dailyReportDate",
+          fuelType: "$_id.fuelType",
+        },
+        fuelData: {
+          $push: {
+            totalSaleLiter: "$totalSaleLiter",
+            totalPrice: "$totalPrice",
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id.dailyReportDate",
+        fuelData: {
+          $push: {
+            k: "$_id.fuelType",
+            v: "$fuelData",
+          },
+        },
+      },
+    },
+    {
+      $sort: { _id: -1 }, // Sort by dailyReportDate in ascending order
+    },
+    {
+      $project: {
+        _id: 0,
+        dailyReportDate: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: { $dateFromString: { dateString: "$_id" } },
+          },
+        },
+        fuelData: { $arrayToObject: "$fuelData" },
+      },
+    },
+  ]);
 };
-
