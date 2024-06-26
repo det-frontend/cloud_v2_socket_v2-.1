@@ -89,7 +89,6 @@ export const deleteUserHandler = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.query);
     let result = await deleteUser(req.query);
     fMsg(res, "user deleted");
   } catch (e) {

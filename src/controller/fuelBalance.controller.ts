@@ -120,7 +120,6 @@ export const getFuelBalanceByDateHandler = async (
   try {
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
-    console.log(sDate, eDate, "ggggggggggggggggggggggggggggggggggggg");
 
     delete req.query.sDate;
     delete req.query.eDate;

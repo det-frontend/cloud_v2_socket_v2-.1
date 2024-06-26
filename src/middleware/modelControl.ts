@@ -10,7 +10,6 @@ export const modelController = async (
   try {
     // Fetch the collection based on the user's collectionId
 
-    console.log(req.params);
 
     const collection = await collectionGet({
       _id: req.body.user[0].collectionId,
@@ -57,7 +56,6 @@ export const locSevModelControl = async (
 ) => {
   try {
     const collection = await collectionGet({});
-    console.log(collection, "this is collection and ", req.body);
     let result = collection.filter((ea) =>
       ea.stationCollection.find(
         (ea) => ea.stationId == req.body.stationDetailId

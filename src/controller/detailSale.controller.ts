@@ -67,7 +67,6 @@ export const addDetailSaleHandler = async (
 
     let result = await addDetailSale(req.body, model);
 
-    console.log(result, " this is result from result");
 
     // next update code
 
@@ -118,7 +117,6 @@ export const addDetailSaleHandler = async (
       model
     );
 
-    console.log(checkDate, "this is checkdate", checkDate.length);
 
     if (checkRpDate.length == 0) {
       await addDailyReport(
@@ -131,10 +129,7 @@ export const addDetailSaleHandler = async (
     }
 
     if (checkDate.length == 0) {
-      console.log(
-        result.stationDetailId,
-        "thisihsihihil......................................."
-      );
+
       let prevDate = previous(new Date(req.body.dailyReportDate));
       let prevResult = await getFuelBalance(
         {
@@ -143,12 +138,7 @@ export const addDetailSaleHandler = async (
         },
         model
       );
-      console.log(
-        prevResult.reverse().slice(0, 4),
-        "this is prev result",
-        req.body.stationDetailId
-      );
-      // console.log(prevDate, "this is prev prevDate");
+
       await Promise.all(
         prevResult.slice(0, 4).map(async (ea) => {
           let obj: fuelBalanceDocument;
@@ -180,15 +170,7 @@ export const addDetailSaleHandler = async (
         })
       );
     }
-    console.log(
-      result.stationDetailId,
-      result.fuelType,
-      result.dailyReportDate,
-      result.saleLiter,
-      result.nozzleNo,
-      model,
-      "this is fuleCalc"
-    );
+
 
     await calcFuelBalance(
       {
@@ -373,9 +355,7 @@ export const statementReportHandler = async (
       const value = await detailSaleByDate(query, startDate, endDate, model);
       let result = value.reverse();
 
-      console.log("=====dfdfdfdf===============================");
-      console.log(stationDetail);
-      console.log("====================================");
+
 
       let count = result.length;
 
@@ -695,7 +675,6 @@ export const getDailyReportDateForEachDayHandler = async (
       pageNo,
       model
     );
-    console.log(result);
 
     fMsg(res, "Daily Report Date For EachDay", result);
   } catch (e) {

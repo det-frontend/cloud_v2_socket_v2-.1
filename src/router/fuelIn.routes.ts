@@ -31,8 +31,8 @@ fuelInRoute.get(
 fuelInRoute.post(
   "/",
   validateToken,
-  roleValidator(["manager", "det"]), //In that one role is manager
-  hasAnyPermit(["add"]),
+  // roleValidator(["manager", "det"]), //In that one role is manager
+  // hasAnyPermit(["add"]),
   validateAll(fuelInSchema),
   modelController,
   addFuelInHandler

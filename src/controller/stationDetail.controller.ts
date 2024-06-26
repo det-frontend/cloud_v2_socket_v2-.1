@@ -148,10 +148,7 @@ export const getAllStationHandler = async (
       query = { "permission": { $in: [name] } };
     } 
 
-    console.log("********");
-    console.log(query);
-    console.log(model);
-    console.log("*********");
+
 
 
 
@@ -182,14 +179,12 @@ export const allowPermissionDetailSale = async (req: Request, res: Response, nex
     if (station[0].permission.includes(keye)) {
       let result = await permissionAddService(req.body._id, req.body.keye, model, { $pull: { permission: keye } });
     
-      console.log("pull permited", result);
 
     return fMsg(res, "pull permited!", result);
 
     } else {
       let result = await permissionAddService(req.body._id, req.body.keye, model, { $push: { permission: keye } });
       
-      console.log("push permited", result);
      return fMsg(res, "push permited!", result);
     }
 

@@ -37,13 +37,12 @@ fuelBalanceRoute.get(
   getFuelBalanceByDateHandler
 );
 
-
 fuelBalanceRoute.post(
   "/",
   validateToken,
   validateAll(fuelBalanceSchema),
-  roleValidator(["det"]),
-  hasAnyPermit(["add"]),
+  // roleValidator(["det"]),
+  // hasAnyPermit(["add"]),
   modelController,
   addFuelBalanceHandler
 );

@@ -105,7 +105,6 @@ export const getFuelInByDateHandler = async (
     
     delete req.query.accessDb;
      
-    console.log(req.query);
     
     let { data, count } = await fuelInByDate(
       query,

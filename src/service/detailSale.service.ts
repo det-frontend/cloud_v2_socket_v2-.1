@@ -160,7 +160,6 @@ export const detailSaleByDate = async (
     },
   };
 
-  console.log(d1, d2, "this is detail sale by date");
 
   let result = await selectedModel
     .find(filter)

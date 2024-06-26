@@ -26,7 +26,6 @@ export const getFuelBalance = async (
       //   model: dbDistribution({ accessDb: dbModel }),
       // })
       .select("-__v");
-    console.log("hhahah", result);
     return result;
   } catch (e) {
     throw new Error(e);
@@ -125,13 +124,11 @@ export const calcFuelBalance = async (
     if (result.length == 0) {
       new Error("No fuel balance data found for the given query.");
     }
-    console.log(result, "this is result", result.length, query);
 
     let gg = result.find((ea: { nozzles: string[] }) =>
       ea.nozzles.includes(payload.toString())
     );
 
-    console.log(gg, "this is gg");
 
     if (!gg) {
       new Error("No tank with the provided nozzle found.");
