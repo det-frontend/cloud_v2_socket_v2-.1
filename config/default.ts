@@ -4,7 +4,7 @@ export default {
   controlDbUrl:
     "mongodb+srv://ksdbfms:Tpd7iFyquVJrh4u8@controller.zabfxgj.mongodb.net/?retryWrites=true&w=majority",
   kyawsan_DbUrl:
-    "mongodb://detpos:asdffdsa@127.0.0.1:27017/HKTest?authSource=admin",
+    "mongodb://detpos:asdffdsa@127.0.0.1:27017/kyawsan?authSource=admin",
   common_DbUrl:
     "mongodb://detpos:asdffdsa@127.0.0.1:27017/common?authSource=admin",
   saltWorkFactor: 10,
