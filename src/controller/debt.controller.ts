@@ -15,6 +15,7 @@ import {
 } from "../service/coustomer.service";
 import moment from "moment-timezone";
 import { debtDocument } from "../model/debt.model";
+const test = "test";
 
 export const getDebtHandler = async (
   req: Request,
@@ -25,7 +26,7 @@ export const getDebtHandler = async (
     let pageNo = Number(req.params.page);
 
     let { data, count } = await DebtPaginate(pageNo, req.query);
-    fMsg(res, "Debt are here", data, count);
+    fMsg(res, "Debt are here", data, test, count);
   } catch (e) {
     next(new Error(e));
   }
@@ -163,7 +164,7 @@ export const getDebtDatePagiHandler = async (
       pageNo
     );
 
-    fMsg(res, "debt between two date", data, count);
+    fMsg(res, "debt between two date", data, test, count);
   } catch (e) {
     next(new Error(e));
   }
