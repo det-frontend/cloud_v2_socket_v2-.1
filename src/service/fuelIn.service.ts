@@ -20,9 +20,9 @@ export const getFuelIn = async (
       .find(query)
       .lean()
       .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
-    })
+        path: "stationId",
+        model: dbDistribution({ accessDb: dbModel }),
+      })
       .select("-__v");
   } catch (e) {
     throw new Error(e);
@@ -47,8 +47,8 @@ export const fuelInPaginate = async (
     .limit(limitNo)
     .lean()
     .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
     })
     .select("-__v");
 
@@ -63,29 +63,37 @@ export const addFuelIn = async (body: any, dbModel: string) => {
 
     let no = await selectedModel.count();
 
-
     let tankCondition = await getFuelBalance(
       {
-        stationId: body.user[0].stationId,
-        // fuelType: body.fuel_type,
+        stationId: body.stationDetailId,
+        fuelType: body.fuel_type,
         tankNo: body.tankNo,
         createAt: body.receive_date,
       },
       dbModel
     );
 
+    console.log(body, tankCondition, {
+      stationId: body.stationDetailId,
+      fuelType: body.fuel_type,
+      tankNo: body.tankNo,
+      createAt: body.receive_date,
+    });
 
     const updatedBody = {
       ...body,
-      stationId: body.user[0].stationId,
+      stationId: body.stationDetailId,
       fuel_in_code: no + 1,
       tank_balance: tankCondition[0].balance,
     };
 
+    console.log(updatedBody, "???????????????????????????????????????????????");
+
     let result = await new selectedModel(updatedBody).save();
+    
     await updateFuelBalance(
       { _id: tankCondition[0]._id },
-      { fuelIn: body.recive_balance },
+      { fuelIn: body.receive_balance },
       dbModel
     );
     return result;
@@ -150,8 +158,8 @@ export const fuelInByDate = async (
     .skip(skipCount)
     .limit(limitNo)
     .populate({
-      path: 'stationId',
-      model:dbDistribution({accessDb:dbModel})
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
     })
     .select("-__v");
 

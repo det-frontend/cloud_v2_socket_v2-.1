@@ -5,7 +5,10 @@ import {
   getFuelInHandler,
   updateFuelInHandler,
 } from "../controller/fuelIn.controller";
-import { modelController } from "../middleware/modelControl";
+import {
+  locSevModelControl,
+  modelController,
+} from "../middleware/modelControl";
 import { hasAnyPermit } from "../middleware/permitValidator";
 import { roleValidator } from "../middleware/roleValidator";
 import { validateAll, validateToken } from "../middleware/validator";
@@ -30,11 +33,12 @@ fuelInRoute.get(
 
 fuelInRoute.post(
   "/",
-  validateToken,
+  // validateToken,
   // roleValidator(["manager", "det"]), //In that one role is manager
   // hasAnyPermit(["add"]),
   validateAll(fuelInSchema),
-  modelController,
+  // modelController,
+  locSevModelControl,
   addFuelInHandler
 );
 fuelInRoute.patch(

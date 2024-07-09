@@ -10,7 +10,6 @@ export const modelController = async (
   try {
     // Fetch the collection based on the user's collectionId
 
-
     const collection = await collectionGet({
       _id: req.body.user[0].collectionId,
     });

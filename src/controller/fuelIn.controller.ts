@@ -96,16 +96,15 @@ export const getFuelInByDateHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
-    
+
     delete req.query.accessDb;
-     
-    
+
     let { data, count } = await fuelInByDate(
       query,
       startDate,

@@ -28,7 +28,7 @@ export const loginUser = async ({
       .exec();
     // .select("-__v");
 
-    console.log(user);
+    // console.log(user);
 
     if (!user || !compass(password, user.password)) {
       throw new Error("Creditial Error");
@@ -47,7 +47,6 @@ export const loginUser = async ({
 
 export const getUser = async (query: FilterQuery<UserDocument>) => {
   try {
-
     return await userModel
       .find(query)
       .lean()

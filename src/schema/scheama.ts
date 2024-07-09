@@ -183,8 +183,8 @@ export const fuelInSchema = object({
       required_error: "you need add fuel_type",
     }),
 
-    recive_balance: string({
-      required_error: "you need add recive_balance",
+    receive_balance: string({
+      required_error: "you need add receive_balance",
     }),
   }),
 });

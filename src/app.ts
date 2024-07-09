@@ -5,7 +5,6 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import userRoute from "./router/user.routes";
 import fuelInRoute from "./router/fuelIn.routes";
-
 import roleRoute from "./router/role.routes";
 import permitRoute from "./router/permit.routes";
 import stationDetailRoute from "./router/stationDetail.routes";
@@ -18,10 +17,9 @@ import collectionRoute from "./router/collection.routes";
 import tankDataRouter from "./router/tankData.routes";
 import stockBalanceRoute from "./router/stockbalance.routes";
 import closePermissionRoute from "./router/closePermission.routes";
-import { Server as SocketIOServer, Socket } from 'socket.io';
+import { Server as SocketIOServer, Socket } from "socket.io";
 import setupSocket from "./utils/socketConnect";
 import casherCodeRoute from "./router/casherCode.routes";
-
 
 const app = express();
 app.use(express.json());
@@ -68,9 +66,7 @@ app.use("/api/stock-balance", stockBalanceRoute);
 
 app.use("/api/close-permission", closePermissionRoute);
 
-app.use("/api/casher-code",casherCodeRoute)
-
-
+app.use("/api/casher-code", casherCodeRoute);
 
 // app.use("/api/debt", debtRoute);
 // app.use("/api/customer", coustomerRoute);
@@ -90,12 +86,10 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // // back up
 // backup(dbUrl);
 
-let io: SocketIOServer =  setupSocket(server);
+let io: SocketIOServer = setupSocket(server);
 
 server.listen(port, () =>
   console.log(`server is running in  http://${host}:${port}`)
 );
 
 export default io;
-
-
