@@ -11,6 +11,7 @@ export interface stationDetailDocument extends mongoose.Document {
   lienseNo: string;
   deviceCount: number;
   nozzleCount: number;
+  tankCount: number;
   permission:[]
 }
 
@@ -20,6 +21,7 @@ const stationDetailSchema = new Schema({
   lienseNo: { type: String, required: true, unique: true },
   deviceCount: { type: Number, required: true },
   nozzleCount: { type: Number, required: true },
+  tankCount: { type: Number, required: true},
   permission:[]
 });
 
