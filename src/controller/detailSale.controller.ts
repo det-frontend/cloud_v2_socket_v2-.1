@@ -131,13 +131,14 @@ export const addDetailSaleHandler = async (
       let prevResult = await getFuelBalance(
         {
           stationId: result.stationDetailId,
-          createAt: prevDate,
+          // createAt: prevDate,
         },
         model
       );
+
       //.slice(0, 4)
       await Promise.all(
-        prevResult.map(async (ea) => {
+        prevResult?.slice(0, 4).map(async (ea) => {
           let obj: fuelBalanceDocument;
           if (ea.balance == 0) {
             obj = {
