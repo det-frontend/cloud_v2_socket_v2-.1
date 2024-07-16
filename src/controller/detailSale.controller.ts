@@ -54,6 +54,9 @@ export const addDetailSaleHandler = async (
   res: Response,
   next: NextFunction
 ) => {
+
+  
+  
   try {
     // //that is remove after pos updated
     let model = req.body.accessDb;
@@ -66,6 +69,8 @@ export const addDetailSaleHandler = async (
     }
 
     let result = await addDetailSale(req.body, model);
+
+    
 
     // next update code
 
@@ -136,14 +141,18 @@ export const addDetailSaleHandler = async (
         model
       );
       
+      // get tank count from stationDetail
       let station = await getStationDetail(
         {
            _id: result.stationDetailId,
         },
         model
       )
-
-      const tankCount = station.tankCount;
+  
+      // console.log('station', station);
+      
+      const tankCount = station[0].tankCount
+      // console.log('tankCount', tankCount);
 
       //.slice(0, 4)
       await Promise.all(
