@@ -33,7 +33,7 @@ export const getCollectionHandler = async (
       query = req.query
     }
 
-    console.log(query)
+    // console.log(query)
 
 
     let result = await collectionGet(query);

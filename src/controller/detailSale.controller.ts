@@ -60,6 +60,7 @@ export const addDetailSaleHandler = async (
   try {
     // //that is remove after pos updated
     let model = req.body.accessDb;
+    console.log(req.body , "this is req.body")
 
     let check = await getDetailSale({ vocono: req.body.vocono }, model);
     //console.log(check);

@@ -55,11 +55,11 @@ export const addTankDataController = async (
       model
     );
 
-    console.log(fuelBalanceLatest, yesterdayTank)
+    // console.log(fuelBalanceLatest, yesterdayTank)
 
     //realtime tank opening
     const datas = req.body.data;
-    console.log(datas, "...............................")
+    // console.log(datas, "...............................")
 
     let yesterdayDatas = [];
     if (yesterdayTank.length == 1) {
