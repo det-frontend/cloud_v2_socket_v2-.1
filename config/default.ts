@@ -1,5 +1,5 @@
 export default {
-  port: 9000,
+  port: 8000,
   host: "localhost",
   controlDbUrl:
     "mongodb+srv://ksdbfms:Tpd7iFyquVJrh4u8@controller.zabfxgj.mongodb.net/?retryWrites=true&w=majority",

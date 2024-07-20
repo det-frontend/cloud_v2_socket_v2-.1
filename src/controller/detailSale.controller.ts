@@ -391,6 +391,8 @@ export const statementReportHandler = async (
             totalizer_different: 0,
             totalSaleLiter: 0,
             totalSalePrice: 0,
+            other: 0,
+            pumptest: 0,
           };
 
           finalData.push(data);
@@ -406,6 +408,8 @@ export const statementReportHandler = async (
             totalizer_different: 0,
             totalSaleLiter: 0,
             totalSalePrice: 0,
+            other: 0,
+            pumptest: 0,
           };
 
           finalData.push(data);
@@ -432,6 +436,14 @@ export const statementReportHandler = async (
         //   result[count - 1].salePrice
         // );
 
+        let otherCalcu =
+          (
+            Number(
+              result[count - 1].devTotalizar_liter -
+                (result[0].devTotalizar_liter - result[0].saleLiter)
+            ) - Number(totalSaleLiter - pumptest)
+          ).toFixed(3) || "0";
+
         let data = {
           stationId: stationDetail[0].name,
           station: stationDetail,
@@ -440,15 +452,24 @@ export const statementReportHandler = async (
           price: result[count - 1].salePrice
             ? result[count - 1].salePrice
             : result[count - 2].salePrice,
-          totalizer_opening: Number(result[0].devTotalizar_liter.toFixed(3)),
+          totalizer_opening: Number(
+            (result[0].devTotalizar_liter - result[0].saleLiter).toFixed(3)
+          ),
           totalizer_closing: Number(
             result[count - 1].devTotalizar_liter.toFixed(3)
           ),
           totalizer_different: Number(
-            result[count - 1].devTotalizar_liter - result[0].devTotalizar_liter
+            result[count - 1].devTotalizar_liter -
+              (result[0].devTotalizar_liter - result[0].saleLiter)
           ).toFixed(3),
-          totalSaleLiter: Number(totalSaleLiter.toFixed(3)),
+          totalSaleLiter: Number((totalSaleLiter - pumptest).toFixed(3)),
           totalSalePrice: Number(totalSalePrice.toFixed(3)),
+          other: Math.abs(
+            Number(
+              result[count - 1].devTotalizar_liter -
+                (result[0].devTotalizar_liter - result[0].saleLiter)
+            ) - Number((totalSaleLiter - pumptest).toFixed(3))
+          ),
           pumptest: pumptest,
         };
         finalData.push(data);
