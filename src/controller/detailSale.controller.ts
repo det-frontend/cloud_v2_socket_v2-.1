@@ -54,13 +54,10 @@ export const addDetailSaleHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-
-  
-  
   try {
     // //that is remove after pos updated
     let model = req.body.accessDb;
-    console.log(req.body , "this is req.body")
+    console.log(req.body, "this is req.body");
 
     let check = await getDetailSale({ vocono: req.body.vocono }, model);
     //console.log(check);
@@ -70,8 +67,6 @@ export const addDetailSaleHandler = async (
     }
 
     let result = await addDetailSale(req.body, model);
-
-    
 
     // next update code
 
@@ -141,18 +136,18 @@ export const addDetailSaleHandler = async (
         },
         model
       );
-      
+
       // get tank count from stationDetail
       let station = await getStationDetail(
         {
-           _id: result.stationDetailId,
+          _id: result.stationDetailId,
         },
         model
-      )
-  
+      );
+
       // console.log('station', station);
-      
-      const tankCount = station[0].tankCount
+
+      const tankCount = station[0].tankCount;
       // console.log('tankCount', tankCount);
 
       //.slice(0, 4)
@@ -407,8 +402,8 @@ export const statementReportHandler = async (
           .reduce((pv: number, cv: number): number => pv + cv, 0);
 
         // console.log(
-        //   result[0].totalizer_liter,
-        //   result[count - 1].totalizer_liter,
+        //   result[0].devTotalizar_liter,
+        //   result[count - 1].devTotalizar_liter,
         //   result[count - 1].salePrice
         // );
 
@@ -420,12 +415,12 @@ export const statementReportHandler = async (
           price: result[count - 1].salePrice
             ? result[count - 1].salePrice
             : result[count - 2].salePrice,
-          totalizer_opening: Number(result[0].totalizer_liter.toFixed(3)),
+          totalizer_opening: Number(result[0].devTotalizar_liter.toFixed(3)),
           totalizer_closing: Number(
-            result[count - 1].totalizer_liter.toFixed(3)
+            result[count - 1].devTotalizar_liter.toFixed(3)
           ),
           totalizer_different: Number(
-            result[count - 1].totalizer_liter - result[0].totalizer_liter
+            result[count - 1].devTotalizar_liter - result[0].devTotalizar_liter
           ).toFixed(3),
           totalSaleLiter: Number(totalSaleLiter.toFixed(3)),
           totalSalePrice: Number(totalSalePrice.toFixed(3)),
