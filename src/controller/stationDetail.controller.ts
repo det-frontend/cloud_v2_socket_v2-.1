@@ -41,15 +41,12 @@ export const getStationDetailHandler = async (
 
     if (!pageNo) throw new Error("You need page number");
 
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
-
-
-    
 
     // console.log(model)
 
@@ -66,13 +63,11 @@ export const addStationDetailHandler = async (
   next: NextFunction
 ) => {
   try {
-
-
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
     // console.log(model)
@@ -90,16 +85,18 @@ export const updateStationDetailHandler = async (
   next: NextFunction
 ) => {
   try {
-
-
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
 
-    let result = await updateStationDetail({_id:req.query._id}, req.body, model);
+    let result = await updateStationDetail(
+      { _id: req.query._id },
+      req.body,
+      model
+    );
     fMsg(res, "updated StationDetail data", result);
   } catch (e) {
     next(new Error(e));
@@ -112,13 +109,13 @@ export const deleteStationDetailHandler = async (
   next: NextFunction
 ) => {
   try {
-   let model: any;
+    let model: any;
     if (req.query.accessDb) {
-       model = req.query.accessDb;
+      model = req.query.accessDb;
     } else {
-       model = req.body.accessDb;
+      model = req.body.accessDb;
     }
-    await deleteStationDetail({_id:req.query._id}, model);
+    await deleteStationDetail({ _id: req.query._id }, model);
     fMsg(res, "StationDetail data was deleted");
   } catch (e) {
     next(new Error(e));
@@ -131,8 +128,6 @@ export const getAllStationHandler = async (
   next: NextFunction
 ) => {
   try {
-
-
     let model: any;
     if (req.query.accessDb) {
       model = req.query.accessDb;
@@ -145,22 +140,21 @@ export const getAllStationHandler = async (
 
     let query;
     if (name === "user" || name === "pprd" || name === "manager") {
-      query = { "permission": { $in: [name] } };
-    } 
+      query = { permission: { $in: [name] } };
+    }
 
-
-
-
-
-
-    let data = await getAllStationDetails(model,query);
+    let data = await getAllStationDetails(model, query);
     fMsg(res, "StationDetail are here", data, model);
   } catch (e) {
     next(new Error(e));
   }
 };
 
-export const allowPermissionDetailSale = async (req: Request, res: Response, next: NextFunction) => {
+export const allowPermissionDetailSale = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     let model: any;
     if (req.query.accessDb) {
@@ -175,21 +169,26 @@ export const allowPermissionDetailSale = async (req: Request, res: Response, nex
 
     const keye = req.body.keye;
 
-
     if (station[0].permission.includes(keye)) {
-      let result = await permissionAddService(req.body._id, req.body.keye, model, { $pull: { permission: keye } });
-    
+      let result = await permissionAddService(
+        req.body._id,
+        req.body.keye,
+        model,
+        { $pull: { permission: keye } }
+      );
 
-    return fMsg(res, "pull permited!", result);
-
+      return fMsg(res, "pull permited!", result);
     } else {
-      let result = await permissionAddService(req.body._id, req.body.keye, model, { $push: { permission: keye } });
-      
-     return fMsg(res, "push permited!", result);
+      let result = await permissionAddService(
+        req.body._id,
+        req.body.keye,
+        model,
+        { $push: { permission: keye } }
+      );
+
+      return fMsg(res, "push permited!", result);
     }
-
-
   } catch (e) {
     next(new Error(e));
   }
-}
+};

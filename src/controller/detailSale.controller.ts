@@ -369,22 +369,47 @@ export const statementReportHandler = async (
       let count = result.length;
 
       if (count == 0) {
-        let lastData = await getLastDetailSale(query, model);
-
-        let data = {
-          stationId: stationDetail[0].name,
-          station: stationDetail,
-          nozzle: noz,
-          price: "-",
-          fuelType: "-",
-          totalizer_opening: "-",
-          totalizer_closing: "-",
-          totalizer_different: 0,
-          totalSaleLiter: 0,
-          totalSalePrice: 0,
+        query = {
+          ...query,
+          nozzleNo: noz,
         };
+        let lastData = await getLastDetailSale(query, model);
+        console.log(
+          lastData,
+          "this is last Data....................................................."
+        );
 
-        finalData.push(data);
+        if (lastData) {
+          let data = {
+            stationId: stationDetail[0].name,
+            station: stationDetail,
+            nozzle: noz,
+            price: "0",
+            fuelType: lastData?.fuelType,
+            totalizer_opening: lastData?.devTotalizar_liter,
+            totalizer_closing: lastData?.devTotalizar_liter,
+            totalizer_different: 0,
+            totalSaleLiter: 0,
+            totalSalePrice: 0,
+          };
+
+          finalData.push(data);
+        } else {
+          let data = {
+            stationId: stationDetail[0].name,
+            station: stationDetail,
+            nozzle: noz,
+            price: "0",
+            fuelType: "-",
+            totalizer_opening: "0",
+            totalizer_closing: "0",
+            totalizer_different: 0,
+            totalSaleLiter: 0,
+            totalSalePrice: 0,
+          };
+
+          finalData.push(data);
+        }
 
         // return;
       } else {
