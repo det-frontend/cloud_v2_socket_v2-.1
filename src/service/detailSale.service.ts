@@ -148,9 +148,21 @@ export const detailSaleByDate = async (
   query: FilterQuery<detailSaleDocument>,
   d1: Date,
   d2: Date,
-  dbModel: string
+  dbModel: string,
+  amount?,
+  greater?: string
 ): Promise<detailSaleDocument[]> => {
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
+
+  if(amount) {
+    if (greater === 'greater') {
+      query.totalPrice = { $gt: amount };
+    } else if (greater === 'less') {
+      query.totalPrice = { $lt: amount };
+    } else if (greater === 'equal') {
+      query.totalPrice = { $eq: amount };
+    }
+  }
 
   const filter: FilterQuery<detailSaleDocument> = {
     ...query,
