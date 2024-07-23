@@ -292,6 +292,9 @@ export const getDetailSaleDatePagiHandler = async (
     delete req.query.sDate;
     delete req.query.eDate;
 
+    delete req.query.greate;
+    delete req.query.amount;
+
     let query = req.query;
 
     if (!sDate) {
