@@ -149,20 +149,8 @@ export const detailSaleByDate = async (
   d1: Date,
   d2: Date,
   dbModel: string,
-  amount?,
-  greater?: string
 ): Promise<detailSaleDocument[]> => {
   let selectedModel = dBSelector(dbModel, ksDetailSaleModel, csDetailSaleModel);
-
-  if(amount) {
-    if (greater === 'greater') {
-      query.totalPrice = { $gt: amount };
-    } else if (greater === 'less') {
-      query.totalPrice = { $lt: amount };
-    } else if (greater === 'equal') {
-      query.totalPrice = { $eq: amount };
-    }
-  }
 
   const filter: FilterQuery<detailSaleDocument> = {
     ...query,
@@ -190,6 +178,8 @@ export const detailSaleByDateAndPagi = async (
   d1: Date,
   d2: Date,
   pageNo: number,
+  greater: string,
+  amount,
   dbModel: string
 ): Promise<{ count: number; data: detailSaleDocument[] }> => {
   try {
@@ -198,6 +188,16 @@ export const detailSaleByDateAndPagi = async (
       ksDetailSaleModel,
       csDetailSaleModel
     );
+
+    if(amount) {
+      if (greater === 'greater') {
+        query.totalPrice = { $gt: amount };
+      } else if (greater === 'less') {
+        query.totalPrice = { $lt: amount };
+      } else if (greater === 'equal') {
+        query.totalPrice = { $eq: amount };
+      }
+    }
 
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
