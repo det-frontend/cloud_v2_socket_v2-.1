@@ -241,9 +241,6 @@ export const getDetailSaleByDateHandler = async (
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
 
-    const greater: string = req.query.greater as string;
-    const amount = req.query.amount;
-
     delete req.query.sDate;
     delete req.query.eDate;
 
@@ -269,7 +266,7 @@ export const getDetailSaleByDateHandler = async (
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    let result = await detailSaleByDate(query, startDate, endDate, greater, amount, model);
+    let result = await detailSaleByDate(query, startDate, endDate,model);
     fMsg(res, "detail sale between two date", result);
   } catch (e) {
     next(new Error(e));
@@ -285,6 +282,8 @@ export const getDetailSaleDatePagiHandler = async (
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
     let pageNo: number = Number(req.params.page);
+    const greater: string = req.query.greater as string;
+    const amount = req.query.amount;
 
     delete req.query.sDate;
     delete req.query.eDate;
@@ -314,6 +313,8 @@ export const getDetailSaleDatePagiHandler = async (
       startDate,
       endDate,
       pageNo,
+      greater,
+      amount,
       model
     );
 
