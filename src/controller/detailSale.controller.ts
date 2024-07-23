@@ -282,8 +282,8 @@ export const getDetailSaleDatePagiHandler = async (
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
     let pageNo: number = Number(req.params.page);
-    const greater: string = req.query.greater as string;
-    const amount = req.query.amount;
+    const greater: string = req.query.greate as string;
+    const amount: number = parseInt(req.query.amount as string);
 
     delete req.query.sDate;
     delete req.query.eDate;

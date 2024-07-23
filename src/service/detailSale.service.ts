@@ -190,7 +190,7 @@ export const detailSaleByDateAndPagi = async (
     );
 
     if(amount) {
-      if (greater === 'greater') {
+      if (greater === 'greate') {
         query.totalPrice = { $gt: amount };
       } else if (greater === 'less') {
         query.totalPrice = { $lt: amount };
@@ -209,6 +209,8 @@ export const detailSaleByDateAndPagi = async (
       },
     };
 
+    console.log(filter);
+
     const dataQuery = selectedModel
       .find(filter)
       .sort({ createAt: -1 })
@@ -223,7 +225,7 @@ export const detailSaleByDateAndPagi = async (
     const countQuery = selectedModel.countDocuments(filter);
 
     const [data, count] = await Promise.all([dataQuery, countQuery]);
-    console.log(data);
+    // console.log(data);
     return { data, count };
   } catch (error) {
     console.error("Error in detailSaleByDateAndPagi:", error);
