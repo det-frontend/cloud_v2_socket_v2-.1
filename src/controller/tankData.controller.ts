@@ -78,7 +78,7 @@ export const addTankDataController = async (
     );
     // yesterday tank opening
     // console.log(todayTankData, yesterdayTankData, "..............................");
-    console.log(fuelBalanceLatest,"wk....");
+    // console.log(fuelBalanceLatest,"wk....");
     //fuel balance opening
     const {
       ron92_opening,
@@ -99,24 +99,24 @@ export const addTankDataController = async (
       pDiesel_receive,
     } = fuelBalanceCalculationForStockBalance(fuelBalanceLatest);
 
-    console.log(
-      ron92_opening,
-      ron92_cash,
-      ron92_balance,
-      ron92_receive,
-      ron95_opening,
-      ron95_cash,
-      ron95_balance,
-      ron95_receive,
-      diesel_opening,
-      diesel_cash,
-      diesel_balance,
-      diesel_receive,
-      pDiesel_opening,
-      pDiesel_cash,
-      pDiesel_balance,
-      pDiesel_receive
-    );
+    // console.log(
+    //   ron92_opening,
+    //   ron92_cash,
+    //   ron92_balance,
+    //   ron92_receive,
+    //   ron95_opening,
+    //   ron95_cash,
+    //   ron95_balance,
+    //   ron95_receive,
+    //   diesel_opening,
+    //   diesel_cash,
+    //   diesel_balance,
+    //   diesel_receive,
+    //   pDiesel_opening,
+    //   pDiesel_cash,
+    //   pDiesel_balance,
+    //   pDiesel_receive
+    // );
 
     const pureData92 = {
       stationId: req.body.stationDetailId,

@@ -57,7 +57,7 @@ export const addDetailSaleHandler = async (
   try {
     // //that is remove after pos updated
     let model = req.body.accessDb;
-    console.log(req.body, "this is req.body");
+    // console.log(req.body, "this is req.body");
 
     let check = await getDetailSale({ vocono: req.body.vocono }, model);
     //console.log(check);
@@ -195,7 +195,7 @@ export const addDetailSaleHandler = async (
     );
     fMsg(res, "New DetailSale data was added", result);
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     next(new Error(e));
   }
 };
@@ -384,10 +384,10 @@ export const statementReportHandler = async (
           nozzleNo: noz,
         };
         let lastData = await getLastDetailSale(query, model);
-        console.log(
-          lastData,
-          "this is last Data....................................................."
-        );
+        // console.log(
+        //   lastData,
+        //   "this is last Data....................................................."
+        // );
 
         if (lastData) {
           let data = {

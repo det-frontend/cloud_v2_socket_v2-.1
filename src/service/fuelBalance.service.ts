@@ -206,7 +206,7 @@ export const fuelBalanceByDate = async (
     csFuelBalanceModel
   );
 
-  console.log(filter);
+  // console.log(filter);
 
   return await selectedModel
     .find(filter)
