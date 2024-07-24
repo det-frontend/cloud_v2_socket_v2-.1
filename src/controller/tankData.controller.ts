@@ -4,8 +4,10 @@ import {
   addTankDataService,
   deleteTankDataById,
   getAllTankDataService,
+  getTankData,
   latestTankDataByStationId,
   tankDataByDate,
+  updateExistingTankData,
   updateTankDataService,
 } from "../service/tankData.service";
 import fMsg, {
@@ -36,8 +38,16 @@ export const addTankDataController = async (
     let model = req.body.accessDb;
     let stationId = req.body.stationDetailId;
 
-    //save tankData
-    let result = await addTankDataService(req.body, model);
+    let tankData = await getTankData({
+      stationDetailId: stationId,
+      dailyReportDate: currentDate,
+    }, model);
+
+    if(tankData.length > 0) {
+      await updateExistingTankData(req.body, model);
+    }
+
+    const result = await addTankDataService(req.body, model);  
     console.log("work.....");
     //find fuel balance
     let fuelBalanceLatest = await fuelBalanceForStockBalance(

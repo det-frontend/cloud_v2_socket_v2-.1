@@ -7,6 +7,22 @@ import moment from "moment-timezone";
 
 const limitNo = config.get<number>('page_limit');
 
+export const getTankData = async (
+    query: FilterQuery<tankDataDocument>,
+    dbModel: string
+) => {
+    let selectedModel = dBSelector(
+        dbModel,
+        ksTankDataModel,
+        csTankDataModel
+    );
+      try {
+        return await selectedModel.find(query).lean().select("-__v");
+      } catch (e) {
+        throw new Error(e);
+      }
+}
+
 export const addTankDataService = async (body: any, dbModel: string) => { 
     try { 
         let selectedModel = dBSelector(dbModel, ksTankDataModel, csTankDataModel);
@@ -23,6 +39,34 @@ export const addTankDataService = async (body: any, dbModel: string) => {
     }
 };
 
+export const updateExistingTankData = async (
+    body: any,
+    dbModel: string
+) => {
+    try {
+        let selectedModel = dBSelector(dbModel, ksTankDataModel, csTankDataModel);
+        
+
+        const tankObject = {
+            stationDetailId: body.stationDetailId,
+            vocono: body.vocono,
+            nozzleNo: body.nozzleNo,
+            data: body.data,
+            dailyReportDate: body.dateOfDay,
+        }
+
+        await selectedModel.findOneAndUpdate({ _id: body._id }, tankObject);
+
+        const result = await selectedModel.find({ _id: body._id }).lean();
+        if (!result) throw new Error("Tank data save is failed!");
+
+        return result;
+        
+    } catch (e) {
+        throw new Error(e);
+    }
+}
+
 export const tankDataByDate = async (
     query: FilterQuery<tankDataDocument>,
     d1: Date,
@@ -34,8 +78,6 @@ export const tankDataByDate = async (
         ksTankDataModel,
         csTankDataModel
     );
-
-
 
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
