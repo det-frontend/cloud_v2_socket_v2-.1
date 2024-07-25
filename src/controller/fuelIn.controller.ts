@@ -7,8 +7,10 @@ import {
   deleteFuelIn,
   fuelInPaginate,
   fuelInByDate,
+  addAtgFuelIn,
 } from "../service/fuelIn.service";
 import { csFuelInModel, ksFuelInModel } from "../model/fuelIn.model";
+
 
 export const getFuelInHandler = async (
   req: Request,
@@ -117,3 +119,18 @@ export const getFuelInByDateHandler = async (
     next(new Error(e));
   }
 };
+
+export const addAtgFuelInHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let model = req.body.accessDb;
+    
+    let result = await addAtgFuelIn(req.body, model);
+    fMsg(res, "New FuelIn data was added", result);
+  } catch (e) {
+    next(new Error(e));
+  }
+}

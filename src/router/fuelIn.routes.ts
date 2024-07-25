@@ -1,4 +1,5 @@
 import {
+  addAtgFuelInHandler,
   addFuelInHandler,
   deleteFuelInHandler,
   getFuelInByDateHandler,
@@ -31,6 +32,8 @@ fuelInRoute.get(
   getFuelInByDateHandler
 );
 
+
+
 fuelInRoute.post(
   "/",
   // validateToken,
@@ -41,6 +44,16 @@ fuelInRoute.post(
   locSevModelControl,
   addFuelInHandler
 );
+
+fuelInRoute.post(
+  '/cloud/atg',
+  validateAll(fuelInSchema),
+  locSevModelControl,
+  addAtgFuelInHandler
+);
+
+
+
 fuelInRoute.patch(
   "/",
   validateToken,
