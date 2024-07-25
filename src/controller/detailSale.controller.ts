@@ -127,6 +127,17 @@ export const addDetailSaleHandler = async (
       );
     }
 
+    let station = await getStationDetail(
+      {
+        _id: result.stationDetailId,
+      },
+      model
+    );
+
+    // console.log('station', station);
+
+    const tankCount = station[0].tankCount;
+
     if (checkDate.length == 0) {
       let prevDate = previous(new Date(req.body.dailyReportDate));
       let prevResult = await getFuelBalance(
@@ -134,25 +145,17 @@ export const addDetailSaleHandler = async (
           stationId: result.stationDetailId,
           // createAt: prevDate,
         },
-        model
+        model,
+        tankCount
       );
 
       // get tank count from stationDetail
-      let station = await getStationDetail(
-        {
-          _id: result.stationDetailId,
-        },
-        model
-      );
 
-      // console.log('station', station);
-
-      const tankCount = station[0].tankCount;
       // console.log('tankCount', tankCount);
 
       //.slice(0, 4)
       await Promise.all(
-        prevResult?.slice(0, tankCount).map(async (ea) => {
+        prevResult?.map(async (ea) => {
           let obj: fuelBalanceDocument;
           if (ea.balance == 0) {
             obj = {
@@ -266,7 +269,7 @@ export const getDetailSaleByDateHandler = async (
     //if date error ? you should use split with T or be sure detail Id
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
-    let result = await detailSaleByDate(query, startDate, endDate,model);
+    let result = await detailSaleByDate(query, startDate, endDate, model);
     fMsg(res, "detail sale between two date", result);
   } catch (e) {
     next(new Error(e));

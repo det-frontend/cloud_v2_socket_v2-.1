@@ -10,7 +10,8 @@ import moment from "moment-timezone";
 
 export const getFuelBalance = async (
   query: FilterQuery<fuelBalanceDocument>,
-  dbModel: string
+  dbModel: string,
+  tankCount?: number
 ) => {
   try {
     let selectedModel = dBSelector(
@@ -20,6 +21,8 @@ export const getFuelBalance = async (
     );
     const result = await selectedModel
       .find(query)
+      .sort({ $natural: -1 })
+      .limit(Number(tankCount))
       .lean()
       // .populate({
       //   path: "stationId",
@@ -128,7 +131,6 @@ export const calcFuelBalance = async (
     let gg = result.find((ea: { nozzles: string[] }) =>
       ea.nozzles.includes(payload.toString())
     );
-
 
     if (!gg) {
       new Error("No tank with the provided nozzle found.");

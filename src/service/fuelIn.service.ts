@@ -90,7 +90,7 @@ export const addFuelIn = async (body: any, dbModel: string) => {
     // console.log(updatedBody, "???????????????????????????????????????????????");
 
     let result = await new selectedModel(updatedBody).save();
-    
+
     await updateFuelBalance(
       { _id: tankCondition[0]._id },
       { fuelIn: body.receive_balance },
@@ -168,16 +168,14 @@ export const fuelInByDate = async (
 };
 
 export const addAtgFuelIn = async (body: any, dbModel: string) => {
-      console.log(body);
-      try {
-          let selectedModel = dBSelector(dbModel, ksFuelInModel, csFuelInModel);
+  console.log(body);
+  try {
+    let selectedModel = dBSelector(dbModel, ksFuelInModel, csFuelInModel);
 
+    let result = await new selectedModel(body).save();
 
-
-          let result = await new selectedModel(body).save();
-
-          return result;
-      } catch (error) {
-          throw new Error(error);
-      }
-}
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
