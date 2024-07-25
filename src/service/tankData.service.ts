@@ -27,8 +27,15 @@ export const addTankDataService = async (body: any, dbModel: string) => {
     try { 
         let selectedModel = dBSelector(dbModel, ksTankDataModel, csTankDataModel);
 
-        body.dailyReportDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
-        const result = await selectedModel.create(body);
+        const tankObject = {
+            stationDetailId: body.stationDetailId,
+            vocono: body.vocono,
+            nozzleNo: body.nozzleNo,
+            data: body.data,
+            dailyReportDate: body.dateOfDay,
+        }
+        
+        const result = await selectedModel.create(tankObject);
 
         if (!result) throw new Error("Tank data save is failed!");
 
