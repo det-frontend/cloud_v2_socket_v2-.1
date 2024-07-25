@@ -166,3 +166,18 @@ export const fuelInByDate = async (
   const count = await selectedModel.countDocuments(filter);
   return { data, count };
 };
+
+export const addAtgFuelIn = async (body: any, dbModel: string) => {
+      console.log(body);
+      try {
+          let selectedModel = dBSelector(dbModel, ksFuelInModel, csFuelInModel);
+
+
+
+          let result = await new selectedModel(body).save();
+
+          return result;
+      } catch (error) {
+          throw new Error(error);
+      }
+}
