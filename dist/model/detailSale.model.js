@@ -22,6 +22,7 @@ const detailSaleSchema = new mongoose_1.Schema({
     vocono: { type: String, required: true, unique: true }, //g
     carNo: { type: String, default: null }, //g
     vehicleType: { type: String, default: "car" }, //g
+    depNo: { type: String, default: '0' },
     nozzleNo: { type: String, required: true }, //g
     fuelType: { type: String, required: true }, //g
     //update
