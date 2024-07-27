@@ -26,7 +26,7 @@ import {
 //     let result = [...ksData, ...csData];
 
 //     fMsg(res, "StationDetail are here", result);
-//   } catch (e) {
+//   } catch (e: any) {
 //     next(new Error(e));
 //   }
 // };
@@ -52,7 +52,7 @@ export const getStationDetailHandler = async (
 
     let { data, count } = await stationDetailPaginate(pageNo, req.query, model);
     fMsg(res, "StationDetail are here", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -74,7 +74,7 @@ export const addStationDetailHandler = async (
 
     let result = await addStationDetail(req.body, model);
     fMsg(res, "New StationDetail data was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -98,7 +98,7 @@ export const updateStationDetailHandler = async (
       model
     );
     fMsg(res, "updated StationDetail data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -117,7 +117,7 @@ export const deleteStationDetailHandler = async (
     }
     await deleteStationDetail({ _id: req.query._id }, model);
     fMsg(res, "StationDetail data was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -138,14 +138,14 @@ export const getAllStationHandler = async (
 
     const name = req.query.name;
 
-    let query;
+    let query: any;
     if (name === "user" || name === "pprd" || name === "manager") {
       query = { permission: { $in: [name] } };
     }
 
     let data = await getAllStationDetails(model, query);
     fMsg(res, "StationDetail are here", data, model);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -188,7 +188,7 @@ export const allowPermissionDetailSale = async (
 
       return fMsg(res, "push permited!", result);
     }
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

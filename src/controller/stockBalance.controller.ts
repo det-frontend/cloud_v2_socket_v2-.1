@@ -51,7 +51,7 @@ export const getStockBalanceDatePagiHandler = async (
         fMsg(res, "Stock balance between date", data, model, count);
 
 
-    } catch (e) {
+    } catch (e: any) {
         next(new Error(e));
     }
 };
@@ -73,7 +73,7 @@ export const stockBalanceAdjustHandler = async (req: Request,
 
         fMsg(res, "Adjust Success!", result, model);
 
-    } catch (e) {
+    } catch (e: any) {
         next(new Error(e));
     }
 };

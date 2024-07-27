@@ -1,42 +1,33 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePermissionService = exports.updatePermissionService = exports.addPerissionService = exports.getAClosePermissionService = exports.getAllClosePermissionService = void 0;
 const closePermission_model_1 = __importDefault(require("../model/closePermission.model"));
-const getAllClosePermissionService = (dbModel, query) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllClosePermissionService = async (dbModel, query) => {
     let selectedModel = closePermission_model_1.default;
-    return yield selectedModel.find(query);
-});
+    return await selectedModel.find(query);
+};
 exports.getAllClosePermissionService = getAllClosePermissionService;
-const getAClosePermissionService = (dbModel, query) => __awaiter(void 0, void 0, void 0, function* () {
+const getAClosePermissionService = async (dbModel, query) => {
     let selectedModel = closePermission_model_1.default;
-    return yield selectedModel.findOne(query);
-});
+    return await selectedModel.findOne(query);
+};
 exports.getAClosePermissionService = getAClosePermissionService;
-const addPerissionService = (body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const addPerissionService = async (body, dbModel) => {
     let selectedModel = closePermission_model_1.default;
-    return yield new selectedModel(body).save();
-});
+    return await new selectedModel(body).save();
+};
 exports.addPerissionService = addPerissionService;
-const updatePermissionService = (body, id, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const updatePermissionService = async (body, id, dbModel) => {
     let selectedModel = closePermission_model_1.default;
-    yield selectedModel.findByIdAndUpdate({ _id: id }, body);
-    return yield selectedModel.find({ _id: id });
-});
+    await selectedModel.findByIdAndUpdate({ _id: id }, body);
+    return await selectedModel.find({ _id: id });
+};
 exports.updatePermissionService = updatePermissionService;
-const deletePermissionService = (id, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const deletePermissionService = async (id, dbModel) => {
     let selectedModel = closePermission_model_1.default;
-    return yield selectedModel.deleteOne({ stationDetailId: id });
-});
+    return await selectedModel.deleteOne({ stationDetailId: id });
+};
 exports.deletePermissionService = deletePermissionService;

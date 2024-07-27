@@ -116,7 +116,7 @@ const realTankCalculationForStockBalance = (data) => {
     let ron95 = 0;
     let diesel = 0;
     let pDiesel = 0;
-    data.forEach(element => {
+    data.forEach((element) => {
         if (element.oilType === "Petrol 92" || element.oilType === "001-Octane Ron(92)") {
             ron92 += element.volume;
         }

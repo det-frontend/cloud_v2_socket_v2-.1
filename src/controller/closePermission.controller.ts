@@ -13,7 +13,7 @@ export const getClosePermissionHandler = async (req: Request, res: Response, nex
        model = req.body.accessDb;
     }
         
-    let query;
+    let query: any;
     if (req.query.stationDetailId) {
             query = { stationDetailId: req.query.stationDetailId };
     }
@@ -22,7 +22,7 @@ export const getClosePermissionHandler = async (req: Request, res: Response, nex
        
         fMsg(res, "close Permissions", result);
 
-    } catch (e) {
+    } catch (e: any) {
         next(new Error(e));
     }
 };
@@ -51,7 +51,7 @@ export const updatePermissionHandler = async (req: Request, res: Response, next:
 
         fMsg(res, "update Permissions", succ);
 
-    } catch (e) {
+    } catch (e: any) {
         next(new Error(e));
     }
 };
@@ -69,7 +69,7 @@ export const addPermissionHandler = async (req: Request, res: Response, next: Ne
         io.of('/change-mode').emit(result.stationDetailId, result);
         fMsg(res, "add Permissions", result);
 
-    } catch (e) {
+    } catch (e: any) {
         next(new Error(e));
     }
 }
@@ -88,7 +88,7 @@ export const deletePermissionHandler = async (req: Request, res: Response, next:
        
         fMsg(res, "add Permissions", result);
 
-    } catch (e) {
+    } catch (e: any) {
         next(new Error(e));
     }
 }

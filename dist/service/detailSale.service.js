@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,10 +8,10 @@ const detailSale_model_1 = require("../model/detailSale.model");
 const config_1 = __importDefault(require("config"));
 const helper_1 = require("../utils/helper");
 const limitNo = config_1.default.get("page_limit");
-const getDetailSale = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const getDetailSale = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-        return yield selectedModel
+        return await selectedModel
             .find(query)
             .populate({
             path: "stationDetailId",
@@ -31,49 +22,49 @@ const getDetailSale = (query, dbModel) => __awaiter(void 0, void 0, void 0, func
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.getDetailSale = getDetailSale;
-const addDetailSale = (body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const addDetailSale = async (body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
         body.accessDb = dbModel;
         delete body._id;
-        return yield new selectedModel(body).save();
+        return await new selectedModel(body).save();
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.addDetailSale = addDetailSale;
-const updateDetailSale = (query, body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const updateDetailSale = async (query, body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-        yield selectedModel.updateMany(query, body);
-        return yield selectedModel.find(query);
+        await selectedModel.updateMany(query, body);
+        return await selectedModel.find(query);
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.updateDetailSale = updateDetailSale;
-const deleteDetailSale = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteDetailSale = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-        let DetailSale = yield selectedModel.find(query);
+        let DetailSale = await selectedModel.find(query);
         if (!DetailSale) {
             throw new Error("No DetailSale with that id");
         }
-        return yield selectedModel.deleteMany(query);
+        return await selectedModel.deleteMany(query);
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.deleteDetailSale = deleteDetailSale;
-const getDetailSaleByFuelType = (dateOfDay, 
+const getDetailSaleByFuelType = async (dateOfDay, 
 // stationId : string,
-fuelType, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
-    let fuel = yield (0, exports.getDetailSale)({
+fuelType, dbModel) => {
+    let fuel = await (0, exports.getDetailSale)({
         dailyReportDate: dateOfDay,
         fuelType: fuelType,
     }, dbModel);
@@ -84,13 +75,13 @@ fuelType, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
         .map((ea) => ea["totalPrice"])
         .reduce((pv, cv) => pv + cv, 0);
     return { count: fuel.length, liter: fuelLiter, price: fuelAmount };
-});
+};
 exports.getDetailSaleByFuelType = getDetailSaleByFuelType;
-const detailSalePaginate = (pageNo, query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const detailSalePaginate = async (pageNo, query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
-    const data = yield selectedModel
+    const data = await selectedModel
         .find(query)
         .sort({ createAt: -1 })
         .skip(skipCount)
@@ -100,17 +91,20 @@ const detailSalePaginate = (pageNo, query, dbModel) => __awaiter(void 0, void 0,
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
         .select("-__v");
-    const count = yield selectedModel.countDocuments(query);
+    const count = await selectedModel.countDocuments(query);
     return { data, count };
-});
+};
 exports.detailSalePaginate = detailSalePaginate;
-const detailSaleByDate = (query, d1, d2, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const detailSaleByDate = async (query, d1, d2, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    const filter = Object.assign(Object.assign({}, query), { createAt: {
+    const filter = {
+        ...query,
+        createAt: {
             $gt: d1,
             $lt: d2,
-        } });
-    let result = yield selectedModel
+        },
+    };
+    let result = await selectedModel
         .find(filter)
         .sort({ createAt: -1 })
         .populate({
@@ -119,9 +113,9 @@ const detailSaleByDate = (query, d1, d2, dbModel) => __awaiter(void 0, void 0, v
     })
         .select("-__v");
     return result;
-});
+};
 exports.detailSaleByDate = detailSaleByDate;
-const detailSaleByDateAndPagi = (query, d1, d2, pageNo, greater, amount, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
         if (amount) {
@@ -137,10 +131,13 @@ const detailSaleByDateAndPagi = (query, d1, d2, pageNo, greater, amount, dbModel
         }
         const reqPage = pageNo == 1 ? 0 : pageNo - 1;
         const skipCount = limitNo * reqPage;
-        const filter = Object.assign(Object.assign({}, query), { createAt: {
+        const filter = {
+            ...query,
+            createAt: {
                 $gt: d1,
                 $lt: d2,
-            } });
+            },
+        };
         // console.log(filter);
         const dataQuery = selectedModel
             .find(filter)
@@ -153,7 +150,7 @@ const detailSaleByDateAndPagi = (query, d1, d2, pageNo, greater, amount, dbModel
         })
             .select("-__v");
         const countQuery = selectedModel.countDocuments(filter);
-        const [data, count] = yield Promise.all([dataQuery, countQuery]);
+        const [data, count] = await Promise.all([dataQuery, countQuery]);
         // console.log(data);
         return { data, count };
     }
@@ -161,21 +158,21 @@ const detailSaleByDateAndPagi = (query, d1, d2, pageNo, greater, amount, dbModel
         console.error("Error in detailSaleByDateAndPagi:", error);
         throw error;
     }
-});
+};
 exports.detailSaleByDateAndPagi = detailSaleByDateAndPagi;
-const getLastDetailSale = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const getLastDetailSale = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return yield selectedModel.findOne(query).sort({ _id: -1, createAt: -1 });
-});
+    return await selectedModel.findOne(query).sort({ _id: -1, createAt: -1 });
+};
 exports.getLastDetailSale = getLastDetailSale;
-const getTodayVechicleCount = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const getTodayVechicleCount = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return yield selectedModel.count(query);
-});
+    return await selectedModel.count(query);
+};
 exports.getTodayVechicleCount = getTodayVechicleCount;
-const sumTodayDatasService = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const sumTodayDatasService = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return yield selectedModel.aggregate([
+    return await selectedModel.aggregate([
         {
             $match: query,
         },
@@ -192,11 +189,11 @@ const sumTodayDatasService = (query, dbModel) => __awaiter(void 0, void 0, void 
             },
         },
     ]);
-});
+};
 exports.sumTodayDatasService = sumTodayDatasService;
-const sumTodayCategoryDatasService = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const sumTodayCategoryDatasService = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return yield selectedModel.aggregate([
+    return await selectedModel.aggregate([
         {
             $match: query,
         },
@@ -212,11 +209,11 @@ const sumTodayCategoryDatasService = (query, dbModel) => __awaiter(void 0, void 
             },
         },
     ]);
-});
+};
 exports.sumTodayCategoryDatasService = sumTodayCategoryDatasService;
-const sumTodayFuelTypeService = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const sumTodayFuelTypeService = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return yield selectedModel.aggregate([
+    return await selectedModel.aggregate([
         {
             $match: query,
         },
@@ -232,11 +229,11 @@ const sumTodayFuelTypeService = (query, dbModel) => __awaiter(void 0, void 0, vo
             },
         },
     ]);
-});
+};
 exports.sumTodayFuelTypeService = sumTodayFuelTypeService;
-const sumTodayStationDatasService = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const sumTodayStationDatasService = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return yield selectedModel.aggregate([
+    return await selectedModel.aggregate([
         {
             $match: query,
         },
@@ -264,9 +261,9 @@ const sumTodayStationDatasService = (query, dbModel) => __awaiter(void 0, void 0
             },
         },
     ]);
-});
+};
 exports.sumTodayStationDatasService = sumTodayStationDatasService;
-const sumSevenDayPrevious = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const sumSevenDayPrevious = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
     const today = new Date();
     const pipeline = [];
@@ -295,14 +292,14 @@ const sumSevenDayPrevious = (query, dbModel) => __awaiter(void 0, void 0, void 0
             _id: 1, // Sort by date in ascending order
         },
     });
-    return yield selectedModel.aggregate(pipeline);
-});
+    return await selectedModel.aggregate(pipeline);
+};
 exports.sumSevenDayPrevious = sumSevenDayPrevious;
-const getDailyReportDateForEachDayService = (vehicleQuery, pageNo, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const getDailyReportDateForEachDayService = async (vehicleQuery, pageNo, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
-    return yield selectedModel.aggregate([
+    return await selectedModel.aggregate([
         {
             $match: vehicleQuery,
         },
@@ -357,5 +354,5 @@ const getDailyReportDateForEachDayService = (vehicleQuery, pageNo, dbModel) => _
             },
         },
     ]);
-});
+};
 exports.getDailyReportDateForEachDayService = getDailyReportDateForEachDayService;

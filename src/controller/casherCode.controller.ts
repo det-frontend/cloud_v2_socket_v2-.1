@@ -34,7 +34,7 @@ export const getAllCasherCodeHandler = async(
 
         fMsg(res,"Casher codes are here",data,model,count);
 
-    }catch(e){
+    }catch(e: any){
         next(new Error(e))
     }
 }

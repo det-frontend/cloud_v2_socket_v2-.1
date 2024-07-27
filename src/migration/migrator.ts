@@ -3,7 +3,7 @@ import UserModel from "../model/user.model";
 const fs = require("fs");
 
 export const migrate = () => {
-  fs.readFile("./src/migration/user.json", async (err, data) => {
+  fs.readFile("./src/migration/user.json", async (err: any, data: any) => {
     if (err) {
       console.log(err);
     } else {

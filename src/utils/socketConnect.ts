@@ -10,7 +10,7 @@ function setupSocket(server: Server): SocketIOServer {
 });
 
   io.of("/change-mode").on("connection", (socket: any) => {
-  socket.on("checkMode", async (data) => {
+  socket.on("checkMode", async (data: any) => {
     try {
       let result = await getAClosePermissionService("kyaw_san", { stationDetailId: data });
       if (result) {

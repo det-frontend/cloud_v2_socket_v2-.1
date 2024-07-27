@@ -11,7 +11,7 @@ export const getCheckStation = async (
       .find(query)
       .select("-otpCode -__v")
       .lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -19,7 +19,7 @@ export const getCheckStation = async (
 export const addCheckStation = async (body: checkStationDocument) => {
   try {
     return new checkStationModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -29,7 +29,7 @@ export const deleteCheckStation = async (
 ) => {
   try {
     return checkStationModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

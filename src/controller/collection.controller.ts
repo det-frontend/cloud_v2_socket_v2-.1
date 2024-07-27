@@ -40,7 +40,7 @@ export const getCollectionHandler = async (
 
 
     fMsg(res, "Collection are here", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -53,7 +53,7 @@ export const addCollectionHandler = async (
   try {
     let result = await collectionAdd(req.body);
     fMsg(res, "New Collection was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -66,7 +66,7 @@ export const deletCollectionHandler = async (
   try {
     await collectionDelete(req.query);
     fMsg(res, "Collection was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -113,7 +113,7 @@ export const collectionAddPermitHandler = async (
       req.body.stationName
     );
     fMsg(res, "station added ", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -130,7 +130,7 @@ export const collectionRemovePermitHandler = async (
 
 
     let foundStation = collection[0]["stationCollection"].find(
-      (ea: {}) => ea["stationId"] == req.body.stationId
+      (ea: { stationId: string }) => ea["stationId"] == req.body.stationId
     );
     if (!collection || !foundStation) {
       throw new Error("collection or station not found");
@@ -141,7 +141,7 @@ export const collectionRemovePermitHandler = async (
       req.body.stationName
     );
     fMsg(res, "station removed ", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -168,7 +168,7 @@ export const collectionPPRDDo = async (req: Request, res: Response, next: NextFu
     
     
     
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 }

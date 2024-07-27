@@ -9,7 +9,7 @@ export const registerUser = async (payload: UserInput) => {
     let userObj: Partial<UserDocument> = result.toObject();
     delete userObj.password;
     return userObj;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -34,13 +34,13 @@ export const loginUser = async ({
       throw new Error("Creditial Error");
     }
 
-    let userObj: Partial<UserDocument> = user.toObject();
+    let userObj: Partial<UserDocument> | any = user.toObject();
     userObj["token"] = createToken(userObj);
 
     delete userObj.password;
 
     return userObj;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -52,7 +52,7 @@ export const getUser = async (query: FilterQuery<UserDocument>) => {
       .lean()
       .populate({ path: "roles permits" })
       .select("-password -__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -65,7 +65,7 @@ export const getCredentialUser = async (query: FilterQuery<UserDocument>) => {
       .populate({ path: "roles permits" })
       .select("-__v");
     return [result[0].email, result[0].password];
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -77,7 +77,7 @@ export const updateUser = async (
   try {
     await userModel.updateMany(query, body);
     return await userModel.find(query).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -85,7 +85,7 @@ export const updateUser = async (
 export const deleteUser = async (query: FilterQuery<UserDocument>) => {
   try {
     return await userModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

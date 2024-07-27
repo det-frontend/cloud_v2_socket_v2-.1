@@ -27,7 +27,7 @@ export const getDebtHandler = async (
 
     let { data, count } = await DebtPaginate(pageNo, req.query);
     fMsg(res, "Debt are here", data, test, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -102,7 +102,7 @@ export const addDebtHandler = async (
 
       fMsg(res, "New Debt data was added", addResutl);
     }
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -115,7 +115,7 @@ export const updateDebtHandler = async (
   try {
     let result = await updateDebt(req.query, req.body);
     fMsg(res, "updated Debt data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -128,7 +128,7 @@ export const deleteDebtHandler = async (
   try {
     await deleteDebt(req.query);
     fMsg(res, "Debt data was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -165,7 +165,7 @@ export const getDebtDatePagiHandler = async (
     );
 
     fMsg(res, "debt between two date", data, test, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

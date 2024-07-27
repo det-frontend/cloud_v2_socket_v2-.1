@@ -6,7 +6,7 @@ const MongoClient = require("mongodb").MongoClient;
 
 // const dbUrl = config.get("dbUrl");
 
-async function getCollectionData(databaseName, collectionName, dbUrl) {
+async function getCollectionData(databaseName: string, collectionName: string, dbUrl: any) {
   try {
     const client = new MongoClient(dbUrl, {
       useNewUrlParser: true,
@@ -30,7 +30,7 @@ async function getCollectionData(databaseName, collectionName, dbUrl) {
   }
 }
 
-async function createBackup(dbUrl) {
+async function createBackup(dbUrl: any) {
   const backupDirectory = path.join(__dirname, "public");
   const backupFilePath = path.join(backupDirectory, "backup.json");
 
@@ -50,7 +50,7 @@ async function createBackup(dbUrl) {
 
   // Write the data to a file
   const dataWriteStream = fs.createWriteStream(backupFilePath);
-  documents.forEach((document) => {
+  documents.forEach((document: any) => {
     dataWriteStream.write(JSON.stringify(document));
     dataWriteStream.write("\n");
   });
@@ -59,5 +59,5 @@ async function createBackup(dbUrl) {
 }
 
 //
-export const backup = (dbUrl) =>
+export const backup = (dbUrl: any) =>
   cron.schedule("0 0 * * *", () => createBackup(dbUrl));

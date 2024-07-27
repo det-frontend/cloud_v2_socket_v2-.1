@@ -44,7 +44,7 @@ export const getDetailSaleHandler = async (
     }
     let { data, count } = await detailSalePaginate(pageNo, req.query, model);
     fMsg(res, "DetailSale are here", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -155,7 +155,7 @@ export const addDetailSaleHandler = async (
 
       //.slice(0, 4)
       await Promise.all(
-        prevResult?.map(async (ea) => {
+        prevResult?.map(async (ea: any) => {
           let obj: fuelBalanceDocument;
           if (ea.balance == 0) {
             obj = {
@@ -197,7 +197,7 @@ export const addDetailSaleHandler = async (
       model
     );
     fMsg(res, "New DetailSale data was added", result);
-  } catch (e) {
+  } catch (e: any) {
     // console.log(e);
     next(new Error(e));
   }
@@ -213,7 +213,7 @@ export const updateDetailSaleHandler = async (
 
     let result = await updateDetailSale(req.query, req.body, model);
     fMsg(res, "updated DetailSale data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -228,7 +228,7 @@ export const deleteDetailSaleHandler = async (
 
     await deleteDetailSale(req.query, model);
     fMsg(res, "DetailSale data was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -271,7 +271,7 @@ export const getDetailSaleByDateHandler = async (
     const endDate: Date = new Date(eDate);
     let result = await detailSaleByDate(query, startDate, endDate, model);
     fMsg(res, "detail sale between two date", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -325,7 +325,7 @@ export const getDetailSaleDatePagiHandler = async (
     );
 
     fMsg(res, "detail sale between two date", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -494,7 +494,7 @@ export const statementReportHandler = async (
     // console.log("0000000000");
 
     fMsg(res, "final data", finalData, model);
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
     next(new Error(e));
   }
@@ -542,7 +542,7 @@ export const calculateTotalPerDayHandler = async (
       const result = await sumTodayDatasService(vehicleQuery, model);
       if (result) fMsg(res, "Total Today Sum", result, model);
     }
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -584,7 +584,7 @@ export const calculateCategoriesTotalHandler = async (
     const result = await sumTodayCategoryDatasService(vehicleQuery, model);
 
     if (result) fMsg(res, "Total Vehicle", result, model);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -644,7 +644,7 @@ export const calculateStationTotalHandler = async (
     const result = await sumTodayStationDatasService(vehicleQuery, model);
 
     if (result) fMsg(res, "Total Stations", result, model);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -662,7 +662,7 @@ export const sevenDayPreviousTotalHandler = async (
       model = req.body.accessDb;
     }
 
-    function formatDate(date) {
+    function formatDate(date: any) {
       const year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
@@ -678,7 +678,7 @@ export const sevenDayPreviousTotalHandler = async (
       return `${year}-${month}-${day}`;
     }
 
-    function getDates(startDate, endDate) {
+    function getDates(startDate: string | number | Date, endDate: number | Date) {
       const dates: any = [];
       let currentDate = new Date(startDate);
 
@@ -701,7 +701,7 @@ export const sevenDayPreviousTotalHandler = async (
     const result = await sumTodayDatasService(query, model);
 
     if (result) fMsg(res, "Total seven day", result, model);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -745,7 +745,7 @@ export const getDailyReportDateForEachDayHandler = async (
     );
 
     fMsg(res, "Daily Report Date For EachDay", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

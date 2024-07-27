@@ -9,7 +9,7 @@ export const getRole = async (query: FilterQuery<roleDocument>) => {
       .lean()
       .populate("permits")
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -17,7 +17,7 @@ export const getRole = async (query: FilterQuery<roleDocument>) => {
 export const addRole = async (body: roleDocument) => {
   try {
     return await new roleModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -25,7 +25,7 @@ export const addRole = async (body: roleDocument) => {
 export const deleteRole = async (query: FilterQuery<roleDocument>) => {
   try {
     return await roleModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -37,7 +37,7 @@ export const roleAddPermit = async (
   try {
     await roleModel.findByIdAndUpdate(roleId, { $push: { permits: permitId } });
     return roleModel.findById(roleId);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -49,7 +49,7 @@ export const roleRemovePermit = async (
   try {
     await roleModel.findByIdAndUpdate(roleId, { $pull: { permits: permitId } });
     return roleModel.findById(roleId);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

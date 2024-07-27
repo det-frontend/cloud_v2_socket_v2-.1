@@ -16,7 +16,7 @@ export const hasAnyPermit =
       }
       if (!bol) return next(new Error("You have not that permit"));
       next();
-    } catch (e) {
+    } catch (e: any) {
       next(new Error(e));
     }
   };

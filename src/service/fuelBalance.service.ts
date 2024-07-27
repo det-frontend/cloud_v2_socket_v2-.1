@@ -30,7 +30,7 @@ export const getFuelBalance = async (
       // })
       .select("-__v");
     return result;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -64,7 +64,7 @@ export const addFuelBalance = async (
     body.realTime = iso;
 
     return await new selectedModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -83,7 +83,7 @@ export const updateFuelBalance = async (
 
     await selectedModel.updateMany(query, body);
     return await selectedModel.find(query).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -105,14 +105,14 @@ export const deleteFuelBalance = async (
     }
 
     return await selectedModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
 
 export const calcFuelBalance = async (
-  query,
-  body,
+  query: { stationId: any; fuelType: any; createAt: any; },
+  body: { liter: any; },
   payload: string,
   dbModel: string
 ) => {
@@ -149,7 +149,7 @@ export const calcFuelBalance = async (
 
     await selectedModel.updateMany({ _id: gg?._id }, obj);
     return await selectedModel.find({ _id: gg?._id }).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e); // Rethrow the error with the actual error message
   }
 };

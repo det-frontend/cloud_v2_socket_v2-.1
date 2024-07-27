@@ -24,7 +24,7 @@ export const getFuelIn = async (
         model: dbDistribution({ accessDb: dbModel }),
       })
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -97,7 +97,7 @@ export const addFuelIn = async (body: any, dbModel: string) => {
       dbModel
     );
     return result;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -111,7 +111,7 @@ export const updateFuelIn = async (
     let selectedModel = dBSelector(dbModel, ksFuelInModel, csFuelInModel);
     await selectedModel.updateMany(query, body);
     return await selectedModel.find(query).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -127,7 +127,7 @@ export const deleteFuelIn = async (
       throw new Error("No FuelIn with that id");
     }
     return await selectedModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -175,7 +175,7 @@ export const addAtgFuelIn = async (body: any, dbModel: string) => {
     let result = await new selectedModel(body).save();
 
     return result;
-  } catch (error) {
-    throw new Error(error);
+  } catch (e: any) {
+    throw new Error(e);
   }
 };

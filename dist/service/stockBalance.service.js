@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,7 +8,7 @@ const stockBalance_model_1 = require("../model/stockBalance.model");
 const helper_1 = require("../utils/helper");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const config_1 = __importDefault(require("config"));
-const addStockBalanceService = (body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const addStockBalanceService = async (body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stockBalance_model_1.ksStockBalanceModel, stockBalance_model_1.csStockBalanceModel);
         //true
@@ -27,7 +18,7 @@ const addStockBalanceService = (body, dbModel) => __awaiter(void 0, void 0, void
             .format("YYYY-MM-DD");
         //for test
         const currentDate = (0, moment_timezone_1.default)().tz("Asia/Yangon").format("YYYY-MM-DD");
-        const updateGLPre = yield selectedModel.findOne({
+        const updateGLPre = await selectedModel.findOne({
             realTime: previousDate,
             tank: body.tank,
         });
@@ -42,12 +33,12 @@ const addStockBalanceService = (body, dbModel) => __awaiter(void 0, void 0, void
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.addStockBalanceService = addStockBalanceService;
-const findStockBalanceByDateService = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const findStockBalanceByDateService = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stockBalance_model_1.ksStockBalanceModel, stockBalance_model_1.csStockBalanceModel);
-        return yield selectedModel
+        return await selectedModel
             .find(query)
             .sort({ createdAt: -1 })
             .populate({
@@ -59,15 +50,15 @@ const findStockBalanceByDateService = (query, dbModel) => __awaiter(void 0, void
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.findStockBalanceByDateService = findStockBalanceByDateService;
-const findByoneAndUpdateMany = (query, body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const findByoneAndUpdateMany = async (query, body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stockBalance_model_1.ksStockBalanceModel, stockBalance_model_1.csStockBalanceModel);
-        const result = yield selectedModel.find(query);
+        const result = await selectedModel.find(query);
         body.adjust = result.adjust;
         body.totalGL = result.totalGL;
-        return yield selectedModel
+        return await selectedModel
             .updateMany(query, { $set: body })
             .populate({
             path: "stationId",
@@ -78,18 +69,21 @@ const findByoneAndUpdateMany = (query, body, dbModel) => __awaiter(void 0, void 
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.findByoneAndUpdateMany = findByoneAndUpdateMany;
-const findStockBalancePagiByDateService = (query, pageNo, d1, d2, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const findStockBalancePagiByDateService = async (query, pageNo, d1, d2, dbModel) => {
     const limitNo = config_1.default.get("page_limit");
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
-    const filter = Object.assign(Object.assign({}, query), { updatedAt: {
+    const filter = {
+        ...query,
+        updatedAt: {
             $gt: d1,
             $lt: d2,
-        } });
+        },
+    };
     let selectedModel = (0, helper_1.dBSelector)(dbModel, stockBalance_model_1.ksStockBalanceModel, stockBalance_model_1.csStockBalanceModel);
-    const data = yield selectedModel
+    const data = await selectedModel
         .find(filter)
         .skip(skipCount)
         .limit(limitNo)
@@ -98,15 +92,15 @@ const findStockBalancePagiByDateService = (query, pageNo, d1, d2, dbModel) => __
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
         .select("-__v");
-    const count = yield selectedModel.countDocuments(filter);
+    const count = await selectedModel.countDocuments(filter);
     return { data, count };
-});
+};
 exports.findStockBalancePagiByDateService = findStockBalancePagiByDateService;
-const findByIdAndAdjust = (query, payload, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const findByIdAndAdjust = async (query, payload, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, stockBalance_model_1.ksStockBalanceModel, stockBalance_model_1.csStockBalanceModel);
-    const result = yield selectedModel.findOne(query);
+    const result = await selectedModel.findOne(query);
     result.totalGL += Number(payload.adjust);
     result.adjust = payload.adjust;
-    return yield selectedModel.updateMany(query, result);
-});
+    return await selectedModel.updateMany(query, result);
+};
 exports.findByIdAndAdjust = findByIdAndAdjust;

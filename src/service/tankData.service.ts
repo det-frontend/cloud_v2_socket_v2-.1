@@ -18,7 +18,7 @@ export const getTankData = async (
     );
       try {
         return await selectedModel.find(query).lean().select("-__v");
-      } catch (e) {
+      } catch (e: any) {
         throw new Error(e);
       }
 }
@@ -41,7 +41,7 @@ export const addTankDataService = async (body: any, dbModel: string) => {
 
         return result;
 
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(e);
     }
 };
@@ -69,7 +69,7 @@ export const updateExistingTankData = async (
 
         return result;
         
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(e);
     }
 }
@@ -143,7 +143,7 @@ export const tankDataByDates = async (
         })
         .select("-__v");
 
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(e);
     }
 
@@ -163,7 +163,7 @@ export const getAllTankDataService = async (dbModel: string,pageNo:number) => {
         .limit(limitNo)
         if (!result) throw new Error("All of tank data can't!");
         return result;
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(e);
     }
 };
@@ -175,7 +175,7 @@ export const deleteTankDataById = async (query: FilterQuery<tankDataDocument>, d
         let tankData = await selectedModel.find(query);
         if (!tankData) throw new Error("No tank data with that id!");
         return await selectedModel.deleteMany(query);
-    } catch (e) { throw new Error(e); }
+    } catch (e: any) { throw new Error(e); }
 };
 
 export const updateTankDataService = async (query: FilterQuery<tankDataDocument>, body: UpdateQuery<tankDataDocument>, dbModel: string) => {
@@ -185,7 +185,7 @@ export const updateTankDataService = async (query: FilterQuery<tankDataDocument>
         await selectedModel.updateMany(query, body);
         return await selectedModel.find(query).lean();
 
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(e);
     }
 };
@@ -201,7 +201,7 @@ export const latestTankDataByStationId = async (query: FilterQuery<tankDataDocum
             .lean()
             .select("-__v")
 
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(e);
     }
 }

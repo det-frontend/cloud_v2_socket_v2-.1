@@ -14,7 +14,7 @@ import { dBSelector } from "../utils/helper";
 //     let ksData = await ksdbModel.find(query).lean().select("-__v");
 //     let csData = await csStationDetailModel.find(query).lean().select("-__v");
 //     return [ksData , csData]
-//   } catch (e) {
+//   } catch (e: any) {
 //     throw new Error(e);
 //   }
 // };
@@ -30,7 +30,7 @@ export const getStationDetail = async (
       csStationDetailModel
     );
     return await selectedModel.find(query).lean().select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -76,7 +76,7 @@ export const addStationDetail = async (
     );
 
     return await new selectedModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -94,7 +94,7 @@ export const updateStationDetail = async (
     );
     await selectedModel.updateMany(query, body);
     return await selectedModel.find(query).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -116,7 +116,7 @@ export const deleteStationDetail = async (
       throw new Error("No StationDetail with that id");
     }
     return await selectedModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -131,7 +131,7 @@ export const getAllStationDetails = async (dbModel: string,query:object) => {
     );
 
     return await selectedModel.find(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 }
@@ -148,7 +148,7 @@ export const permissionAddService = async (stationId: FilterQuery<stationDetailD
     
     return await selectedModel.findById({ _id: stationId });
     
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

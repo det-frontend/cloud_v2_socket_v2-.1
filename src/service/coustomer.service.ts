@@ -1,11 +1,12 @@
 import { FilterQuery } from "mongoose";
 import coustomerModel, { coustomerDocument } from "../model/coustomer.model";
 import { UpdateQuery } from "mongoose";
+import { ParsedQs } from "qs";
 
 export const getCoustomer = async (query: FilterQuery<coustomerDocument>) => {
   try {
     return await coustomerModel.find(query).lean().select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -13,7 +14,7 @@ export const getCoustomer = async (query: FilterQuery<coustomerDocument>) => {
 export const getCoustomerById = async (id: string) => {
   try {
     return await coustomerModel.findById(id).select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -21,7 +22,7 @@ export const getCoustomerById = async (id: string) => {
 export const addCoustomer = async (body: coustomerDocument) => {
   try {
     return await new coustomerModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -33,7 +34,7 @@ export const updateCoustomer = async (
   try {
     await coustomerModel.findByIdAndUpdate(id, body).select("-password -__v");
     return await coustomerModel.findById(id).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -43,12 +44,12 @@ export const deleteCoustomer = async (
 ) => {
   try {
     return await coustomerModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
 
-export const searchCoustomer = async (query) => {
+export const searchCoustomer = async (query: any) => {
   try {
     let key = query.key.toLowerCase();
     if (typeof key !== "string") {
@@ -58,7 +59,7 @@ export const searchCoustomer = async (query) => {
       $or: [{ cou_name: { $regex: key } }],
     });
     return result;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

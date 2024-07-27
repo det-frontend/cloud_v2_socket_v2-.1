@@ -36,7 +36,7 @@ export const validateToken = async (
       return next(new Error(e));
     }
     next();
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -52,7 +52,7 @@ export const validateUser = async (
       throw new Error("Creditial Error");
     }
     next();
-  }catch(e){
+  }catch(e: any){
     next (new Error(e))
   }
 };

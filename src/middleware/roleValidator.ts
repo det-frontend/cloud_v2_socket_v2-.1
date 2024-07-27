@@ -19,7 +19,7 @@ export const roleValidator =
       if (!bol) return next(new Error("You dont have enough role"));
 
       next();
-    } catch (e) {
+    } catch (e: any) {
       next(new Error(e));
     }
   };

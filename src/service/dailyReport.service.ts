@@ -30,7 +30,7 @@ export const getDailyReport = async (
       .lean()
       .populate("stationId")
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -49,7 +49,7 @@ export const addDailyReport = async (
     if (!body.accessDb) body.accessDb = dbModel;
 
     return await new selectedModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -70,7 +70,7 @@ export const updateDailyReport = async (
 
     await selectedModel.updateMany(query, body);
     return await selectedModel.find(query).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -90,7 +90,7 @@ export const deleteDailyReport = async (
       throw new Error("No DailyReport with that id");
     }
     return await selectedModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

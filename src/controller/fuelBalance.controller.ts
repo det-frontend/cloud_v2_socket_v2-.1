@@ -22,7 +22,7 @@ export const getAllFuelBalanceHandler = async (
 
     let result = await getFuelBalance(req.query, model);
     fMsg(res, "FuelIn are here", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -62,7 +62,7 @@ export const getFuelBalanceHandler = async (
     );
 
     fMsg(res, "fuelBalance find", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -77,7 +77,7 @@ export const addFuelBalanceHandler = async (
 
     let result = await addFuelBalance(req.body, model);
     fMsg(res, "New fuelBalance data was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -92,7 +92,7 @@ export const updateFuelBalanceHandler = async (
 
     let result = await updateFuelBalance(req.query, req.body, model);
     fMsg(res, "updated fuelBalance data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -107,7 +107,7 @@ export const deleteFuelBalanceHandler = async (
 
     await deleteFuelBalance(req.query, model);
     fMsg(res, "fuelBalance data was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -144,7 +144,7 @@ export const getFuelBalanceByDateHandler = async (
 
     let result = await fuelBalanceByDate(query, startDate, endDate, model);
     fMsg(res, "fuel balance between two date", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

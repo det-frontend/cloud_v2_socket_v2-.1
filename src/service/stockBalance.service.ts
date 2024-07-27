@@ -37,7 +37,7 @@ export const addStockBalanceService = async (body: any, dbModel: string) => {
     const result = selectedModel.create(body);
     if (!result) throw new Error("Stock Balance is failed!");
     return result;
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -61,7 +61,7 @@ export const findStockBalanceByDateService = async (
         model: dbDistribution({ accessDb: dbModel }),
       })
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -90,7 +90,7 @@ export const findByoneAndUpdateMany = async (
         model: dbDistribution({ accessDb: dbModel }),
       })
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

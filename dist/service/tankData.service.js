@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,17 +8,17 @@ const tankData_Detail_model_1 = require("../model/tankData.Detail.model");
 const helper_1 = require("../utils/helper");
 const config_1 = __importDefault(require("config"));
 const limitNo = config_1.default.get('page_limit');
-const getTankData = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const getTankData = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
     try {
-        return yield selectedModel.find(query).lean().select("-__v");
+        return await selectedModel.find(query).lean().select("-__v");
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.getTankData = getTankData;
-const addTankDataService = (body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const addTankDataService = async (body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
         const tankObject = {
@@ -37,7 +28,7 @@ const addTankDataService = (body, dbModel) => __awaiter(void 0, void 0, void 0, 
             data: body.data,
             dailyReportDate: body.dateOfDay,
         };
-        const result = yield selectedModel.create(tankObject);
+        const result = await selectedModel.create(tankObject);
         if (!result)
             throw new Error("Tank data save is failed!");
         return result;
@@ -45,9 +36,9 @@ const addTankDataService = (body, dbModel) => __awaiter(void 0, void 0, void 0, 
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.addTankDataService = addTankDataService;
-const updateExistingTankData = (body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const updateExistingTankData = async (body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
         const tankObject = {
@@ -57,8 +48,8 @@ const updateExistingTankData = (body, dbModel) => __awaiter(void 0, void 0, void
             data: body.data,
             dailyReportDate: body.dateOfDay,
         };
-        yield selectedModel.findOneAndUpdate({ _id: body._id }, tankObject);
-        const result = yield selectedModel.find({ _id: body._id }).lean();
+        await selectedModel.findOneAndUpdate({ _id: body._id }, tankObject);
+        const result = await selectedModel.find({ _id: body._id }).lean();
         if (!result)
             throw new Error("Tank data save is failed!");
         return result;
@@ -66,13 +57,13 @@ const updateExistingTankData = (body, dbModel) => __awaiter(void 0, void 0, void
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.updateExistingTankData = updateExistingTankData;
-const tankDataByDate = (query, d1, pageNo, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const tankDataByDate = async (query, d1, pageNo, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
-    const data = yield selectedModel
+    const data = await selectedModel
         .find(query)
         .sort({ createdAt: -1 })
         .skip(skipCount)
@@ -82,18 +73,21 @@ const tankDataByDate = (query, d1, pageNo, dbModel) => __awaiter(void 0, void 0,
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel })
     })
         .select("-__v");
-    const count = yield selectedModel.countDocuments();
+    const count = await selectedModel.countDocuments();
     return { data, count };
-});
+};
 exports.tankDataByDate = tankDataByDate;
-const tankDataByDates = (query, d1, d2, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const tankDataByDates = async (query, d1, d2, dbModel) => {
     try {
-        const filter = Object.assign(Object.assign({}, query), { createdAt: {
+        const filter = {
+            ...query,
+            createdAt: {
                 $gt: d1,
                 $lt: d2,
-            } });
+            },
+        };
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
-        return yield selectedModel
+        return await selectedModel
             .find({ createdAt: {
                 $gt: d1,
                 $lt: d2,
@@ -109,14 +103,14 @@ const tankDataByDates = (query, d1, d2, dbModel) => __awaiter(void 0, void 0, vo
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.tankDataByDates = tankDataByDates;
-const getAllTankDataService = (dbModel, pageNo) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllTankDataService = async (dbModel, pageNo) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
         const reqPage = pageNo == 1 ? 0 : pageNo - 1;
         const skipCount = limitNo * reqPage;
-        const result = yield selectedModel
+        const result = await selectedModel
             .find()
             .sort({ createdAt: -1 })
             .skip(skipCount)
@@ -128,36 +122,36 @@ const getAllTankDataService = (dbModel, pageNo) => __awaiter(void 0, void 0, voi
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.getAllTankDataService = getAllTankDataService;
-const deleteTankDataById = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteTankDataById = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
-        let tankData = yield selectedModel.find(query);
+        let tankData = await selectedModel.find(query);
         if (!tankData)
             throw new Error("No tank data with that id!");
-        return yield selectedModel.deleteMany(query);
+        return await selectedModel.deleteMany(query);
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.deleteTankDataById = deleteTankDataById;
-const updateTankDataService = (query, body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const updateTankDataService = async (query, body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
-        yield selectedModel.updateMany(query, body);
-        return yield selectedModel.find(query).lean();
+        await selectedModel.updateMany(query, body);
+        return await selectedModel.find(query).lean();
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.updateTankDataService = updateTankDataService;
-const latestTankDataByStationId = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const latestTankDataByStationId = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
-        return yield selectedModel
+        return await selectedModel
             .find(query)
             .sort({ createdAt: -1 })
             .limit(1)
@@ -167,5 +161,5 @@ const latestTankDataByStationId = (query, dbModel) => __awaiter(void 0, void 0, 
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.latestTankDataByStationId = latestTankDataByStationId;

@@ -16,7 +16,7 @@ export const getCheckStationHandler = async (
     if (!otpCodeCheck) throw new Error("you need otp");
     let result = await getCheckStation(req.query);
     fMsg(res, "CheckStation are here", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -29,7 +29,7 @@ export const addCheckStationHandler = async (
   try {
     let result = await addCheckStation(req.body);
     fMsg(res, "New CheckStation was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -42,7 +42,7 @@ export const deletCheckStationHandler = async (
   try {
     await deleteCheckStation(req.query);
     fMsg(res, "CheckStation was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

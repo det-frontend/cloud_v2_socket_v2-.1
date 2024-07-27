@@ -57,7 +57,7 @@ export const locSevModelControl = async (
     const collection = await collectionGet({});
     let result = collection.filter((ea) =>
       ea.stationCollection.find(
-        (ea) => ea.stationId == req.body.stationDetailId
+        (ea: any) => ea.stationId == req.body.stationDetailId
       )
     );
 
@@ -65,7 +65,7 @@ export const locSevModelControl = async (
 
     req.body.accessDb = result[0].collectionName;
     next();
-  } catch (e) {
+  } catch (e: any) {
     next(e);
   }
 };

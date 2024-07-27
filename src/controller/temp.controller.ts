@@ -12,7 +12,7 @@ export const getTempHandler = async (
     if (!otpCodeCheck) throw new Error("you need otp");
     let result = await getTemp(req.query);
     fMsg(res, "Temp are here", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -25,7 +25,7 @@ export const addTempHandler = async (
   try {
     let result = await addTemp(req.body);
     fMsg(res, "New Temp was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -38,7 +38,7 @@ export const deletTempHandler = async (
   try {
     await deleteTemp(req.query);
     fMsg(res, "Temp was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

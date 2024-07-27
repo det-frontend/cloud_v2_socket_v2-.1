@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -23,88 +14,88 @@ const helper_1 = require("../utils/helper");
 //     let ksData = await ksdbModel.find(query).lean().select("-__v");
 //     let csData = await csStationDetailModel.find(query).lean().select("-__v");
 //     return [ksData , csData]
-//   } catch (e) {
+//   } catch (e: any) {
 //     throw new Error(e);
 //   }
 // };
-const getStationDetail = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const getStationDetail = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-        return yield selectedModel.find(query).lean().select("-__v");
+        return await selectedModel.find(query).lean().select("-__v");
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.getStationDetail = getStationDetail;
-const stationDetailPaginate = (pageNo, query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const stationDetailPaginate = async (pageNo, query, dbModel) => {
     const limitNo = config_1.default.get("page_limit");
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
     let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-    const data = yield selectedModel
+    const data = await selectedModel
         .find(query)
         .skip(skipCount)
         .limit(limitNo)
         .lean()
         .select("-__v");
-    const count = yield selectedModel.countDocuments(query);
+    const count = await selectedModel.countDocuments(query);
     return { data, count };
-});
+};
 exports.stationDetailPaginate = stationDetailPaginate;
-const addStationDetail = (body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const addStationDetail = async (body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-        return yield new selectedModel(body).save();
+        return await new selectedModel(body).save();
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.addStationDetail = addStationDetail;
-const updateStationDetail = (query, body, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const updateStationDetail = async (query, body, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-        yield selectedModel.updateMany(query, body);
-        return yield selectedModel.find(query).lean();
+        await selectedModel.updateMany(query, body);
+        return await selectedModel.find(query).lean();
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.updateStationDetail = updateStationDetail;
-const deleteStationDetail = (query, dbModel) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteStationDetail = async (query, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-        let StationDetail = yield selectedModel.find(query);
+        let StationDetail = await selectedModel.find(query);
         if (!StationDetail) {
             throw new Error("No StationDetail with that id");
         }
-        return yield selectedModel.deleteMany(query);
+        return await selectedModel.deleteMany(query);
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.deleteStationDetail = deleteStationDetail;
-const getAllStationDetails = (dbModel, query) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllStationDetails = async (dbModel, query) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-        return yield selectedModel.find(query);
+        return await selectedModel.find(query);
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.getAllStationDetails = getAllStationDetails;
-const permissionAddService = (stationId, name, dbModel, pipeLine) => __awaiter(void 0, void 0, void 0, function* () {
+const permissionAddService = async (stationId, name, dbModel, pipeLine) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
-        yield selectedModel.findByIdAndUpdate({ _id: stationId }, pipeLine);
-        return yield selectedModel.findById({ _id: stationId });
+        await selectedModel.findByIdAndUpdate({ _id: stationId }, pipeLine);
+        return await selectedModel.findById({ _id: stationId });
     }
     catch (e) {
         throw new Error(e);
     }
-});
+};
 exports.permissionAddService = permissionAddService;

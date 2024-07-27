@@ -9,7 +9,7 @@ export const collectionGet = async (query: any) => {
       .lean()
       // .populate("stationCollection")
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -17,7 +17,7 @@ export const collectionGet = async (query: any) => {
 export const collectionAdd = async (body: collectionDocument) => {
   try {
     return await new collectionModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -27,7 +27,7 @@ export const collectionDelete = async (
 ) => {
   try {
     return await collectionModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -42,7 +42,7 @@ export const collectionAddStation = async (
       $push: { stationCollection: {stationId:stationId,stationName:name}},
     });
     return collectionModel.findById(collectionId);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -57,7 +57,7 @@ export const collectionRemoveStation = async (
       $pull: { stationCollection: {stationId:stationId,stationName:name}},
     });
     return collectionModel.findById(collectionId);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -71,7 +71,7 @@ export const collectionPPRDDPull = async (collectionId: FilterQuery<collectionDo
     });
 
     return collectionModel.findById(collectionId);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -85,7 +85,7 @@ export const collectionPPRDDPush = async (collectionId: FilterQuery<collectionDo
     });
 
     return collectionModel.findById(collectionId);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -99,7 +99,7 @@ export const collectionPPRDDPush = async (collectionId: FilterQuery<collectionDo
 //       .lean()
 //       // .populate("stationCollection")
 //       .select("-__v");
-//   } catch (e) {
+//   } catch (e: any) {
 //     throw new Error(e);
 //   }
 // }

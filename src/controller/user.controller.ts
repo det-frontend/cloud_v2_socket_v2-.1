@@ -24,7 +24,7 @@ export const registerUserHandler = async (
   try {
     let result = await registerUser(req.body);
     fMsg(res, "user registered", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -37,7 +37,7 @@ export const loginUserHandler = async (
   try {
     let result = await loginUser(req.body);
     fMsg(res, "registered users", result);
-  } catch (e) {
+  } catch (e: any) {
     next(e);
   }
 };
@@ -52,7 +52,7 @@ export const getUserHandler = async (
     let query = req.query;
     let result = await getUser(query);
     fMsg(res, "registered users", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -65,7 +65,7 @@ export const updateUserHandler = async (
   try {
     let result = await updateUser(req.query, req.body);
     fMsg(res, "updated user data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -78,7 +78,7 @@ export const getUserByAdminHandler = async (
   try {
     let result = await getUser(req.query);
     fMsg(res, "registered users", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -91,7 +91,7 @@ export const deleteUserHandler = async (
   try {
     let result = await deleteUser(req.query);
     fMsg(res, "user deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -107,7 +107,7 @@ export const userAddRoleHandler = async (
   if (!user[0] || !role[0]) {
     return next(new Error("there is no role or user"));
   }
-  let foundRole = user[0].roles.find((ea?) => ea._id == req.body.roleId);
+  let foundRole = user[0].roles.find((ea?: { _id: any }) => ea?._id == req.body.roleId);
   if (foundRole) {
     return next(new Error("Role already in exist"));
   }
@@ -132,7 +132,7 @@ export const userRemoveRoleHandler = async (
     return next(new Error("there is no user"));
   }
 
-  let foundRole = user[0].roles.find((ea?) => ea._id == req.body.roleId);
+  let foundRole = user[0].roles.find((ea?: { _id: any; }) => ea?._id == req.body.roleId);
   if (!foundRole) {
     return next(new Error("role not exist"));
   }
@@ -155,7 +155,7 @@ export const userAddPermitHandler = async (
   if (!user[0] || !permit[0]) {
     return next(new Error("there is no permit or user"));
   }
-  let foundRole = user[0].permits.find((ea?) => ea._id == req.body.permitId);
+  let foundRole = user[0].permits.find((ea?: { _id: any; }) => ea?._id == req.body.permitId);
   if (foundRole) {
     return next(new Error("permit already in exist"));
   }
@@ -180,7 +180,7 @@ export const userRemovePermitHandler = async (
     return next(new Error("there is no user"));
   }
 
-  let foundRole = user[0].permits.find((ea?) => ea._id == req.body.permitId);
+  let foundRole = user[0].permits.find((ea?: { _id: any; }) => ea?._id == req.body.permitId);
   if (!foundRole) {
     return next(new Error("permit not exist"));
   }

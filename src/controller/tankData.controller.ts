@@ -265,7 +265,7 @@ export const addTankDataController = async (
 
       console.log("all successfully work");
     }
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -280,7 +280,7 @@ export const getAllTankDataController = async (
     let pageNo: number = Number(req.params.page);
     let result = await getAllTankDataService(model, pageNo);
     fMsg(res, "All is tank data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -312,7 +312,7 @@ export const getTankDataByDate = async (
     const startDate: Date = new Date(sDate);
     let { data, count } = await tankDataByDate(query, startDate, pageNo, model);
     fMsg(res, "tank", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -327,7 +327,7 @@ export const deleteTankDataIdController = async (
     let result = await deleteTankDataById(req.query, model);
     if (!result) throw new Error("Tank data delete is failed!");
     fMsg(res, "Tank Data was deleted!");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -342,7 +342,7 @@ export const updateTankDataController = async (
 
     let result = await updateTankDataService(req.query, req.body, model);
     fMsg(res, "Updated tank data!", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

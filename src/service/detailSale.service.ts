@@ -31,7 +31,7 @@ export const getDetailSale = async (
         model: dbDistribution({ accessDb: dbModel }),
       })
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -51,7 +51,7 @@ export const addDetailSale = async (
 
     delete body._id;
     return await new selectedModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -70,7 +70,7 @@ export const updateDetailSale = async (
 
     await selectedModel.updateMany(query, body);
     return await selectedModel.find(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -91,7 +91,7 @@ export const deleteDetailSale = async (
       throw new Error("No DetailSale with that id");
     }
     return await selectedModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -111,10 +111,10 @@ export const getDetailSaleByFuelType = async (
   );
 
   let fuelLiter = fuel
-    .map((ea) => ea["saleLiter"])
+    .map((ea: { [x: string]: any; }) => ea["saleLiter"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
   let fuelAmount = fuel
-    .map((ea) => ea["totalPrice"])
+    .map((ea: { [x: string]: any; }) => ea["totalPrice"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
 
   return { count: fuel.length, liter: fuelLiter, price: fuelAmount };
@@ -178,7 +178,7 @@ export const detailSaleByDateAndPagi = async (
   d2: Date,
   pageNo: number,
   greater: string,
-  amount,
+  amount: number,
   dbModel: string
 ): Promise<{ count: number; data: detailSaleDocument[] }> => {
   try {

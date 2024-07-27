@@ -21,7 +21,7 @@ export const getDailyReportHandler = async (
     let { data, count } = await dailyReportPaginate(pageNo, req.query, model);
 
     const result = await Promise.all(
-      data.map(async (ea) => {
+      data.map(async (ea: any) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(
           ea["dateOfDay"],
           "001-Octane Ron(92)",
@@ -57,7 +57,7 @@ export const getDailyReportHandler = async (
     );
 
     fMsg(res, "DailyReport are here", result, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -71,7 +71,7 @@ export const addDailyReportHandler = async (
     let model = req.body.accessDb;
     let result = await addDailyReport(req.body, model);
     fMsg(res, "New DailyReport data was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -88,7 +88,7 @@ export const updateDailyReportHandler = async (
 
     let result = await updateDailyReport(req.query, req.body, model);
     fMsg(res, "updated DailyReport data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -103,7 +103,7 @@ export const deleteDailyReportHandler = async (
 
     await deleteDailyReport(req.query, model);
     fMsg(res, "DailyReport data was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -146,7 +146,7 @@ export const getDailyReportByDateHandler = async (
     );
     
     const resultWithDetails = await Promise.all(
-      result.map(async (ea) => {
+      result.map(async (ea: any) => {
         ea["ninety-two"] = await getDetailSaleByFuelType(
           ea["dateOfDay"],
           "001-Octane Ron(92)",
@@ -182,7 +182,7 @@ export const getDailyReportByDateHandler = async (
     );
 
     fMsg(res, "between two date", resultWithDetails);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -219,7 +219,7 @@ export const getDailyReportByDateHandler = async (
 
 //     fMsg(res, 'Daily Report Date For EachDay', result);
 
-//   } catch (e) {
+//   } catch (e: any) {
 //     next(new Error(e))
 //   }
 // };
@@ -245,7 +245,7 @@ export const getDailyReportByDateHandler = async (
 
 //     let result =await getDailyReportByMonth(req.query, 2023, 5);
 //     fMsg(res , 'wk' , result)
-//   } catch (e) {
+//   } catch (e: any) {
 //     next(new Error(e));
 //   }
 // };

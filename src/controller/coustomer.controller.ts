@@ -15,7 +15,7 @@ export const getCoustomerHandler = async (
   try {
     let result = await getCoustomer(req.query);
     fMsg(res, "Coustomer are here", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -28,7 +28,7 @@ export const addCoustomerHandler = async (
   try {
     let result = await addCoustomer(req.body);
     fMsg(res, "New Coustomer was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -41,7 +41,7 @@ export const deletCoustomerHandler = async (
   try {
     await deleteCoustomer(req.query);
     fMsg(res, "Coustomer was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -54,7 +54,7 @@ export const searchCoustomerHandler = async (
   try {
     let result = await searchCoustomer(req.query);
     fMsg(res, "search result", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

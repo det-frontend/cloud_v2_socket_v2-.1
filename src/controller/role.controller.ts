@@ -17,7 +17,7 @@ export const getRoleHandler = async (
   try {
     let result = await getRole(req.query);
     fMsg(res, "Role are here", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -30,7 +30,7 @@ export const addRoleHandler = async (
   try {
     let result = await addRole(req.body);
     fMsg(res, "New Role was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -43,7 +43,7 @@ export const deletRoleHandler = async (
   try {
     await deleteRole(req.query);
     fMsg(res, "Role was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -67,7 +67,7 @@ export const roleAddPermitHandler = async (
     }
     let result = await roleAddPermit(req.body.roleId, req.body.permitId);
     fMsg(res, "permit added ", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -80,14 +80,14 @@ export const roleRemovePermitHandler = async (
   try {
     let role = await getRole({ _id: req.body.roleId });
     let dbpermit = role[0]["permits"].find(
-      (ea: {}) => ea["_id"] == req.body.permitId
+      (ea: { _id: string }) => ea["_id"] == req.body.permitId
     );
     if (!role || !dbpermit) {
       throw new Error("role or permit not found");
     }
     let result = await roleRemovePermit(req.body.roleId, req.body.permitId);
     fMsg(res, "permit removed ", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

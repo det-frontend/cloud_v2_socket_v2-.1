@@ -7,7 +7,7 @@ export const getPermitHandler = async (req : Request , res : Response , next : N
    try{
     let result = await getPermit(req.query)
     fMsg(res , "Permit are here" , result)
-   }catch(e){
+   }catch(e: any){
         next(new Error (e))
    }
 }
@@ -17,7 +17,7 @@ export const addPermitHandler = async (req : Request , res : Response , next : N
     try {
        let result = await addPermit(req.body)
         fMsg(res , "New permit was added" , result)
-    }catch(e){
+    }catch(e: any){
         next(new Error (e))
     }
 
@@ -28,7 +28,7 @@ export const deletPermitHandler = async (req : Request , res : Response , next :
     try {
         await deletePermit(req.query);
         fMsg(res , "Permit was deleted");
-    }catch(e){
+    }catch(e: any){
         next(new Error (e))
     }
 

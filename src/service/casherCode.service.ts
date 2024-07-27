@@ -29,7 +29,7 @@ export const getAllCasherCodeService = async(
 
   return {data,count};
 
- }catch(e){
+ }catch(e: any){
     throw new Error(e);
  }
 }

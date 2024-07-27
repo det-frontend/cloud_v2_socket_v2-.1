@@ -10,7 +10,7 @@ export const getTemp = async (
       .populate("stationId")
       .select("-otpCode -__v")
       .lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -18,7 +18,7 @@ export const getTemp = async (
 export const addTemp = async (body: tempDocument) => {
   try {
     return new tempModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -28,7 +28,7 @@ export const deleteTemp = async (
 ) => {
   try {
     return tempModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

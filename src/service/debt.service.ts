@@ -10,7 +10,7 @@ export const getDebt = async (query: FilterQuery<debtDocument>) => {
       .populate("couObjId")
       .lean()
       .select("-__v");
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -43,7 +43,7 @@ export const addDebt = async (body: debtInput) => {
       throw new Error("There is no coustomer with that name");
 
     return await new debtModel(body).save();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -59,7 +59,7 @@ export const updateDebt = async (
   try {
     await debtModel.updateMany(query, body);
     return await debtModel.find(query).lean();
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };
@@ -71,7 +71,7 @@ export const deleteDebt = async (query: FilterQuery<debtDocument>) => {
       throw new Error("No Debt with that id");
     }
     return await debtModel.deleteMany(query);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(e);
   }
 };

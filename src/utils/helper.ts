@@ -54,7 +54,7 @@ export const fMsg2 = (
   res.status(status).json({ con: true, msg, result });
 };
 
-export const dBSelector = (dbModel: string, dbOne, dbTwo) => {
+export const dBSelector = (dbModel: string, dbOne: any, dbTwo: any) => {
   if (dbModel === "kyaw_san") {
     return dbOne;
   } else if (dbModel === "common") {
@@ -64,7 +64,7 @@ export const dBSelector = (dbModel: string, dbOne, dbTwo) => {
   }
 };
 
-export const dbDistribution = (ea) => {
+export const dbDistribution = (ea: any) => {
   
   if (ea.accessDb === "kyaw_san") {
     return ksStationDetailModel;
@@ -75,7 +75,7 @@ export const dbDistribution = (ea) => {
   }
 };
 
-export const fuelBalanceCalculationForStockBalance = (data) => {
+export const fuelBalanceCalculationForStockBalance = (data: any[]) => {
 
   let ron92_opening = 0;
   let ron95_opening = 0;
@@ -97,7 +97,7 @@ export const fuelBalanceCalculationForStockBalance = (data) => {
   let diesel_receive = 0;
   let pDiesel_receive = 0;
   
-  data.map((e) => {
+  data.map((e: { fuelType: string; opening: number; cash: number; balance: number; fuelIn: number; }) => {
     if (e.fuelType === "001-Octane Ron(92)") {
       ron92_opening += e.opening;
       ron92_cash += e.cash;
@@ -127,13 +127,13 @@ export const fuelBalanceCalculationForStockBalance = (data) => {
   return { ron92_opening, ron95_opening, diesel_opening, pDiesel_opening, ron92_cash, ron95_cash, diesel_cash, pDiesel_cash, ron92_balance, ron95_balance, diesel_balance, pDiesel_balance,ron92_receive,ron95_receive,diesel_receive,pDiesel_receive }
 };
 
-export const realTankCalculationForStockBalance = (data) => {
+export const realTankCalculationForStockBalance = (data: any[]) => {
   let ron92 = 0;
   let ron95 = 0;
   let diesel = 0;
   let pDiesel = 0;
     
-  data.forEach(element => {
+  data.forEach((element: { oilType: string; volume: number; }) => {
     if (
       element.oilType === "Petrol 92" || element.oilType === "001-Octane Ron(92)") {
       ron92 += element.volume;

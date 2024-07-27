@@ -23,7 +23,7 @@ export const getFuelInHandler = async (
     let pageNo = Number(req.params.page);
     let { data, count } = await fuelInPaginate(pageNo, req.query, model);
     fMsg(res, "FuelIn are here", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -38,7 +38,7 @@ export const addFuelInHandler = async (
 
     let result = await addFuelIn(req.body, model);
     fMsg(res, "New FuelIn data was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -53,7 +53,7 @@ export const updateFuelInHandler = async (
 
     let result = await updateFuelIn(req.query, req.body, model);
     fMsg(res, "updated FuelIn data", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -67,7 +67,7 @@ export const deleteFuelInHandler = async (
     let model = req.body.accessDb;
     await deleteFuelIn(req.query, model);
     fMsg(res, "FuelIn data was deleted");
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -115,7 +115,7 @@ export const getFuelInByDateHandler = async (
       model
     );
     fMsg(res, "fuel balance between two date", data, model, count);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };
@@ -130,7 +130,7 @@ export const addAtgFuelInHandler = async (
     
     let result = await addAtgFuelIn(req.body, model);
     fMsg(res, "New FuelIn data was added", result);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 }
