@@ -21,6 +21,7 @@ export interface detailSaleDocument extends mongoose.Document {
   isError: string; // 
   accessDb: string;
   vehicleType: string;
+  depNo: string;
   nozzleNo: string;
   fuelType: string;
   salePrice: number;
@@ -48,6 +49,7 @@ const detailSaleSchema = new Schema({
   vocono: { type: String, required: true, unique: true }, //g
   carNo: { type: String, default: null }, //g
   vehicleType: { type: String, default: "car" }, //g
+  depNo: { type: String, required: true},
   nozzleNo: { type: String, required: true }, //g
   fuelType: { type: String, required: true }, //g
   //update
