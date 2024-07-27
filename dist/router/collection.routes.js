@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const collection_controller_1 = require("../controller/collection.controller");
+const roleValidator_1 = require("../middleware/roleValidator");
+const validator_1 = require("../middleware/validator");
+const collectionRoute = require("express").Router();
+collectionRoute.get("/", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["admin", "pprd", "user"]), collection_controller_1.getCollectionHandler);
+collectionRoute.post("/", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det"]), collection_controller_1.addCollectionHandler);
+collectionRoute.delete("/", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det"]), collection_controller_1.deletCollectionHandler);
+collectionRoute.patch("/add/stations", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det", "admin"]), collection_controller_1.collectionAddPermitHandler);
+collectionRoute.patch("/remove/stations", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det", "admin"]), collection_controller_1.collectionRemovePermitHandler);
+collectionRoute.patch("/pprd", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["admin"]), collection_controller_1.collectionPPRDDo);
+exports.default = collectionRoute;

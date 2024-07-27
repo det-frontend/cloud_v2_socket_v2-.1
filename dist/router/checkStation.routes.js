@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const validator_1 = require("../middleware/validator");
+const roleValidator_1 = require("../middleware/roleValidator");
+const scheama_1 = require("../schema/scheama");
+const checkStation_controller_1 = require("../controller/checkStation.controller");
+const checkStationRoute = require("express").Router();
+checkStationRoute.get("/", checkStation_controller_1.getCheckStationHandler);
+checkStationRoute.post("/new", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det"]), checkStation_controller_1.addCheckStationHandler);
+checkStationRoute.delete("/", validator_1.validateToken, (0, validator_1.validateAll)(scheama_1.allSchemaId), (0, roleValidator_1.roleValidator)(["det"]), checkStation_controller_1.deletCheckStationHandler);
+exports.default = checkStationRoute;
