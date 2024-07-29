@@ -3,6 +3,7 @@ import {
   allowPermissionDetailSale,
   deleteStationDetailHandler,
   getAllStationHandler,
+  getSingleStationHandler,
   getStationDetailHandler,
   updateStationDetailHandler,
 } from "../controller/stationDetail.controller";
@@ -30,6 +31,14 @@ stationDetailRoute.get(
   hasAnyPermit(["view"]),
   modelController,
   getAllStationHandler
+);
+
+stationDetailRoute.get(
+  '/get/single',
+  validateToken,
+  hasAnyPermit(["view"]),
+  modelController,
+  getSingleStationHandler
 );
 
 stationDetailRoute.post(
