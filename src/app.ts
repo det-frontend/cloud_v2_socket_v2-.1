@@ -33,6 +33,7 @@ const server = require("http").createServer(app);
 const port = config.get<number>("port");
 const host = config.get<string>("host");
 
+
 // request routes
 
 app.get("/api", (req: Request, res: Response, next: NextFunction) => {
@@ -85,6 +86,9 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 // // back up
 // backup(dbUrl);
+
+const memoryUsage = process.memoryUsage();
+console.log(`Memory usage: ${memoryUsage.rss / 1024 / 1024} MB`);
 
 let io: SocketIOServer = setupSocket(server);
 

@@ -67,6 +67,8 @@ app.use((err, req, res, next) => {
 // migrate();
 // // back up
 // backup(dbUrl);
+const memoryUsage = process.memoryUsage();
+console.log(`Memory usage: ${memoryUsage.rss / 1024 / 1024} MB`);
 let io = (0, socketConnect_1.default)(server);
 server.listen(port, () => console.log(`server is running in  http://${host}:${port}`));
 exports.default = io;
