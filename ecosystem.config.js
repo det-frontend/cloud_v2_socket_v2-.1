@@ -2,10 +2,11 @@ module.exports = {
     apps: [
       {
         name: 'se-sai',
-        script: 'node dist/app.js', // Change this to the entry point of your application
-        watch: false, // Watch files for changes (optional)
+        script: 'node dist/app.js',
+        node_args: "--max_old_space_size=4096",
+        watch: true, // Watch files for changes (optional)
         instance: 1,
-        max_memory_restart: '1G', // Restart if it exceeds this memory
+        max_memory_restart: '2G', // Restart if it exceeds this memory
         autorestart: true,
         cron_restart: '0 0 * * *',
         env: {
