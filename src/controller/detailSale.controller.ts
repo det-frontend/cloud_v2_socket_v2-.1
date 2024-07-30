@@ -791,10 +791,6 @@ export const statementReportHandler = async (
           ),
         });
       }
-
-      console.log("====================================");
-      console.log(dateGroupedData, "this is");
-      console.log("====================================");
     }
 
     fMsg(res, "Final data by date", finalData, model);
