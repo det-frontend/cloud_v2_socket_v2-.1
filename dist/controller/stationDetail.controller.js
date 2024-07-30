@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allowPermissionDetailSale = exports.getAllStationHandler = exports.deleteStationDetailHandler = exports.updateStationDetailHandler = exports.addStationDetailHandler = exports.getStationDetailHandler = void 0;
+exports.allowPermissionDetailSale = exports.getSingleStationHandler = exports.getAllStationHandler = exports.deleteStationDetailHandler = exports.updateStationDetailHandler = exports.addStationDetailHandler = exports.getStationDetailHandler = void 0;
 const helper_1 = __importDefault(require("../utils/helper"));
 const stationDetail_service_1 = require("../service/stationDetail.service");
 // export const getAllStationDetailHandler = async (
@@ -108,6 +108,7 @@ const getAllStationHandler = async (req, res, next) => {
         if (name === "user" || name === "pprd" || name === "manager") {
             query = { permission: { $in: [name] } };
         }
+        // query = req.query;
         let data = await (0, stationDetail_service_1.getAllStationDetails)(model, query);
         (0, helper_1.default)(res, "StationDetail are here", data, model);
     }
@@ -116,6 +117,30 @@ const getAllStationHandler = async (req, res, next) => {
     }
 };
 exports.getAllStationHandler = getAllStationHandler;
+const getSingleStationHandler = async (req, res, next) => {
+    try {
+        let model;
+        if (req.query.accessDb) {
+            model = req.query.accessDb;
+        }
+        else {
+            model = req.body.accessDb;
+        }
+        // console.log(model)
+        const name = req.query.name;
+        let query;
+        if (name === "user" || name === "pprd" || name === "manager") {
+            query = { permission: { $in: [name] } };
+        }
+        query = req.query;
+        let data = await (0, stationDetail_service_1.getAllStationDetails)(model, query);
+        (0, helper_1.default)(res, "StationDetail single are here", data, model);
+    }
+    catch (e) {
+        next(new Error(e));
+    }
+};
+exports.getSingleStationHandler = getSingleStationHandler;
 const allowPermissionDetailSale = async (req, res, next) => {
     try {
         let model;

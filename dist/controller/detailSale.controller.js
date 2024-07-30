@@ -248,41 +248,276 @@ const getDetailSaleDatePagiHandler = async (req, res, next) => {
     }
 };
 exports.getDetailSaleDatePagiHandler = getDetailSaleDatePagiHandler;
+//old version
+// export const statementReportHandler = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     let sDate: any = req.query.sDate;
+//     let eDate: any = req.query.eDate;
+//     delete req.query.sDate;
+//     delete req.query.eDate;
+//     let query = req.query;
+//     if (!req.query.stationDetailId) throw new Error("you need stataion");
+//     if (!sDate) throw new Error("you need date");
+//     if (!eDate) eDate = new Date();
+//     const startDate: Date = new Date(sDate);
+//     const endDate: Date = new Date(eDate);
+//     let model: any;
+//     if (req.query.accessDb) {
+//       model = req.query.accessDb;
+//     } else {
+//       model = req.body.accessDb;
+//     }
+//     let stationDetail = await getStationDetail(
+//       {
+//         _id: req.query.stationDetailId,
+//       },
+//       model
+//     );
+//     let finalData: any = [];
+//     for (let i: number = 1; i <= stationDetail[0].nozzleCount; i++) {
+//       let noz = i.toString().padStart(2, "0");
+//       query = {
+//         ...query,
+//         nozzleNo: noz,
+//       };
+//       // let result = await detailSaleByDate(query, startDate, endDate, model);
+//       const value = await detailSaleByDate(query, startDate, endDate, model);
+//       let result = value.reverse();
+//       let count = result.length;
+//       if (count == 0) {
+//         query = {
+//           ...query,
+//           nozzleNo: noz,
+//         };
+//         let lastData = await getLastDetailSale(query, model);
+//         // console.log(
+//         //   lastData,
+//         //   "this is last Data....................................................."
+//         // );
+//         if (lastData) {
+//           let data = {
+//             stationId: stationDetail[0].name,
+//             station: stationDetail,
+//             nozzle: noz,
+//             price: "0",
+//             fuelType: lastData?.fuelType,
+//             totalizer_opening: lastData?.devTotalizar_liter,
+//             totalizer_closing: lastData?.devTotalizar_liter,
+//             totalizer_different: 0,
+//             totalSaleLiter: 0,
+//             totalSalePrice: 0,
+//             other: 0,
+//             pumptest: 0,
+//           };
+//           finalData.push(data);
+//         } else {
+//           let data = {
+//             stationId: stationDetail[0].name,
+//             station: stationDetail,
+//             nozzle: noz,
+//             price: "0",
+//             fuelType: "-",
+//             totalizer_opening: "0",
+//             totalizer_closing: "0",
+//             totalizer_different: 0,
+//             totalSaleLiter: 0,
+//             totalSalePrice: 0,
+//             other: 0,
+//             pumptest: 0,
+//           };
+//           finalData.push(data);
+//         }
+//         // return;
+//       } else {
+//         let totalSaleLiter: number = result
+//           .map((ea) => ea["saleLiter"])
+//           .reduce((pv: number, cv: number): number => pv + cv, 0);
+//         let totalSalePrice: number = result
+//           .map((ea) => ea["totalPrice"])
+//           .reduce((pv: number, cv: number): number => pv + cv, 0);
+//         let pumptest: number = result
+//           .filter((ea) => ea.vehicleType == "Pump Test")
+//           .map((ea) => ea.totalPrice)
+//           .reduce((pv: number, cv: number): number => pv + cv, 0);
+//         // console.log(
+//         //   result[0].devTotalizar_liter,
+//         //   result[count - 1].devTotalizar_liter,
+//         //   result[count - 1].salePrice
+//         // );
+//         let otherCalcu =
+//           (
+//             Number(
+//               result[count - 1].devTotalizar_liter -
+//                 (result[0].devTotalizar_liter - result[0].saleLiter)
+//             ) - Number(totalSaleLiter - pumptest)
+//           ).toFixed(3) || "0";
+//         let data = {
+//           stationId: stationDetail[0].name,
+//           station: stationDetail,
+//           nozzle: noz,
+//           fuelType: result[count - 1].fuelType,
+//           price: result[count - 1].salePrice
+//             ? result[count - 1].salePrice
+//             : result[count - 2].salePrice,
+//           totalizer_opening: Number(
+//             (result[0].devTotalizar_liter - result[0].saleLiter).toFixed(3)
+//           ),
+//           totalizer_closing: Number(
+//             result[count - 1].devTotalizar_liter.toFixed(3)
+//           ),
+//           totalizer_different: Number(
+//             result[count - 1].devTotalizar_liter -
+//               (result[0].devTotalizar_liter - result[0].saleLiter)
+//           ).toFixed(3),
+//           totalSaleLiter: Number((totalSaleLiter - pumptest).toFixed(3)),
+//           totalSalePrice: Number(totalSalePrice.toFixed(3)),
+//           other: Math.abs(
+//             Number(
+//               result[count - 1].devTotalizar_liter -
+//                 (result[0].devTotalizar_liter - result[0].saleLiter)
+//             ) - Number((totalSaleLiter - pumptest).toFixed(3))
+//           ),
+//           pumptest: pumptest,
+//         };
+//         finalData.push(data);
+//       }
+//     }
+//     // console.log("0000000000");
+//     // console.log(finalData);
+//     // console.log("0000000000");
+//     fMsg(res, "final data", finalData, model);
+//   } catch (e) {
+//     console.log(e);
+//     next(new Error(e));
+//   }
+// };
+//new version
+// export const statementReportHandler = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const sDate: any = req.query.sDate;
+//     const eDate: any = req.query.eDate;
+//     delete req.query.sDate;
+//     delete req.query.eDate;
+//     if (!req.query.stationDetailId) throw new Error("You need stationDetailId");
+//     if (!sDate) throw new Error("You need start date");
+//     const startDate: Date = new Date(sDate);
+//     const endDate: Date = eDate ? new Date(eDate) : new Date();
+//     const model: any = req.query.accessDb || req.body.accessDb;
+//     const stationDetail = await getStationDetail(
+//       {
+//         _id: req.query.stationDetailId,
+//       },
+//       model
+//     );
+//     const finalData: { [date: string]: any[] } = {};
+//     for (let i: number = 1; i <= stationDetail[0].nozzleCount; i++) {
+//       const noz = i.toString().padStart(2, "0");
+//       let query = {
+//         ...req.query,
+//         nozzleNo: noz,
+//       };
+//       const value = await detailSaleByDate(query, startDate, endDate, model);
+//       const result = value.reverse();
+//       // Organize data by date
+//       const dateGroupedData: { [date: string]: any[] } = {};
+//       for (const entry of result) {
+//         const entryDate = new Date(entry.dailyReportDate).toISOString().split("T")[0]; // Extract date part (YYYY-MM-DD)
+//         if (!dateGroupedData[entryDate]) {
+//           dateGroupedData[entryDate] = [];
+//         }
+//         let data = {
+//           stationId: stationDetail[0].name,
+//           station: stationDetail,
+//           nozzle: noz,
+//           fuelType: entry.fuelType,
+//           price: entry.salePrice,
+//           totalizer_opening: entry.devTotalizar_liter - entry.saleLiter,
+//           totalizer_closing: entry.devTotalizar_liter,
+//           totalizer_different:
+//             entry.devTotalizar_liter -
+//             (entry.devTotalizar_liter - entry.saleLiter),
+//           totalSaleLiter: entry.saleLiter,
+//           totalSalePrice: entry.totalPrice,
+//           // other: entry.other,
+//           pumptest: entry.vehicleType === "Pump Test" ? entry.totalPrice : 0,
+//         };
+//         dateGroupedData[entryDate].push(data);
+//       }
+//       // Fill in data for dates with no transactions
+//       for (const date in dateGroupedData) {
+//         let totalSaleLiter = dateGroupedData[date].reduce(
+//           (acc, item) => acc + item.totalSaleLiter,
+//           0
+//         );
+//         let totalSalePrice = dateGroupedData[date].reduce(
+//           (acc, item) => acc + item.totalSalePrice,
+//           0
+//         );
+//         let pumptest = dateGroupedData[date].reduce(
+//           (acc, item) => acc + item.pumptest,
+//           0
+//         );
+//         finalData[date] = finalData[date] || [];
+//         finalData[date].push({
+//           stationId: stationDetail[0].name,
+//           station: stationDetail,
+//           nozzle: noz,
+//           fuelType: dateGroupedData[date][0]?.fuelType || "-",
+//           price: dateGroupedData[date][0]?.price || "0",
+//           totalizer_opening: dateGroupedData[date][0]?.totalizer_opening || "0",
+//           totalizer_closing: dateGroupedData[date][0]?.totalizer_closing || "0",
+//           totalizer_different:
+//             dateGroupedData[date][0]?.totalizer_closing -
+//               dateGroupedData[date][0]?.totalizer_opening || "0",
+//           totalSaleLiter: totalSaleLiter.toFixed(3),
+//           totalSalePrice: totalSalePrice.toFixed(3),
+//           other: 0, // Compute this if needed based on your logic
+//           pumptest: pumptest.toFixed(3),
+//         });
+//       }
+//     }
+//     fMsg(res, "Final data by date", finalData, model);
+//   } catch (e) {
+//     console.log(e);
+//     next(new Error(e));
+//   }
+// };
 const statementReportHandler = async (req, res, next) => {
     try {
-        let sDate = req.query.sDate;
-        let eDate = req.query.eDate;
+        const sDate = req.query.sDate;
+        const eDate = req.query.eDate;
         delete req.query.sDate;
         delete req.query.eDate;
-        let query = req.query;
         if (!req.query.stationDetailId)
-            throw new Error("you need stataion");
+            throw new Error("You need stationDetailId");
         if (!sDate)
-            throw new Error("you need date");
-        if (!eDate)
-            eDate = new Date();
+            throw new Error("You need start date");
         const startDate = new Date(sDate);
-        const endDate = new Date(eDate);
-        let model;
-        if (req.query.accessDb) {
-            model = req.query.accessDb;
-        }
-        else {
-            model = req.body.accessDb;
-        }
-        let stationDetail = await (0, stationDetail_service_1.getStationDetail)({
+        const endDate = eDate ? new Date(eDate) : new Date();
+        const model = req.query.accessDb || req.body.accessDb;
+        const stationDetail = await (0, stationDetail_service_1.getStationDetail)({
             _id: req.query.stationDetailId,
         }, model);
-        let finalData = [];
-        for (let i = 1; i <= stationDetail[0].nozzleCount; i++) {
-            let noz = i.toString().padStart(2, "0");
-            query = {
-                ...query,
+        const nozzleCount = stationDetail[0].nozzleCount;
+        const finalData = []; // Array to store final results
+        for (let i = 1; i <= nozzleCount; i++) {
+            const noz = i.toString().padStart(2, "0");
+            let query = {
+                ...req.query,
                 nozzleNo: noz,
             };
-            // let result = await detailSaleByDate(query, startDate, endDate, model);
             const value = await (0, detailSale_service_1.detailSaleByDate)(query, startDate, endDate, model);
-            let result = value.reverse();
+            const result = value.reverse();
+            // Organize data by date and include date in each entry
+            const dateGroupedData = {};
             let count = result.length;
             if (count == 0) {
                 query = {
@@ -296,6 +531,7 @@ const statementReportHandler = async (req, res, next) => {
                 // );
                 if (lastData) {
                     let data = {
+                        date: "-",
                         stationId: stationDetail[0].name,
                         station: stationDetail,
                         nozzle: noz,
@@ -313,6 +549,7 @@ const statementReportHandler = async (req, res, next) => {
                 }
                 else {
                     let data = {
+                        date: "-",
                         stationId: stationDetail[0].name,
                         station: stationDetail,
                         nozzle: noz,
@@ -328,58 +565,77 @@ const statementReportHandler = async (req, res, next) => {
                     };
                     finalData.push(data);
                 }
-                // return;
             }
             else {
-                let totalSaleLiter = result
-                    .map((ea) => ea["saleLiter"])
-                    .reduce((pv, cv) => pv + cv, 0);
-                let totalSalePrice = result
-                    .map((ea) => ea["totalPrice"])
-                    .reduce((pv, cv) => pv + cv, 0);
-                let pumptest = result
-                    .filter((ea) => ea.vehicleType == "Pump Test")
-                    .map((ea) => ea.totalPrice)
-                    .reduce((pv, cv) => pv + cv, 0);
-                // console.log(
-                //   result[0].devTotalizar_liter,
-                //   result[count - 1].devTotalizar_liter,
-                //   result[count - 1].salePrice
-                // );
-                let otherCalcu = (Number(result[count - 1].devTotalizar_liter -
-                    (result[0].devTotalizar_liter - result[0].saleLiter)) - Number(totalSaleLiter - pumptest)).toFixed(3) || "0";
-                let data = {
+                for (const entry of result) {
+                    const entryDate = new Date(entry.dailyReportDate)
+                        .toISOString()
+                        .split("T")[0]; // Extract date part (YYYY-MM-DD)
+                    if (!dateGroupedData[entryDate]) {
+                        dateGroupedData[entryDate] = [];
+                    }
+                    let totalSaleLiter = result
+                        .map((ea) => ea["saleLiter"])
+                        .reduce((pv, cv) => pv + cv, 0);
+                    let pumptest = result
+                        .filter((ea) => ea.vehicleType == "Pump Test")
+                        .map((ea) => ea.totalPrice)
+                        .reduce((pv, cv) => pv + cv, 0);
+                    let data = {
+                        date: entryDate,
+                        stationId: stationDetail[0].name,
+                        station: stationDetail,
+                        nozzle: noz,
+                        fuelType: entry.fuelType,
+                        price: entry.salePrice,
+                        totalizer_opening: entry.devTotalizar_liter - entry.saleLiter,
+                        totalizer_closing: entry.devTotalizar_liter,
+                        totalizer_different: entry.devTotalizar_liter -
+                            (entry.devTotalizar_liter - entry.saleLiter),
+                        totalSaleLiter: entry.saleLiter,
+                        totalSalePrice: entry.totalPrice,
+                        pumptest: entry.vehicleType === "Pump Test" ? entry.totalPrice : 0,
+                    };
+                    dateGroupedData[entryDate].push(data);
+                }
+            }
+            // Fill in data for dates with no transactions
+            for (const date in dateGroupedData) {
+                let totalSaleLiter = dateGroupedData[date].reduce((acc, item) => acc + item.totalSaleLiter, 0);
+                let totalSalePrice = dateGroupedData[date].reduce((acc, item) => acc + item.totalSalePrice, 0);
+                let pumptest = dateGroupedData[date].reduce((acc, item) => acc + item.pumptest, 0);
+                finalData.push({
+                    date,
                     stationId: stationDetail[0].name,
                     station: stationDetail,
                     nozzle: noz,
-                    fuelType: result[count - 1].fuelType,
-                    price: result[count - 1].salePrice
-                        ? result[count - 1].salePrice
-                        : result[count - 2].salePrice,
-                    totalizer_opening: Number((result[0].devTotalizar_liter - result[0].saleLiter).toFixed(3)),
-                    totalizer_closing: Number(result[count - 1].devTotalizar_liter.toFixed(3)),
-                    totalizer_different: Number(result[count - 1].devTotalizar_liter -
-                        (result[0].devTotalizar_liter - result[0].saleLiter)).toFixed(3),
-                    totalSaleLiter: Number((totalSaleLiter - pumptest).toFixed(3)),
-                    totalSalePrice: Number(totalSalePrice.toFixed(3)),
-                    other: Math.abs(Number(result[count - 1].devTotalizar_liter -
-                        (result[0].devTotalizar_liter - result[0].saleLiter)) - Number((totalSaleLiter - pumptest).toFixed(3))),
-                    pumptest: pumptest,
-                };
-                finalData.push(data);
+                    fuelType: dateGroupedData[date][0]?.fuelType || "-",
+                    price: dateGroupedData[date][0]?.price || "0",
+                    totalizer_opening: dateGroupedData[date][0]?.totalizer_opening || "0",
+                    totalizer_closing: dateGroupedData[date][dateGroupedData[date].length - 1]
+                        ?.totalizer_closing || "0",
+                    totalizer_different: dateGroupedData[date][dateGroupedData[date].length - 1]
+                        ?.totalizer_closing -
+                        dateGroupedData[date][0]?.totalizer_opening || "0",
+                    totalSaleLiter: totalSaleLiter.toFixed(3),
+                    totalSalePrice: totalSalePrice.toFixed(3),
+                    // other: dateGroupedData[date][0]?.other,
+                    // Compute this if needed based on your logic
+                    pumptest: pumptest.toFixed(3),
+                    other: Math.abs(Number(dateGroupedData[date][dateGroupedData[date].length - 1]
+                        ?.totalizer_closing -
+                        dateGroupedData[date][0]?.totalizer_opening) - Number((totalSaleLiter - pumptest).toFixed(3))),
+                });
             }
         }
-        // console.log("0000000000");
-        // console.log(finalData);
-        // console.log("0000000000");
-        (0, helper_1.default)(res, "final data", finalData, model);
+        (0, helper_1.default)(res, "Final data by date", finalData, model);
     }
     catch (e) {
-        console.log(e);
         next(new Error(e));
     }
 };
 exports.statementReportHandler = statementReportHandler;
+//.........
 const calculateTotalPerDayHandler = async (req, res, next) => {
     try {
         let sDate = req.query.sDate;

@@ -177,7 +177,7 @@ export const getSingleStationHandler = async (
 
     let data = await getAllStationDetails(model, query);
     fMsg(res, "StationDetail single are here", data, model);
-  } catch (e) {
+  } catch (e: any) {
     next(new Error(e));
   }
 };

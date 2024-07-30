@@ -791,22 +791,10 @@ export const statementReportHandler = async (
           ),
         });
       }
-
-      console.log("====================================");
-      console.log(dateGroupedData, "this is");
-      console.log("====================================");
-    }
-
-      console.log("====================================");
-      console.log(dateGroupedData, "this is");
-      console.log("====================================");
     }
 
     fMsg(res, "Final data by date", finalData, model);
-  } catch (e) {
-    fMsg(res, "final data", finalData, model);
   } catch (e: any) {
-    console.log(e);
     next(new Error(e));
   }
 };
