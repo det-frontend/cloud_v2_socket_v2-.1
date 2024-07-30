@@ -143,12 +143,46 @@ export const getAllStationHandler = async (
       query = { permission: { $in: [name] } };
     }
 
+    // query = req.query;
+
     let data = await getAllStationDetails(model, query);
     fMsg(res, "StationDetail are here", data, model);
   } catch (e: any) {
     next(new Error(e));
   }
 };
+
+export const getSingleStationHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let model: any;
+    if (req.query.accessDb) {
+      model = req.query.accessDb;
+    } else {
+      model = req.body.accessDb;
+    }
+    // console.log(model)
+
+    const name = req.query.name;
+
+    let query;
+    if (name === "user" || name === "pprd" || name === "manager") {
+      query = { permission: { $in: [name] } };
+    }
+
+    query = req.query;
+
+    let data = await getAllStationDetails(model, query);
+    fMsg(res, "StationDetail single are here", data, model);
+  } catch (e) {
+    next(new Error(e));
+  }
+};
+
+
 
 export const allowPermissionDetailSale = async (
   req: Request,

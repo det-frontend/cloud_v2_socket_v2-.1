@@ -11,7 +11,7 @@ export default {
   //   "mongodb://detpos:asdffdsa@127.0.0.1:27017/common?authSource=admin",
   common_DbUrl:
     "mongodb+srv://ksdbfms:C9GADG2k0tLRl95C@common.advclns.mongodb.net/?retryWrites=true&w=majority",
-  saltWorkFactor: 10,
+  saltWorkFactor: 10, 
   secretKey: "suuhh",
   page_limit: 50,
 };
