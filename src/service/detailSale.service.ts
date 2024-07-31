@@ -189,21 +189,23 @@ export const detailSaleByDateAndPagi = async (
       csDetailSaleModel
     );
 
-    if (kyat == true) {
-      if (greater === "greate") {
-        query.totalPrice = { $gt: amount };
-      } else if (greater === "less") {
-        query.totalPrice = { $lt: amount };
-      } else if (greater === "equal") {
-        query.totalPrice = { $eq: amount };
-      }
-    } else {
-      if (greater === "greate") {
-        query.saleLiter = { $gt: amount };
-      } else if (greater === "less") {
-        query.saleLiter = { $lt: amount };
-      } else if (greater === "equal") {
-        query.saleLiter = { $eq: amount };
+    if(amount) {
+      if (kyat == true) {
+        if (greater === "greate") {
+          query.totalPrice = { $gt: amount };
+        } else if (greater === "less") {
+          query.totalPrice = { $lt: amount };
+        } else if (greater === "equal") {
+          query.totalPrice = { $eq: amount };
+        }
+      } else {
+        if (greater === "greate") {
+          query.saleLiter = { $gt: amount };
+        } else if (greater === "less") {
+          query.saleLiter = { $lt: amount };
+        } else if (greater === "equal") {
+          query.saleLiter = { $eq: amount };
+        }
       }
     }
 
