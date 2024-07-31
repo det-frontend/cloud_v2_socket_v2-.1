@@ -115,10 +115,10 @@ const detailSaleByDate = async (query, d1, d2, dbModel) => {
     return result;
 };
 exports.detailSaleByDate = detailSaleByDate;
-const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, dbModel) => {
+const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, kyat, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-        if (amount) {
+        if (kyat == true) {
             if (greater === "greate") {
                 query.totalPrice = { $gt: amount };
             }
@@ -127,6 +127,17 @@ const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, d
             }
             else if (greater === "equal") {
                 query.totalPrice = { $eq: amount };
+            }
+        }
+        else {
+            if (greater === "greate") {
+                query.saleLiter = { $gt: amount };
+            }
+            else if (greater === "less") {
+                query.saleLiter = { $lt: amount };
+            }
+            else if (greater === "equal") {
+                query.saleLiter = { $eq: amount };
             }
         }
         const reqPage = pageNo == 1 ? 0 : pageNo - 1;

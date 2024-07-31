@@ -33,24 +33,24 @@ const fuelBalance_service_1 = require("../service/fuelBalance.service");
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const stockBalance_service_1 = require("../service/stockBalance.service");
 const addTankDataController = async (req, res, next) => {
-    const currentDate = (0, moment_timezone_1.default)().tz("Asia/Yangon").format("YYYY-MM-DD");
+    const currentDate = (0, moment_timezone_1.default)().format("YYYY-MM-DD");
     const previousDate = (0, moment_timezone_1.default)()
         .tz("Asia/Yangon")
         .subtract(1, "day")
         .format("YYYY-MM-DD");
-    const nextDate = (0, moment_timezone_1.default)(currentDate).add(1, "day").format("YYYY-MM-DD");
     try {
         let model = req.body.accessDb;
         let stationId = req.body.stationDetailId;
         let tankData = await (0, tankData_service_1.getTankData)({
             stationDetailId: stationId,
-            dailyReportDate: currentDate,
+            dailyReportDate: (0, moment_timezone_1.default)().format("YYYY-MM-DD"),
         }, model);
-        if (tankData.length > 0) {
-            await (0, tankData_service_1.updateExistingTankData)(req.body, model);
+        if (tankData.length == 0) {
+            await (0, tankData_service_1.addTankDataService)(req.body, model);
         }
-        const result = await (0, tankData_service_1.addTankDataService)(req.body, model);
-        console.log("work.....");
+        else {
+            await (0, tankData_service_1.updateExistingTankData)(tankData[0]._id, req.body, model);
+        }
         //find fuel balance
         let fuelBalanceLatest = await (0, fuelBalance_service_1.fuelBalanceForStockBalance)(currentDate, stationId, model);
         //find yesterday Tank
@@ -177,12 +177,9 @@ const addTankDataController = async (req, res, next) => {
                 pureDiesel,
                 pureSuperDiesel,
             ];
-            console.log("if block");
             dataWeMustSave.forEach(async (data, index) => {
                 const result = await (0, stockBalance_service_1.addStockBalanceService)(data, model);
             });
-            console.log("if block wk");
-            (0, helper_1.default)(res, "Tank data add is successful!", result);
         }
         else {
             const result_1 = await (0, stockBalance_service_1.findByoneAndUpdateMany)({ tank: "001-Octane Ron(92)", realTime: currentDate }, pureData92, model);
@@ -197,8 +194,7 @@ const addTankDataController = async (req, res, next) => {
             const result_4 = await (0, stockBalance_service_1.findByoneAndUpdateMany)({ tank: "004-Diesel", realTime: currentDate }, pureDiesel, model);
             if (!result_4)
                 return next(new Error(result_4));
-            (0, helper_1.default)(res, "Tank data add is successful!", result);
-            console.log("all successfully work");
+            (0, helper_1.default)(res, "Tank data update is successful!", result_4);
         }
     }
     catch (e) {

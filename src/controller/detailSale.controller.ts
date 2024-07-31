@@ -287,12 +287,14 @@ export const getDetailSaleDatePagiHandler = async (
     let pageNo: number = Number(req.params.page);
     const greater: string = req.query.greate as string;
     const amount: number = parseInt(req.query.amount as string);
+    const kyat: any = req.query.kyat;
 
     delete req.query.sDate;
     delete req.query.eDate;
 
     delete req.query.greate;
     delete req.query.amount;
+    delete req.query.kyat;
 
     let query = req.query;
 
@@ -321,6 +323,7 @@ export const getDetailSaleDatePagiHandler = async (
       pageNo,
       greater,
       amount,
+      kyat,
       model
     );
 

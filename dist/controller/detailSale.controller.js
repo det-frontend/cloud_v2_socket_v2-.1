@@ -219,10 +219,12 @@ const getDetailSaleDatePagiHandler = async (req, res, next) => {
         let pageNo = Number(req.params.page);
         const greater = req.query.greate;
         const amount = parseInt(req.query.amount);
+        const kyat = req.query.kyat;
         delete req.query.sDate;
         delete req.query.eDate;
         delete req.query.greate;
         delete req.query.amount;
+        delete req.query.kyat;
         let query = req.query;
         if (!sDate) {
             throw new Error("you need date");
@@ -240,7 +242,7 @@ const getDetailSaleDatePagiHandler = async (req, res, next) => {
         //if date error ? you should use split with T or be sure detail Id
         const startDate = new Date(sDate);
         const endDate = new Date(eDate);
-        let { data, count } = await (0, detailSale_service_1.detailSaleByDateAndPagi)(query, startDate, endDate, pageNo, greater, amount, model);
+        let { data, count } = await (0, detailSale_service_1.detailSaleByDateAndPagi)(query, startDate, endDate, pageNo, greater, amount, kyat, model);
         (0, helper_1.default)(res, "detail sale between two date", data, model, count);
     }
     catch (e) {

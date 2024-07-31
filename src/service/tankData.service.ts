@@ -47,13 +47,13 @@ export const addTankDataService = async (body: any, dbModel: string) => {
 };
 
 export const updateExistingTankData = async (
+    id: string,
     body: any,
     dbModel: string
 ) => {
     try {
         let selectedModel = dBSelector(dbModel, ksTankDataModel, csTankDataModel);
         
-
         const tankObject = {
             stationDetailId: body.stationDetailId,
             vocono: body.vocono,
@@ -62,9 +62,9 @@ export const updateExistingTankData = async (
             dailyReportDate: body.dateOfDay,
         }
 
-        await selectedModel.findOneAndUpdate({ _id: body._id }, tankObject);
+        await selectedModel.findOneAndUpdate({ _id: id }, tankObject);
 
-        const result = await selectedModel.find({ _id: body._id }).lean();
+        const result = await selectedModel.find({ _id: id }).lean();
         if (!result) throw new Error("Tank data save is failed!");
 
         return result;
