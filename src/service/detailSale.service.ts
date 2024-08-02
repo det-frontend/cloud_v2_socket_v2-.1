@@ -218,9 +218,7 @@ export const detailSaleByDateAndPagi = async (
         $lt: d2,
       },
     };
-
-    console.log(filter);
-
+    
     const dataQuery = selectedModel
       .find(filter)
       .sort({ createAt: -1 })
