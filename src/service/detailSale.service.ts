@@ -190,7 +190,7 @@ export const detailSaleByDateAndPagi = async (
     );
 
     if(amount) {
-      if (kyat == true) {
+      if (kyat) {
         if (greater === "greate") {
           query.totalPrice = { $gt: amount };
         } else if (greater === "less") {
