@@ -111,10 +111,10 @@ export const getDetailSaleByFuelType = async (
   );
 
   let fuelLiter = fuel
-    .map((ea: { [x: string]: any; }) => ea["saleLiter"])
+    .map((ea: { [x: string]: any }) => ea["saleLiter"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
   let fuelAmount = fuel
-    .map((ea: { [x: string]: any; }) => ea["totalPrice"])
+    .map((ea: { [x: string]: any }) => ea["totalPrice"])
     .reduce((pv: number, cv: number): number => pv + cv, 0);
 
   return { count: fuel.length, liter: fuelLiter, price: fuelAmount };
@@ -189,8 +189,10 @@ export const detailSaleByDateAndPagi = async (
       csDetailSaleModel
     );
 
-    if(amount) {
-      if (kyat == true) {
+    console.log(amount, typeof(kyat), greater);
+
+    if (amount) {
+      if (kyat == "true") {
         if (greater === "greate") {
           query.totalPrice = { $gt: amount };
         } else if (greater === "less") {
@@ -219,7 +221,7 @@ export const detailSaleByDateAndPagi = async (
       },
     };
 
-    // console.log(filter);
+    console.log(filter);
 
     const dataQuery = selectedModel
       .find(filter)
