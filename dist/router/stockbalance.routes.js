@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const stockBalance_controller_1 = require("../controller/stockBalance.controller");
+const modelControl_1 = require("../middleware/modelControl");
+const permitValidator_1 = require("../middleware/permitValidator");
+const validator_1 = require("../middleware/validator");
+const stockBalanceRoute = require("express").Router();
+stockBalanceRoute.get("/bydate/pagi/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, stockBalance_controller_1.getStockBalanceDatePagiHandler);
+stockBalanceRoute.patch("/adjust", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["add"]), modelControl_1.modelController, stockBalance_controller_1.stockBalanceAdjustHandler);
+exports.default = stockBalanceRoute;

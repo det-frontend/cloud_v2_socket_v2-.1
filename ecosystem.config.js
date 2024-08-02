@@ -2,7 +2,7 @@ module.exports = {
     apps: [
       {
         name: 'se-sai',
-        script: 'node_modules/.bin/ts-node-dev --respawn --transpile-only src/app.ts',
+        script: 'node dist/app.js',
         node_args: "--max_old_space_size=4096",
         watch: true, // Watch files for changes (optional)
         instance: 1,
