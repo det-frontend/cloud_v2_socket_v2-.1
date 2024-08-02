@@ -118,8 +118,9 @@ exports.detailSaleByDate = detailSaleByDate;
 const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, kyat, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
+        console.log(amount, typeof (kyat), greater);
         if (amount) {
-            if (kyat == true) {
+            if (kyat == "true") {
                 if (greater === "greate") {
                     query.totalPrice = { $gt: amount };
                 }
@@ -151,7 +152,7 @@ const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, k
                 $lt: d2,
             },
         };
-        // console.log(filter);
+        console.log(filter);
         const dataQuery = selectedModel
             .find(filter)
             .sort({ createAt: -1 })
