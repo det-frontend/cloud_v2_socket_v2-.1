@@ -189,8 +189,6 @@ export const detailSaleByDateAndPagi = async (
       csDetailSaleModel
     );
 
-    console.log(amount, typeof(kyat), greater);
-
     if (amount) {
       if (kyat == "true") {
         if (greater === "greate") {
