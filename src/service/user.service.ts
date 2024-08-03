@@ -28,7 +28,7 @@ export const loginUser = async ({
       .exec();
     // .select("-__v");
 
-    // console.log(user);
+    console.log(user);
 
     if (!user || !compass(password, user.password)) {
       throw new Error("Creditial Error");
