@@ -743,7 +743,7 @@ export const statementReportHandler = async (
               (entry.devTotalizar_liter - entry.saleLiter),
             totalSaleLiter: entry.saleLiter,
             totalSalePrice: entry.totalPrice,
-            pumptest: entry.vehicleType === "Pump Test" ? entry.totalPrice : 0,
+            pumptest: entry.vehicleType === "Pump Test" ? entry.saleLiter : 0,
           };
 
           dateGroupedData[entryDate].push(data);
@@ -780,7 +780,7 @@ export const statementReportHandler = async (
             dateGroupedData[date][dateGroupedData[date].length - 1]
               ?.totalizer_closing -
               dateGroupedData[date][0]?.totalizer_opening || "0",
-          totalSaleLiter: totalSaleLiter.toFixed(3),
+          totalSaleLiter: (totalSaleLiter - pumptest).toFixed(3),
           totalSalePrice: totalSalePrice.toFixed(3),
           // other: dateGroupedData[date][0]?.other,
           // Compute this if needed based on your logic
@@ -790,7 +790,7 @@ export const statementReportHandler = async (
               dateGroupedData[date][dateGroupedData[date].length - 1]
                 ?.totalizer_closing -
                 dateGroupedData[date][0]?.totalizer_opening
-            ) - Number((totalSaleLiter - pumptest).toFixed(3))
+            ) - Number(totalSaleLiter.toFixed(3))
           ),
         });
       }

@@ -596,7 +596,7 @@ const statementReportHandler = async (req, res, next) => {
                             (entry.devTotalizar_liter - entry.saleLiter),
                         totalSaleLiter: entry.saleLiter,
                         totalSalePrice: entry.totalPrice,
-                        pumptest: entry.vehicleType === "Pump Test" ? entry.totalPrice : 0,
+                        pumptest: entry.vehicleType === "Pump Test" ? entry.saleLiter : 0,
                     };
                     dateGroupedData[entryDate].push(data);
                 }
@@ -619,14 +619,14 @@ const statementReportHandler = async (req, res, next) => {
                     totalizer_different: dateGroupedData[date][dateGroupedData[date].length - 1]
                         ?.totalizer_closing -
                         dateGroupedData[date][0]?.totalizer_opening || "0",
-                    totalSaleLiter: totalSaleLiter.toFixed(3),
+                    totalSaleLiter: (totalSaleLiter - pumptest).toFixed(3),
                     totalSalePrice: totalSalePrice.toFixed(3),
                     // other: dateGroupedData[date][0]?.other,
                     // Compute this if needed based on your logic
                     pumptest: pumptest.toFixed(3),
                     other: Math.abs(Number(dateGroupedData[date][dateGroupedData[date].length - 1]
                         ?.totalizer_closing -
-                        dateGroupedData[date][0]?.totalizer_opening) - Number((totalSaleLiter - pumptest).toFixed(3))),
+                        dateGroupedData[date][0]?.totalizer_opening) - Number(totalSaleLiter.toFixed(3))),
                 });
             }
         }

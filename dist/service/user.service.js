@@ -25,7 +25,7 @@ const loginUser = async ({ email, password, }) => {
             .populate("roles permits collectionId")
             .exec();
         // .select("-__v");
-        // console.log(user);
+        console.log(user);
         if (!user || !(0, helper_1.compass)(password, user.password)) {
             throw new Error("Creditial Error");
         }
