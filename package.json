@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node dist/app.js"
+    "dev": "node dist/app.js",
+    "ts:dev": "ts-node-dev --respawn --transpile-only src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "@types/moment-timezone": "^0.5.30",
     "@types/mqtt": "^2.5.0",
     "@types/node-cron": "^3.0.7",
+    "@types/winston": "^2.4.4",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.9",
     "cors": "^2.8.5",
@@ -28,6 +30,7 @@
     "node-cron": "^3.0.2",
     "socket.io": "^4.7.2",
     "ts-node-dev": "^2.0.0",
+    "winston": "^3.13.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {

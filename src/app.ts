@@ -20,11 +20,14 @@ import closePermissionRoute from "./router/closePermission.routes";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import setupSocket from "./utils/socketConnect";
 import casherCodeRoute from "./router/casherCode.routes";
+import { requestLogger, dbLogger } from './middleware/logMiddleware';
 
 const app = express();
 app.use(express.json());
 app.use(fileUpload());
 app.use(cors({ origin: "*" }));
+app.use(requestLogger);
+app.use(dbLogger);
 
 const server = require("http").createServer(app);
 
