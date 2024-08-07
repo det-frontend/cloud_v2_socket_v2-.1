@@ -16,8 +16,21 @@ const dbLogger = (req, res, next) => {
     mongoose_1.default.Query.prototype.exec = async function (...args) {
         const model = this.model;
         const collectionName = model.collection.collectionName;
-        logger_1.default.info(`MongoDB Query: ${JSON.stringify(this.getQuery())} - Collection: ${collectionName}`);
-        return exec.apply(this, args);
+        // Record the start time
+        const start = process.hrtime.bigint();
+        // Execute the query
+        const result = await exec.apply(this, args);
+        // Record the end time and calculate the duration
+        const end = process.hrtime.bigint();
+        const duration = Number(end - start) / 1e6; // Convert to milliseconds
+        logger_1.default.info(`
+      ========== start ==========
+      MongoDB Query: ${JSON.stringify(this.getQuery())}
+      Collection: ${collectionName}
+      Duration: ${duration.toFixed(2)}ms
+      ========== ended ==========
+      `);
+        return result;
     };
     next();
 };
