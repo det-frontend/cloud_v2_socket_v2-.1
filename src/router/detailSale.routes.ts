@@ -55,7 +55,7 @@ detailSaleRoute.get(
 // //that for only device
 detailSaleRoute.post(
   "/",
-  validateAll(detailSaleSchema),
+  // validateAll(detailSaleSchema),
   locSevModelControl,
   addDetailSaleHandler
 );

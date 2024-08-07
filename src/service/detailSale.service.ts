@@ -37,7 +37,7 @@ export const getDetailSale = async (
 };
 
 export const addDetailSale = async (
-  body: detailSaleDocument,
+  body: any,
   dbModel: string
 ) => {
   try {

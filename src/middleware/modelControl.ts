@@ -54,10 +54,14 @@ export const locSevModelControl = async (
   next: NextFunction
 ) => {
   try {
+
     const collection = await collectionGet({});
+    const isArray = Array.isArray(req.body);
+    let stationDetailId = isArray ? req.body[0].stationDetailId : req.body.stationDetailId
+
     let result = collection.filter((ea) =>
       ea.stationCollection.find(
-        (ea: any) => ea.stationId == req.body.stationDetailId
+        (ea: any) => ea.stationId == stationDetailId
       )
     );
 
