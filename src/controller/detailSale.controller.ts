@@ -56,6 +56,9 @@ export const addDetailSaleHandler = async (
   res: Response,
   next: NextFunction
 ) => {
+
+
+  // console.log(req.body);
   const start = moment().format("YYYY-MM-DD HH:mm:ss");
 
   logger.warn(`
@@ -79,7 +82,7 @@ export const addDetailSaleHandler = async (
           fMsg(res);
           return;
         }
-
+        
         let result = await addDetailSale(item, model);
 
         let checkDate = await getFuelBalance(
@@ -170,8 +173,6 @@ export const addDetailSaleHandler = async (
           model
         );
       }
-
-      fMsg(res, "DetailSale are here", req.body, model);
       // Move to the next middleware
       next();
     } catch (e: any) {

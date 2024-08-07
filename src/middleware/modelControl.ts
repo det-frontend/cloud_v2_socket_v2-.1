@@ -57,14 +57,14 @@ export const locSevModelControl = async (
 
     const collection = await collectionGet({});
     const isArray = Array.isArray(req.body);
-    let stationDetailId = isArray ? req.body[0].stationDetailId : req.body.stationDetailId
+    let stationDetailId = isArray == true ? req.body[0].stationDetailId : req.body.stationDetailId
 
     let result = collection.filter((ea) =>
       ea.stationCollection.find(
         (ea: any) => ea.stationId == stationDetailId
       )
     );
-
+    
     if (result.length == 0) throw new Error("You need id");
 
     req.body.accessDb = result[0].collectionName;
