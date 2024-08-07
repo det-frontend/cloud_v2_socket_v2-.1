@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorLogger = exports.dbLogger = exports.requestLogger = void 0;
 const logger_1 = __importDefault(require("../utils/logger"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const moment_1 = __importDefault(require("moment"));
 const requestLogger = (req, res, next) => {
-    const start = Date.now();
+    const start = (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss');
     logger_1.default.info(`
     ========== start ==========
     Method: ${req.method}
@@ -18,7 +19,7 @@ const requestLogger = (req, res, next) => {
     ========== ended ==========
     `);
     res.on('finish', () => {
-        const duration = Date.now() - start;
+        const duration = (0, moment_1.default)().diff(start, 'milliseconds');
         logger_1.default.info(`
       ========== start ==========
       Method: ${req.method}
@@ -37,17 +38,18 @@ const dbLogger = (req, res, next) => {
         const model = this.model;
         const collectionName = model.collection.collectionName;
         // Record the start time
-        const start = process.hrtime.bigint();
+        const start = (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss');
+        // Record the end time and calculate the duration
+        const end = (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss');
         // Execute the query
         const result = await exec.apply(this, args);
-        // Record the end time and calculate the duration
-        const end = process.hrtime.bigint();
-        const duration = Number(end - start) / 1e6; // Convert to milliseconds
+        // Convert to milliseconds
+        const duration = (0, moment_1.default)(end, 'YYYY-MM-DD HH:mm:ss').diff((0, moment_1.default)(start, 'YYYY-MM-DD HH:mm:ss'), 'milliseconds');
         logger_1.default.info(`
       ========== start ==========
       MongoDB Query: ${JSON.stringify(this.getQuery())}
       Collection: ${collectionName}
-      Duration: ${duration.toFixed(2)}ms
+      Duration: ${duration}ms
       ========== ended ==========
       `);
         return result;

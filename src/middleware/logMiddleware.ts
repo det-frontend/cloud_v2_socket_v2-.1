@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger';
 import mongoose from 'mongoose';
+import moment from 'moment';
+
 
 export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
-    const start = Date.now();
+    const start = moment().format('YYYY-MM-DD HH:mm:ss');
 
     logger.info(`
     ========== start ==========
@@ -16,7 +18,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
     `);
 
     res.on('finish', () => {
-      const duration = Date.now() - start;
+      const duration = moment().diff(start, 'milliseconds');
       logger.info(`
       ========== start ==========
       Method: ${req.method}
@@ -37,20 +39,22 @@ export const dbLogger = (req: Request, res: Response, next: NextFunction): void 
       const collectionName = model.collection.collectionName;
       
       // Record the start time
-      const start = process.hrtime.bigint();
+      const start = moment().format('YYYY-MM-DD HH:mm:ss');
+
+      // Record the end time and calculate the duration
+      const end = moment().format('YYYY-MM-DD HH:mm:ss');
 
       // Execute the query
       const result = await exec.apply(this, args);
 
-      // Record the end time and calculate the duration
-      const end = process.hrtime.bigint();
-      const duration = Number(end - start) / 1e6; // Convert to milliseconds
+      // Convert to milliseconds
+      const duration = moment(end, 'YYYY-MM-DD HH:mm:ss').diff(moment(start, 'YYYY-MM-DD HH:mm:ss'), 'milliseconds');
 
       logger.info(`
       ========== start ==========
       MongoDB Query: ${JSON.stringify(this.getQuery())}
       Collection: ${collectionName}
-      Duration: ${duration.toFixed(2)}ms
+      Duration: ${duration}ms
       ========== ended ==========
       `);
       

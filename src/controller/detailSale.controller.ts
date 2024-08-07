@@ -28,6 +28,7 @@ import { getStationDetail } from "../service/stationDetail.service";
 import { ObjectId } from "mongodb";
 import { collectionGet } from "../service/collection.service";
 import logger from '../utils/logger';
+import moment from 'moment';
 
 export const getDetailSaleHandler = async (
   req: Request,
@@ -56,7 +57,7 @@ export const addDetailSaleHandler = async (
   next: NextFunction
 ) => {
 
-  const start = Date.now();
+  const start = moment().format("YYYY-MM-DD HH:mm:ss");
 
   logger.warn(`
   ========== start ==========
@@ -189,8 +190,8 @@ export const addDetailSaleHandler = async (
     `, { file: 'detailsale.log' });
     next(new Error(e));
   } finally {
-    const duration = Date.now() - start;
-    logger.info(`
+    const duration = moment().diff(moment(start), 'milliseconds');
+    logger.warn(`
     ========== start ==========
     Function: addDetailSaleHandler
     Duration: ${duration}ms

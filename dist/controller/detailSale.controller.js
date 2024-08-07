@@ -35,6 +35,7 @@ const stationDetail_service_1 = require("../service/stationDetail.service");
 const mongodb_1 = require("mongodb");
 const collection_service_1 = require("../service/collection.service");
 const logger_1 = __importDefault(require("../utils/logger"));
+const moment_1 = __importDefault(require("moment"));
 const getDetailSaleHandler = async (req, res, next) => {
     try {
         let pageNo = Number(req.params.page);
@@ -56,7 +57,7 @@ const getDetailSaleHandler = async (req, res, next) => {
 };
 exports.getDetailSaleHandler = getDetailSaleHandler;
 const addDetailSaleHandler = async (req, res, next) => {
-    const start = Date.now();
+    const start = (0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss");
     logger_1.default.warn(`
   ========== start ==========
   Function: addDetailSaleHandler
@@ -152,8 +153,8 @@ const addDetailSaleHandler = async (req, res, next) => {
         next(new Error(e));
     }
     finally {
-        const duration = Date.now() - start;
-        logger_1.default.info(`
+        const duration = (0, moment_1.default)().diff((0, moment_1.default)(start), 'milliseconds');
+        logger_1.default.warn(`
     ========== start ==========
     Function: addDetailSaleHandler
     Duration: ${duration}ms
