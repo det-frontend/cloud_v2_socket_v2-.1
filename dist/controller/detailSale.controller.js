@@ -60,7 +60,7 @@ const addDetailSaleHandler = async (req, res, next) => {
     const start = (0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss");
     logger_1.default.warn(`
   ========== start ==========
-  Function: addDetailSaleHandler
+  Function: Request In DetailSale
   Request Date: ${start}
   Request Method: ${req.method}
   Request URL: ${req.originalUrl}
@@ -145,21 +145,12 @@ const addDetailSaleHandler = async (req, res, next) => {
     catch (e) {
         logger_1.default.error(`
     ========== start ==========
-    Function: addDetailSaleHandler
+    Function: Error in addDetailSaleHandler
     Error: ${e.message}
     Stack: ${e.stack}
     ========== ended ==========
     `, { file: 'detailsale.log' });
         next(new Error(e));
-    }
-    finally {
-        const duration = (0, moment_1.default)().diff((0, moment_1.default)(start), 'milliseconds');
-        logger_1.default.warn(`
-    ========== start ==========
-    Function: addDetailSaleHandler
-    Duration: ${duration}ms
-    ========== ended ==========
-    `, { file: 'detailsale.log' });
     }
 };
 exports.addDetailSaleHandler = addDetailSaleHandler;

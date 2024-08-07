@@ -9,6 +9,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
 
     logger.info(`
     ========== start ==========
+    function: Request Logger
     Method: ${req.method}
     URL: ${req.originalUrl}
     Headers: ${JSON.stringify(req.headers)}
@@ -21,14 +22,14 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
       const duration = moment().diff(start, 'milliseconds');
       logger.info(`
       ========== start ==========
+      function: Response Logger
       Method: ${req.method}
       URL: ${req.originalUrl}
       Status: ${res.statusCode}
       Duration: ${duration}ms
       ========== ended ==========
-      `);
+      `, { file: 'detailsale.log' });
     });
-
     next();
 };
 

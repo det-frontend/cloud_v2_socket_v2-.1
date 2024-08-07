@@ -11,6 +11,7 @@ const requestLogger = (req, res, next) => {
     const start = (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss');
     logger_1.default.info(`
     ========== start ==========
+    function: Request Logger
     Method: ${req.method}
     URL: ${req.originalUrl}
     Headers: ${JSON.stringify(req.headers)}
@@ -22,12 +23,13 @@ const requestLogger = (req, res, next) => {
         const duration = (0, moment_1.default)().diff(start, 'milliseconds');
         logger_1.default.info(`
       ========== start ==========
+      function: Response Logger
       Method: ${req.method}
       URL: ${req.originalUrl}
       Status: ${res.statusCode}
       Duration: ${duration}ms
       ========== ended ==========
-      `);
+      `, { file: 'detailsale.log' });
     });
     next();
 };
