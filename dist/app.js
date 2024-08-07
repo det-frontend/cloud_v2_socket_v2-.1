@@ -30,6 +30,7 @@ app.use((0, express_fileupload_1.default)());
 app.use((0, cors_1.default)({ origin: "*" }));
 app.use(logMiddleware_1.requestLogger);
 app.use(logMiddleware_1.dbLogger);
+app.use(logMiddleware_1.errorLogger);
 const server = require("http").createServer(app);
 //require data
 const port = config_1.default.get("port");

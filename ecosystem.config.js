@@ -4,17 +4,21 @@ module.exports = {
         name: 'se-sai',
         script: 'node dist/app.js',
         node_args: "--max_old_space_size=4096",
-        watch: true, // Watch files for changes (optional)
         instance: 1,
-        max_memory_restart: '2G', // Restart if it exceeds this memory
+        max_memory_restart: '2G',
         autorestart: true,
-        cron_restart: '0 0 * * *',
+        watch: false,
         env: {
           NODE_ENV: 'development',
         },
         env_production: {
           NODE_ENV: 'production',
         },
+        log_date_format: 'YYYY-MM-DD HH:mm Z',
+        output: './logs/combined.log',
+        error: './logs/error.log',
+        detailsale: './logs/detailsale.log',
+        merge_logs: true,
       },
     ],
   };

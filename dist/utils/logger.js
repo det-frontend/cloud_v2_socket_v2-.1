@@ -13,8 +13,10 @@ const logger = (0, winston_1.createLogger)({
     level: 'info',
     format: combine(timestamp(), logFormat),
     transports: [
-        // new transports.Console(),
-        new winston_1.transports.File({ filename: path_1.default.join(__dirname, '../../logs/combined.log') }),
+        new winston_1.transports.Console(),
+        new winston_1.transports.File({ filename: path_1.default.join(__dirname, '../../logs/combined.log'), level: 'info' }),
+        new winston_1.transports.File({ filename: path_1.default.join(__dirname, '../../logs/error.log'), level: 'error' }),
+        new winston_1.transports.File({ filename: path_1.default.join(__dirname, '../../logs/detailsale.log'), level: 'warn' }),
     ]
 });
 exports.default = logger;

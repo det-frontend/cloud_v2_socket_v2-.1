@@ -3,8 +3,31 @@ import logger from '../utils/logger';
 import mongoose from 'mongoose';
 
 export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
-  logger.info(`${req.method} ${req.originalUrl}`);
-  next();
+    const start = Date.now();
+
+    logger.info(`
+    ========== start ==========
+    Method: ${req.method}
+    URL: ${req.originalUrl}
+    Headers: ${JSON.stringify(req.headers)}
+    Query Parameters: ${JSON.stringify(req.query)}
+    Body: ${JSON.stringify(req.body)}
+    ========== ended ==========
+    `);
+
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      logger.info(`
+      ========== start ==========
+      Method: ${req.method}
+      URL: ${req.originalUrl}
+      Status: ${res.statusCode}
+      Duration: ${duration}ms
+      ========== ended ==========
+      `);
+    });
+
+    next();
 };
 
 export const dbLogger = (req: Request, res: Response, next: NextFunction): void => {
@@ -34,4 +57,14 @@ export const dbLogger = (req: Request, res: Response, next: NextFunction): void 
       return result;
     };
   next();
+};
+
+export const errorLogger = (err: any, req: Request, res: Response, next: NextFunction): void => {
+      logger.error(`
+      ========== start ==========
+      Error Message: ${err.message}
+      Stack: ${err.stack}
+      ========== ended ==========
+      `);
+      next();
 };

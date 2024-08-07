@@ -22,6 +22,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDailyReportDateForEachDayHandler = exports.calcualteDatasForEachDayHanlder = exports.sevenDayPreviousTotalHandler = exports.calculateStationTotalHandler = exports.calculateCategoriesTotalHandler = exports.calculateTotalPerDayHandler = exports.statementReportHandler = exports.getDetailSaleDatePagiHandler = exports.getDetailSaleByDateHandler = exports.deleteDetailSaleHandler = exports.updateDetailSaleHandler = exports.addDetailSaleHandler = exports.getDetailSaleHandler = void 0;
 const helper_1 = __importStar(require("../utils/helper"));
@@ -31,6 +34,7 @@ const dailyReport_service_1 = require("../service/dailyReport.service");
 const stationDetail_service_1 = require("../service/stationDetail.service");
 const mongodb_1 = require("mongodb");
 const collection_service_1 = require("../service/collection.service");
+const logger_1 = __importDefault(require("../utils/logger"));
 const getDetailSaleHandler = async (req, res, next) => {
     try {
         let pageNo = Number(req.params.page);
@@ -52,6 +56,16 @@ const getDetailSaleHandler = async (req, res, next) => {
 };
 exports.getDetailSaleHandler = getDetailSaleHandler;
 const addDetailSaleHandler = async (req, res, next) => {
+    const start = Date.now();
+    logger_1.default.warn(`
+  ========== start ==========
+  Function: addDetailSaleHandler
+  Request Date: ${start}
+  Request Method: ${req.method}
+  Request URL: ${req.originalUrl}
+  Request Body: ${JSON.stringify(req.body)}
+  ========== ended ==========
+  `, { file: 'detailsale.log' });
     try {
         // //that is remove after pos updated
         let model = req.body.accessDb;
@@ -63,29 +77,6 @@ const addDetailSaleHandler = async (req, res, next) => {
             return;
         }
         let result = await (0, detailSale_service_1.addDetailSale)(req.body, model);
-        // next update code
-        // if (result.cashType == "Debt") {
-        //   // let checkVocono = await getDebt({ vocono: result.vocono });
-        //   // if (checkVocono.length > 0)
-        //   //   throw new Error("this vocono is alreadly exist");
-        //   let coustomerConditon = await getCoustomerById(result.couObjId);
-        //   if (!coustomerConditon)
-        //     throw new Error("There is no coustomer with that name");
-        //   let debtBody = {
-        //     stationDetailId: result.stationDetailId,
-        //     vocono: result.vocono,
-        //     couObjId: result.couObjId,
-        //     deposit: 0,
-        //     credit: result.totalPrice,
-        //     liter: result.saleLiter,
-        //   };
-        //   coustomerConditon.cou_debt =
-        //     coustomerConditon.cou_debt + result.totalPrice;
-        //   await addDebt(debtBody);
-        //   await updateCoustomer(result.couObjId, coustomerConditon);
-        // }
-        //caculation
-        // console.log("wkkk");
         let checkDate = await (0, fuelBalance_service_1.getFuelBalance)({
             stationId: result.stationDetailId,
             createAt: result.dailyReportDate,
@@ -151,8 +142,23 @@ const addDetailSaleHandler = async (req, res, next) => {
         (0, helper_1.default)(res, "New DetailSale data was added", result);
     }
     catch (e) {
-        // console.log(e);
+        logger_1.default.error(`
+    ========== start ==========
+    Function: addDetailSaleHandler
+    Error: ${e.message}
+    Stack: ${e.stack}
+    ========== ended ==========
+    `, { file: 'detailsale.log' });
         next(new Error(e));
+    }
+    finally {
+        const duration = Date.now() - start;
+        logger_1.default.info(`
+    ========== start ==========
+    Function: addDetailSaleHandler
+    Duration: ${duration}ms
+    ========== ended ==========
+    `, { file: 'detailsale.log' });
     }
 };
 exports.addDetailSaleHandler = addDetailSaleHandler;

@@ -27,6 +27,7 @@ import { addDailyReport, getDailyReport } from "../service/dailyReport.service";
 import { getStationDetail } from "../service/stationDetail.service";
 import { ObjectId } from "mongodb";
 import { collectionGet } from "../service/collection.service";
+import logger from '../utils/logger';
 
 export const getDetailSaleHandler = async (
   req: Request,
@@ -54,6 +55,19 @@ export const addDetailSaleHandler = async (
   res: Response,
   next: NextFunction
 ) => {
+
+  const start = Date.now();
+
+  logger.warn(`
+  ========== start ==========
+  Function: addDetailSaleHandler
+  Request Date: ${start}
+  Request Method: ${req.method}
+  Request URL: ${req.originalUrl}
+  Request Body: ${JSON.stringify(req.body)}
+  ========== ended ==========
+  `, { file: 'detailsale.log' });
+
   try {
     // //that is remove after pos updated
     let model = req.body.accessDb;
@@ -67,39 +81,6 @@ export const addDetailSaleHandler = async (
     }
 
     let result = await addDetailSale(req.body, model);
-
-    // next update code
-
-    // if (result.cashType == "Debt") {
-    //   // let checkVocono = await getDebt({ vocono: result.vocono });
-    //   // if (checkVocono.length > 0)
-    //   //   throw new Error("this vocono is alreadly exist");
-
-    //   let coustomerConditon = await getCoustomerById(result.couObjId);
-
-    //   if (!coustomerConditon)
-    //     throw new Error("There is no coustomer with that name");
-
-    //   let debtBody = {
-    //     stationDetailId: result.stationDetailId,
-    //     vocono: result.vocono,
-    //     couObjId: result.couObjId,
-    //     deposit: 0,
-    //     credit: result.totalPrice,
-    //     liter: result.saleLiter,
-    //   };
-
-    //   coustomerConditon.cou_debt =
-    //     coustomerConditon.cou_debt + result.totalPrice;
-
-    //   await addDebt(debtBody);
-
-    //   await updateCoustomer(result.couObjId, coustomerConditon);
-    // }
-
-    //caculation
-
-    // console.log("wkkk");
 
     let checkDate = await getFuelBalance(
       {
@@ -196,10 +177,25 @@ export const addDetailSaleHandler = async (
       result.nozzleNo,
       model
     );
+
     fMsg(res, "New DetailSale data was added", result);
   } catch (e: any) {
-    // console.log(e);
+    logger.error(`
+    ========== start ==========
+    Function: addDetailSaleHandler
+    Error: ${e.message}
+    Stack: ${e.stack}
+    ========== ended ==========
+    `, { file: 'detailsale.log' });
     next(new Error(e));
+  } finally {
+    const duration = Date.now() - start;
+    logger.info(`
+    ========== start ==========
+    Function: addDetailSaleHandler
+    Duration: ${duration}ms
+    ========== ended ==========
+    `, { file: 'detailsale.log' });
   }
 };
 
