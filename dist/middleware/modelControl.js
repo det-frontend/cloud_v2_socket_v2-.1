@@ -42,7 +42,9 @@ exports.modelController = modelController;
 const locSevModelControl = async (req, res, next) => {
     try {
         const collection = await (0, collection_service_1.collectionGet)({});
-        let result = collection.filter((ea) => ea.stationCollection.find((ea) => ea.stationId == req.body.stationDetailId));
+        const isArray = Array.isArray(req.body);
+        let stationDetailId = isArray == true ? req.body[0].stationDetailId : req.body.stationDetailId;
+        let result = collection.filter((ea) => ea.stationCollection.find((ea) => ea.stationId == stationDetailId));
         if (result.length == 0)
             throw new Error("You need id");
         req.body.accessDb = result[0].collectionName;

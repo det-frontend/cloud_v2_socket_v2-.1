@@ -11,7 +11,9 @@ detailSaleRoute.get("/pagi/:page", validator_1.validateToken, (0, permitValidato
 detailSaleRoute.get("/by-date", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.getDetailSaleByDateHandler);
 detailSaleRoute.get("/pagi/by-date/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.getDetailSaleDatePagiHandler);
 // //that for only device
-detailSaleRoute.post("/", (0, validator_1.validateAll)(scheama_1.detailSaleSchema), modelControl_1.locSevModelControl, detailSale_controller_1.addDetailSaleHandler);
+detailSaleRoute.post("/", 
+// validateAll(detailSaleSchema),
+modelControl_1.locSevModelControl, detailSale_controller_1.addDetailSaleHandler);
 detailSaleRoute.patch("/", validator_1.validateToken, (0, validator_1.validateAll)(scheama_1.detailSaleUpdateSchema), (0, roleValidator_1.roleValidator)(["det"]), (0, permitValidator_1.hasAnyPermit)(["edit"]), modelControl_1.modelController, detailSale_controller_1.updateDetailSaleHandler);
 detailSaleRoute.delete("/", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det"]), (0, permitValidator_1.hasAnyPermit)(["delete"]), (0, validator_1.validateAll)(scheama_1.allSchemaId), modelControl_1.modelController, detailSale_controller_1.deleteDetailSaleHandler);
 detailSaleRoute.get("/statement-report", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.statementReportHandler);

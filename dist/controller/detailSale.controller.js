@@ -57,6 +57,7 @@ const getDetailSaleHandler = async (req, res, next) => {
 };
 exports.getDetailSaleHandler = getDetailSaleHandler;
 const addDetailSaleHandler = async (req, res, next) => {
+    // console.log(req.body);
     const start = (0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss");
     logger_1.default.warn(`
   ========== start ==========
@@ -67,91 +68,188 @@ const addDetailSaleHandler = async (req, res, next) => {
   Request Body: ${JSON.stringify(req.body)}
   ========== ended ==========
   `, { file: 'detailsale.log' });
-    try {
-        // //that is remove after pos updated
-        let model = req.body.accessDb;
-        // console.log(req.body, "this is req.body");
-        let check = await (0, detailSale_service_1.getDetailSale)({ vocono: req.body.vocono }, model);
-        //console.log(check);
-        if (check.length != 0) {
-            (0, helper_1.default)(res);
-            return;
-        }
-        let result = await (0, detailSale_service_1.addDetailSale)(req.body, model);
-        let checkDate = await (0, fuelBalance_service_1.getFuelBalance)({
-            stationId: result.stationDetailId,
-            createAt: result.dailyReportDate,
-        }, model);
-        let checkRpDate = await (0, dailyReport_service_1.getDailyReport)({
-            stationId: result.stationDetailId,
-            dateOfDay: result.dailyReportDate,
-        }, model);
-        if (checkRpDate.length == 0) {
-            await (0, dailyReport_service_1.addDailyReport)({
-                stationId: result.stationDetailId,
-                dateOfDay: result.dailyReportDate,
-            }, model);
-        }
-        let station = await (0, stationDetail_service_1.getStationDetail)({
-            _id: result.stationDetailId,
-        }, model);
-        // console.log('station', station);
-        const tankCount = station[0].tankCount;
-        if (checkDate.length == 0) {
-            let prevDate = (0, helper_1.previous)(new Date(req.body.dailyReportDate));
-            let prevResult = await (0, fuelBalance_service_1.getFuelBalance)({
-                stationId: result.stationDetailId,
-                // createAt: prevDate,
-            }, model, tankCount);
-            // get tank count from stationDetail
-            // console.log('tankCount', tankCount);
-            //.slice(0, 4)
-            await Promise.all(prevResult?.map(async (ea) => {
-                let obj;
-                if (ea.balance == 0) {
-                    obj = {
-                        stationId: ea.stationId,
-                        fuelType: ea.fuelType,
-                        capacity: ea.capacity,
-                        opening: ea.opening + ea.fuelIn,
-                        tankNo: ea.tankNo,
-                        createAt: result.dailyReportDate,
-                        nozzles: ea.nozzles,
-                        balance: ea.opening + ea.fuelIn,
-                    };
+    let model = req.body.accessDb;
+    if (req.body.length > 0) {
+        try {
+            for (let item of req.body) {
+                let check = await (0, detailSale_service_1.getDetailSale)({ vocono: item.vocono }, model);
+                if (check.length != 0) {
+                    (0, helper_1.default)(res);
+                    return;
                 }
-                else {
-                    obj = {
-                        stationId: ea.stationId,
-                        fuelType: ea.fuelType,
-                        capacity: ea.capacity,
-                        opening: ea.opening + ea.fuelIn - ea.cash,
-                        tankNo: ea.tankNo,
-                        createAt: req.body.dailyReportDate,
-                        nozzles: ea.nozzles,
-                        balance: ea.opening + ea.fuelIn - ea.cash,
-                    };
+                let result = await (0, detailSale_service_1.addDetailSale)(item, model);
+                let checkDate = await (0, fuelBalance_service_1.getFuelBalance)({
+                    stationId: result.stationDetailId,
+                    createAt: result.dailyReportDate,
+                }, model);
+                let checkRpDate = await (0, dailyReport_service_1.getDailyReport)({
+                    stationId: result.stationDetailId,
+                    dateOfDay: result.dailyReportDate,
+                }, model);
+                if (checkRpDate.length == 0) {
+                    await (0, dailyReport_service_1.addDailyReport)({
+                        stationId: result.stationDetailId,
+                        dateOfDay: result.dailyReportDate,
+                    }, model);
                 }
-                await (0, fuelBalance_service_1.addFuelBalance)(obj, model);
-            }));
+                let station = await (0, stationDetail_service_1.getStationDetail)({
+                    _id: result.stationDetailId,
+                }, model);
+                const tankCount = station[0].tankCount;
+                if (checkDate.length == 0) {
+                    let prevDate = (0, helper_1.previous)(new Date(item.dailyReportDate));
+                    let prevResult = await (0, fuelBalance_service_1.getFuelBalance)({
+                        stationId: result.stationDetailId,
+                    }, model, tankCount);
+                    await Promise.all(prevResult?.map(async (ea) => {
+                        let obj;
+                        if (ea.balance == 0) {
+                            obj = {
+                                stationId: ea.stationId,
+                                fuelType: ea.fuelType,
+                                capacity: ea.capacity,
+                                opening: ea.opening + ea.fuelIn,
+                                tankNo: ea.tankNo,
+                                createAt: result.dailyReportDate,
+                                nozzles: ea.nozzles,
+                                balance: ea.opening + ea.fuelIn,
+                            };
+                        }
+                        else {
+                            obj = {
+                                stationId: ea.stationId,
+                                fuelType: ea.fuelType,
+                                capacity: ea.capacity,
+                                opening: ea.opening + ea.fuelIn - ea.cash,
+                                tankNo: ea.tankNo,
+                                createAt: item.dailyReportDate,
+                                nozzles: ea.nozzles,
+                                balance: ea.opening + ea.fuelIn - ea.cash,
+                            };
+                        }
+                        await (0, fuelBalance_service_1.addFuelBalance)(obj, model);
+                    }));
+                }
+                await (0, fuelBalance_service_1.calcFuelBalance)({
+                    stationId: result.stationDetailId,
+                    fuelType: result.fuelType,
+                    createAt: result.dailyReportDate,
+                }, { liter: result.saleLiter }, result.nozzleNo, model);
+            }
+            // Move to the next middleware
+            next();
         }
-        await (0, fuelBalance_service_1.calcFuelBalance)({
-            stationId: result.stationDetailId,
-            fuelType: result.fuelType,
-            createAt: result.dailyReportDate,
-        }, { liter: result.saleLiter }, result.nozzleNo, model);
-        (0, helper_1.default)(res, "New DetailSale data was added", result);
+        catch (e) {
+            next(new Error(e));
+        }
     }
-    catch (e) {
-        logger_1.default.error(`
-    ========== start ==========
-    Function: Error in addDetailSaleHandler
-    Error: ${e.message}
-    Stack: ${e.stack}
-    ========== ended ==========
-    `, { file: 'detailsale.log' });
-        next(new Error(e));
-    }
+    // old version
+    // try {
+    //   // //that is remove after pos updated
+    //   let model = req.body.accessDb;
+    //   // console.log(req.body, "this is req.body");
+    //   let check = await getDetailSale({ vocono: req.body.vocono }, model);
+    //   //console.log(check);
+    //   if (check.length != 0) {
+    //     fMsg(res);
+    //     return;
+    //   }
+    //   let result = await addDetailSale(req.body, model);
+    //   let checkDate = await getFuelBalance(
+    //     {
+    //       stationId: result.stationDetailId,
+    //       createAt: result.dailyReportDate,
+    //     },
+    //     model
+    //   );
+    //   let checkRpDate = await getDailyReport(
+    //     {
+    //       stationId: result.stationDetailId,
+    //       dateOfDay: result.dailyReportDate,
+    //     },
+    //     model
+    //   );
+    //   if (checkRpDate.length == 0) {
+    //     await addDailyReport(
+    //       {
+    //         stationId: result.stationDetailId,
+    //         dateOfDay: result.dailyReportDate,
+    //       },
+    //       model
+    //     );
+    //   }
+    //   let station = await getStationDetail(
+    //     {
+    //       _id: result.stationDetailId,
+    //     },
+    //     model
+    //   );
+    //   // console.log('station', station);
+    //   const tankCount = station[0].tankCount;
+    //   if (checkDate.length == 0) {
+    //     let prevDate = previous(new Date(req.body.dailyReportDate));
+    //     let prevResult = await getFuelBalance(
+    //       {
+    //         stationId: result.stationDetailId,
+    //         // createAt: prevDate,
+    //       },
+    //       model,
+    //       tankCount
+    //     );
+    //     // get tank count from stationDetail
+    //     // console.log('tankCount', tankCount);
+    //     //.slice(0, 4)
+    //     await Promise.all(
+    //       prevResult?.map(async (ea: any) => {
+    //         let obj: fuelBalanceDocument;
+    //         if (ea.balance == 0) {
+    //           obj = {
+    //             stationId: ea.stationId,
+    //             fuelType: ea.fuelType,
+    //             capacity: ea.capacity,
+    //             opening: ea.opening + ea.fuelIn,
+    //             tankNo: ea.tankNo,
+    //             createAt: result.dailyReportDate,
+    //             nozzles: ea.nozzles,
+    //             balance: ea.opening + ea.fuelIn,
+    //           } as fuelBalanceDocument;
+    //         } else {
+    //           obj = {
+    //             stationId: ea.stationId,
+    //             fuelType: ea.fuelType,
+    //             capacity: ea.capacity,
+    //             opening: ea.opening + ea.fuelIn - ea.cash,
+    //             tankNo: ea.tankNo,
+    //             createAt: req.body.dailyReportDate,
+    //             nozzles: ea.nozzles,
+    //             balance: ea.opening + ea.fuelIn - ea.cash,
+    //           } as fuelBalanceDocument;
+    //         }
+    //         await addFuelBalance(obj, model);
+    //       })
+    //     );
+    //   }
+    //   await calcFuelBalance(
+    //     {
+    //       stationId: result.stationDetailId,
+    //       fuelType: result.fuelType,
+    //       createAt: result.dailyReportDate,
+    //     },
+    //     { liter: result.saleLiter },
+    //     result.nozzleNo,
+    //     model
+    //   );
+    //   fMsg(res, "New DetailSale data was added", result);
+    // } catch (e: any) {
+    //   logger.error(`
+    //   ========== start ==========
+    //   Function: Error in addDetailSaleHandler
+    //   Error: ${e.message}
+    //   Stack: ${e.stack}
+    //   ========== ended ==========
+    //   `, { file: 'detailsale.log' });
+    //   next(new Error(e));
+    // }
 };
 exports.addDetailSaleHandler = addDetailSaleHandler;
 const updateDetailSaleHandler = async (req, res, next) => {
