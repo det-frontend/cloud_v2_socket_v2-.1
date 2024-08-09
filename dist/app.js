@@ -23,14 +23,13 @@ const stockbalance_routes_1 = __importDefault(require("./router/stockbalance.rou
 const closePermission_routes_1 = __importDefault(require("./router/closePermission.routes"));
 const socketConnect_1 = __importDefault(require("./utils/socketConnect"));
 const casherCode_routes_1 = __importDefault(require("./router/casherCode.routes"));
-const logMiddleware_1 = require("./middleware/logMiddleware");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, express_fileupload_1.default)());
 app.use((0, cors_1.default)({ origin: "*" }));
-app.use(logMiddleware_1.requestLogger);
-app.use(logMiddleware_1.dbLogger);
-app.use(logMiddleware_1.errorLogger);
+// app.use(requestLogger);
+// app.use(dbLogger);
+// app.use(errorLogger);
 const server = require("http").createServer(app);
 //require data
 const port = config_1.default.get("port");

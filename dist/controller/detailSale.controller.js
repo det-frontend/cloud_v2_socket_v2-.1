@@ -34,7 +34,6 @@ const dailyReport_service_1 = require("../service/dailyReport.service");
 const stationDetail_service_1 = require("../service/stationDetail.service");
 const mongodb_1 = require("mongodb");
 const collection_service_1 = require("../service/collection.service");
-const logger_1 = __importDefault(require("../utils/logger"));
 const moment_1 = __importDefault(require("moment"));
 const getDetailSaleHandler = async (req, res, next) => {
     try {
@@ -58,15 +57,15 @@ const getDetailSaleHandler = async (req, res, next) => {
 exports.getDetailSaleHandler = getDetailSaleHandler;
 const addDetailSaleHandler = async (req, res, next) => {
     const start = (0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss");
-    logger_1.default.warn(`
-  ========== start ==========
-  Function: Request In DetailSale
-  Request Date: ${start}
-  Request Method: ${req.method}
-  Request URL: ${req.originalUrl}
-  Request Body: ${JSON.stringify(req.body)}
-  ========== ended ==========
-  `, { file: 'detailsale.log' });
+    // logger.warn(`
+    // ========== start ==========
+    // Function: Request In DetailSale
+    // Request Date: ${start}
+    // Request Method: ${req.method}
+    // Request URL: ${req.originalUrl}
+    // Request Body: ${JSON.stringify(req.body)}
+    // ========== ended ==========
+    // `, { file: 'detailsale.log' });
     try {
         // //that is remove after pos updated
         let model = req.body.accessDb;
@@ -143,13 +142,13 @@ const addDetailSaleHandler = async (req, res, next) => {
         (0, helper_1.default)(res, "New DetailSale data was added", result);
     }
     catch (e) {
-        logger_1.default.error(`
-    ========== start ==========
-    Function: Error in addDetailSaleHandler
-    Error: ${e.message}
-    Stack: ${e.stack}
-    ========== ended ==========
-    `, { file: 'detailsale.log' });
+        // logger.error(`
+        // ========== start ==========
+        // Function: Error in addDetailSaleHandler
+        // Error: ${e.message}
+        // Stack: ${e.stack}
+        // ========== ended ==========
+        // `, { file: 'detailsale.log' });
         next(new Error(e));
     }
 };

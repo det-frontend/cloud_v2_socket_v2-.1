@@ -59,15 +59,15 @@ export const addDetailSaleHandler = async (
 
   const start = moment().format("YYYY-MM-DD HH:mm:ss");
 
-  logger.warn(`
-  ========== start ==========
-  Function: Request In DetailSale
-  Request Date: ${start}
-  Request Method: ${req.method}
-  Request URL: ${req.originalUrl}
-  Request Body: ${JSON.stringify(req.body)}
-  ========== ended ==========
-  `, { file: 'detailsale.log' });
+  // logger.warn(`
+  // ========== start ==========
+  // Function: Request In DetailSale
+  // Request Date: ${start}
+  // Request Method: ${req.method}
+  // Request URL: ${req.originalUrl}
+  // Request Body: ${JSON.stringify(req.body)}
+  // ========== ended ==========
+  // `, { file: 'detailsale.log' });
 
   try {
     // //that is remove after pos updated
@@ -181,13 +181,13 @@ export const addDetailSaleHandler = async (
 
     fMsg(res, "New DetailSale data was added", result);
   } catch (e: any) {
-    logger.error(`
-    ========== start ==========
-    Function: Error in addDetailSaleHandler
-    Error: ${e.message}
-    Stack: ${e.stack}
-    ========== ended ==========
-    `, { file: 'detailsale.log' });
+    // logger.error(`
+    // ========== start ==========
+    // Function: Error in addDetailSaleHandler
+    // Error: ${e.message}
+    // Stack: ${e.stack}
+    // ========== ended ==========
+    // `, { file: 'detailsale.log' });
     next(new Error(e));
   }
 };

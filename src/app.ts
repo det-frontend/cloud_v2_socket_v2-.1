@@ -26,9 +26,9 @@ const app = express();
 app.use(express.json());
 app.use(fileUpload());
 app.use(cors({ origin: "*" }));
-app.use(requestLogger);
-app.use(dbLogger);
-app.use(errorLogger);
+// app.use(requestLogger);
+// app.use(dbLogger);
+// app.use(errorLogger);
 
 const server = require("http").createServer(app);
 
