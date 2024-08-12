@@ -115,31 +115,29 @@ const detailSaleByDate = async (query, d1, d2, dbModel) => {
     return result;
 };
 exports.detailSaleByDate = detailSaleByDate;
-const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, greater, amount, kyat, dbModel) => {
+const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, literGreater, literAmount, amountGreater, priceAmount, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-        if (amount) {
-            if (kyat == "true") {
-                if (greater === "greate") {
-                    query.totalPrice = { $gt: amount };
-                }
-                else if (greater === "less") {
-                    query.totalPrice = { $lt: amount };
-                }
-                else if (greater === "equal") {
-                    query.totalPrice = { $eq: amount };
-                }
+        if (literAmount) {
+            if (literGreater === "greate") {
+                query.saleLiter = { $gt: literAmount };
             }
-            else {
-                if (greater === "greate") {
-                    query.saleLiter = { $gt: amount };
-                }
-                else if (greater === "less") {
-                    query.saleLiter = { $lt: amount };
-                }
-                else if (greater === "equal") {
-                    query.saleLiter = { $eq: amount };
-                }
+            else if (literGreater === "less") {
+                query.saleLiter = { $lt: literAmount };
+            }
+            else if (literGreater === "equal") {
+                query.saleLiter = { $eq: literAmount };
+            }
+        }
+        if (priceAmount) {
+            if (amountGreater === "greate") {
+                query.totalPrice = { $gt: priceAmount };
+            }
+            else if (amountGreater === "less") {
+                query.totalPrice = { $lt: priceAmount };
+            }
+            else if (amountGreater === "equal") {
+                query.totalPrice = { $eq: priceAmount };
             }
         }
         const reqPage = pageNo == 1 ? 0 : pageNo - 1;

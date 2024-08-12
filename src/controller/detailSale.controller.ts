@@ -274,17 +274,19 @@ export const getDetailSaleDatePagiHandler = async (
     let sDate: any = req.query.sDate;
     let eDate: any = req.query.eDate;
     let pageNo: number = Number(req.params.page);
-    const greater: string = req.query.greate as string;
-    const amount: number = parseInt(req.query.amount as string);
-    const kyat: any = req.query.kyat;
+    const literGreater: string = req.query.literGreate as string;
+    const amountGreater: string = req.query.amountGreate as string;
+    const literAmount: number = parseInt(req.query.literAmount as string);
+    const priceAmount: number = parseInt(req.query.priceAmount as string);
 
     delete req.query.sDate;
     delete req.query.eDate;
 
-    delete req.query.greate;
-    delete req.query.amount;
-    delete req.query.kyat;
-
+    delete req.query.literGreate;
+    delete req.query.amountGreate;
+    delete req.query.literAmount;
+    delete req.query.priceAmount;
+    
     let query = req.query;
 
     if (!sDate) {
@@ -310,9 +312,10 @@ export const getDetailSaleDatePagiHandler = async (
       startDate,
       endDate,
       pageNo,
-      greater,
-      amount,
-      kyat,
+      literGreater,
+      literAmount,
+      amountGreater,
+      priceAmount,
       model
     );
 

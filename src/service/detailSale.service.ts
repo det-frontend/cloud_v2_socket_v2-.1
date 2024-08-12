@@ -177,9 +177,10 @@ export const detailSaleByDateAndPagi = async (
   d1: Date,
   d2: Date,
   pageNo: number,
-  greater: string,
-  amount: number,
-  kyat: any,
+  literGreater: string,
+  literAmount: number,
+  amountGreater : string,
+  priceAmount : number,
   dbModel: string
 ): Promise<{ count: number; data: detailSaleDocument[] }> => {
   try {
@@ -189,26 +190,26 @@ export const detailSaleByDateAndPagi = async (
       csDetailSaleModel
     );
 
-    if (amount) {
-      if (kyat == "true") {
-        if (greater === "greate") {
-          query.totalPrice = { $gt: amount };
-        } else if (greater === "less") {
-          query.totalPrice = { $lt: amount };
-        } else if (greater === "equal") {
-          query.totalPrice = { $eq: amount };
-        }
-      } else {
-        if (greater === "greate") {
-          query.saleLiter = { $gt: amount };
-        } else if (greater === "less") {
-          query.saleLiter = { $lt: amount };
-        } else if (greater === "equal") {
-          query.saleLiter = { $eq: amount };
-        }
+    if(literAmount){
+      if(literGreater === "greate"){
+        query.saleLiter = { $gt: literAmount };
+      } else if(literGreater === "less"){
+        query.saleLiter = { $lt: literAmount };
+      } else if(literGreater === "equal"){
+        query.saleLiter = { $eq: literAmount };
+      }
+    } 
+
+    if(priceAmount){
+      if(amountGreater === "greate"){
+        query.totalPrice = { $gt: priceAmount };
+      } else if(amountGreater === "less"){
+        query.totalPrice = { $lt: priceAmount };
+      } else if(amountGreater === "equal"){
+        query.totalPrice = { $eq: priceAmount };
       }
     }
-
+    
     const reqPage = pageNo == 1 ? 0 : pageNo - 1;
     const skipCount = limitNo * reqPage;
     const filter: FilterQuery<detailSaleDocument> = {
