@@ -36,10 +36,14 @@ const fMsg = (
   msg: string = "all success",
   result: any = [],
   route: string | null = null,
-  totalCount: number | null = null
+  totalCount: number | null = null,
+  totalPrice: number | null = null,
+  totalLiter: number | null = null
 ) => {
   if (totalCount != null) {
-    res.status(200).json({ con: true, msg, route, result, totalCount });
+    res
+      .status(200)
+      .json({ con: true, msg, route, result, totalCount, totalPrice });
   } else {
     res.status(200).json({ con: true, msg, result });
   }
@@ -65,7 +69,6 @@ export const dBSelector = (dbModel: string, dbOne: any, dbTwo: any) => {
 };
 
 export const dbDistribution = (ea: any) => {
-  
   if (ea.accessDb === "kyaw_san") {
     return ksStationDetailModel;
   } else if (ea.accessDb === "common") {
@@ -76,17 +79,16 @@ export const dbDistribution = (ea: any) => {
 };
 
 export const fuelBalanceCalculationForStockBalance = (data: any[]) => {
-
   let ron92_opening = 0;
   let ron95_opening = 0;
   let diesel_opening = 0;
   let pDiesel_opening = 0;
-  
+
   let ron92_cash = 0;
   let ron95_cash = 0;
   let diesel_cash = 0;
   let pDiesel_cash = 0;
-  
+
   let ron92_balance = 0;
   let ron95_balance = 0;
   let diesel_balance = 0;
@@ -96,35 +98,60 @@ export const fuelBalanceCalculationForStockBalance = (data: any[]) => {
   let ron95_receive = 0;
   let diesel_receive = 0;
   let pDiesel_receive = 0;
-  
-  data.map((e: { fuelType: string; opening: number; cash: number; balance: number; fuelIn: number; }) => {
-    if (e.fuelType === "001-Octane Ron(92)") {
-      ron92_opening += e.opening;
-      ron92_cash += e.cash;
-      ron92_balance += e.balance;
-      ron92_receive = e.fuelIn;
-    }
-    if (e.fuelType === "002-Octane Ron(95)") {
-      ron95_opening += e.opening;
-      ron95_cash += e.cash;
-      ron95_balance += e.balance;
-      ron95_receive = e.fuelIn;
-    }
-    if (e.fuelType === "004-Diesel") {
-      diesel_opening += e.opening;
-      diesel_cash += e.cash;
-      diesel_balance += e.balance;
-      diesel_receive = e.fuelIn;
-    }
-    if (e.fuelType === "005-Premium Diesel") {
-      pDiesel_opening += e.opening;
-      pDiesel_cash += e.cash;
-      pDiesel_balance += e.balance;
-      pDiesel_receive = e.fuelIn;
-    }
-  });
 
-  return { ron92_opening, ron95_opening, diesel_opening, pDiesel_opening, ron92_cash, ron95_cash, diesel_cash, pDiesel_cash, ron92_balance, ron95_balance, diesel_balance, pDiesel_balance,ron92_receive,ron95_receive,diesel_receive,pDiesel_receive }
+  data.map(
+    (e: {
+      fuelType: string;
+      opening: number;
+      cash: number;
+      balance: number;
+      fuelIn: number;
+    }) => {
+      if (e.fuelType === "001-Octane Ron(92)") {
+        ron92_opening += e.opening;
+        ron92_cash += e.cash;
+        ron92_balance += e.balance;
+        ron92_receive = e.fuelIn;
+      }
+      if (e.fuelType === "002-Octane Ron(95)") {
+        ron95_opening += e.opening;
+        ron95_cash += e.cash;
+        ron95_balance += e.balance;
+        ron95_receive = e.fuelIn;
+      }
+      if (e.fuelType === "004-Diesel") {
+        diesel_opening += e.opening;
+        diesel_cash += e.cash;
+        diesel_balance += e.balance;
+        diesel_receive = e.fuelIn;
+      }
+      if (e.fuelType === "005-Premium Diesel") {
+        pDiesel_opening += e.opening;
+        pDiesel_cash += e.cash;
+        pDiesel_balance += e.balance;
+        pDiesel_receive = e.fuelIn;
+      }
+    }
+  );
+
+  return {
+    ron92_opening,
+    ron95_opening,
+    diesel_opening,
+    pDiesel_opening,
+    ron92_cash,
+    ron95_cash,
+    diesel_cash,
+    pDiesel_cash,
+    ron92_balance,
+    ron95_balance,
+    diesel_balance,
+    pDiesel_balance,
+    ron92_receive,
+    ron95_receive,
+    diesel_receive,
+    pDiesel_receive,
+  };
 };
 
 export const realTankCalculationForStockBalance = (data: any[]) => {
@@ -132,27 +159,32 @@ export const realTankCalculationForStockBalance = (data: any[]) => {
   let ron95 = 0;
   let diesel = 0;
   let pDiesel = 0;
-    
-  data.forEach((element: { oilType: string; volume: number; }) => {
+
+  data.forEach((element: { oilType: string; volume: number }) => {
     if (
-      element.oilType === "Petrol 92" || element.oilType === "001-Octane Ron(92)") {
+      element.oilType === "Petrol 92" ||
+      element.oilType === "001-Octane Ron(92)"
+    ) {
       ron92 += element.volume;
     }
     if (
-      element.oilType === "95 Octane" || element.oilType === "002-Octane Ron(95)") {
+      element.oilType === "95 Octane" ||
+      element.oilType === "002-Octane Ron(95)"
+    ) {
       ron95 += element.volume;
     }
-    if (element.oilType === "Super Diesel" || element.oilType === "005-Premium Diesel") {
+    if (
+      element.oilType === "Super Diesel" ||
+      element.oilType === "005-Premium Diesel"
+    ) {
       pDiesel += element.volume;
     }
     if (element.oilType === "Diesel" || element.oilType === " 004-Diesel") {
       diesel += element.volume;
     }
   });
- 
 
-  return {ron92,ron95,diesel,pDiesel}
+  return { ron92, ron95, diesel, pDiesel };
 };
-
 
 export default fMsg;

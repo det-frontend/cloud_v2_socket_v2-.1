@@ -27,8 +27,8 @@ import { addDailyReport, getDailyReport } from "../service/dailyReport.service";
 import { getStationDetail } from "../service/stationDetail.service";
 import { ObjectId } from "mongodb";
 import { collectionGet } from "../service/collection.service";
-import logger from '../utils/logger';
-import moment from 'moment';
+import logger from "../utils/logger";
+import moment from "moment";
 
 export const getDetailSaleHandler = async (
   req: Request,
@@ -56,7 +56,6 @@ export const addDetailSaleHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-
   const start = moment().format("YYYY-MM-DD HH:mm:ss");
 
   // logger.warn(`
@@ -286,7 +285,7 @@ export const getDetailSaleDatePagiHandler = async (
     delete req.query.amountGreate;
     delete req.query.literAmount;
     delete req.query.priceAmount;
-    
+
     let query = req.query;
 
     if (!sDate) {
@@ -307,19 +306,28 @@ export const getDetailSaleDatePagiHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-    let { data, count, sumTotalPrice, sumTotalLiter } = await detailSaleByDateAndPagi(
-      query,
-      startDate,
-      endDate,
-      pageNo,
-      literGreater,
-      literAmount,
-      amountGreater,
-      priceAmount,
-      model
-    );
+    let { data, count, sumTotalPrice, sumTotalLiter } =
+      await detailSaleByDateAndPagi(
+        query,
+        startDate,
+        endDate,
+        pageNo,
+        literGreater,
+        literAmount,
+        amountGreater,
+        priceAmount,
+        model
+      );
 
-    fMsg(res, "detail sale between two date", { data , sumTotalPrice, sumTotalLiter }, model, count);
+    fMsg(
+      res,
+      "detail sale between two date",
+      data,
+      model,
+      count,
+      sumTotalPrice,
+      sumTotalLiter
+    );
   } catch (e: any) {
     next(new Error(e));
   }
@@ -974,7 +982,10 @@ export const sevenDayPreviousTotalHandler = async (
       return `${year}-${month}-${day}`;
     }
 
-    function getDates(startDate: string | number | Date, endDate: number | Date) {
+    function getDates(
+      startDate: string | number | Date,
+      endDate: number | Date
+    ) {
       const dates: any = [];
       let currentDate = new Date(startDate);
 
