@@ -242,7 +242,7 @@ const getDetailSaleDatePagiHandler = async (req, res, next) => {
         const startDate = new Date(sDate);
         const endDate = new Date(eDate);
         let { data, count, sumTotalPrice, sumTotalLiter } = await (0, detailSale_service_1.detailSaleByDateAndPagi)(query, startDate, endDate, pageNo, literGreater, literAmount, amountGreater, priceAmount, model);
-        (0, helper_1.default)(res, "detail sale between two date", { data, sumTotalPrice, sumTotalLiter }, model, count);
+        (0, helper_1.default)(res, "detail sale between two date", data, model, count, sumTotalPrice, sumTotalLiter);
     }
     catch (e) {
         next(new Error(e));

@@ -41,9 +41,15 @@ const fMsg = (
   totalLiter: number | null = null
 ) => {
   if (totalCount != null) {
-    res
-      .status(200)
-      .json({ con: true, msg, route, result, totalCount, totalPrice });
+    res.status(200).json({
+      con: true,
+      msg,
+      route,
+      result,
+      totalCount,
+      totalPrice,
+      totalLiter,
+    });
   } else {
     res.status(200).json({ con: true, msg, result });
   }

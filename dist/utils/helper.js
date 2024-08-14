@@ -29,9 +29,17 @@ let previous = (date = new Date()) => {
 };
 exports.previous = previous;
 //for response
-const fMsg = (res, msg = "all success", result = [], route = null, totalCount = null) => {
+const fMsg = (res, msg = "all success", result = [], route = null, totalCount = null, totalPrice = null, totalLiter = null) => {
     if (totalCount != null) {
-        res.status(200).json({ con: true, msg, route, result, totalCount });
+        res.status(200).json({
+            con: true,
+            msg,
+            route,
+            result,
+            totalCount,
+            totalPrice,
+            totalLiter,
+        });
     }
     else {
         res.status(200).json({ con: true, msg, result });
@@ -108,7 +116,24 @@ const fuelBalanceCalculationForStockBalance = (data) => {
             pDiesel_receive = e.fuelIn;
         }
     });
-    return { ron92_opening, ron95_opening, diesel_opening, pDiesel_opening, ron92_cash, ron95_cash, diesel_cash, pDiesel_cash, ron92_balance, ron95_balance, diesel_balance, pDiesel_balance, ron92_receive, ron95_receive, diesel_receive, pDiesel_receive };
+    return {
+        ron92_opening,
+        ron95_opening,
+        diesel_opening,
+        pDiesel_opening,
+        ron92_cash,
+        ron95_cash,
+        diesel_cash,
+        pDiesel_cash,
+        ron92_balance,
+        ron95_balance,
+        diesel_balance,
+        pDiesel_balance,
+        ron92_receive,
+        ron95_receive,
+        diesel_receive,
+        pDiesel_receive,
+    };
 };
 exports.fuelBalanceCalculationForStockBalance = fuelBalanceCalculationForStockBalance;
 const realTankCalculationForStockBalance = (data) => {
@@ -117,13 +142,16 @@ const realTankCalculationForStockBalance = (data) => {
     let diesel = 0;
     let pDiesel = 0;
     data.forEach((element) => {
-        if (element.oilType === "Petrol 92" || element.oilType === "001-Octane Ron(92)") {
+        if (element.oilType === "Petrol 92" ||
+            element.oilType === "001-Octane Ron(92)") {
             ron92 += element.volume;
         }
-        if (element.oilType === "95 Octane" || element.oilType === "002-Octane Ron(95)") {
+        if (element.oilType === "95 Octane" ||
+            element.oilType === "002-Octane Ron(95)") {
             ron95 += element.volume;
         }
-        if (element.oilType === "Super Diesel" || element.oilType === "005-Premium Diesel") {
+        if (element.oilType === "Super Diesel" ||
+            element.oilType === "005-Premium Diesel") {
             pDiesel += element.volume;
         }
         if (element.oilType === "Diesel" || element.oilType === " 004-Diesel") {

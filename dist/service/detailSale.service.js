@@ -250,7 +250,7 @@ const sumTodayStationDatasService = async (query, dbModel) => {
         },
         {
             $lookup: {
-                from: "stationdetails", // Name of the collection to perform the lookup
+                from: "stationdetails",
                 localField: "stationDetailId",
                 foreignField: "_id",
                 as: "stationdetails", // Alias for the joined data
