@@ -241,8 +241,8 @@ const getDetailSaleDatePagiHandler = async (req, res, next) => {
         //if date error ? you should use split with T or be sure detail Id
         const startDate = new Date(sDate);
         const endDate = new Date(eDate);
-        let { data, count } = await (0, detailSale_service_1.detailSaleByDateAndPagi)(query, startDate, endDate, pageNo, literGreater, literAmount, amountGreater, priceAmount, model);
-        (0, helper_1.default)(res, "detail sale between two date", data, model, count);
+        let { data, count, sumTotalPrice, sumTotalLiter } = await (0, detailSale_service_1.detailSaleByDateAndPagi)(query, startDate, endDate, pageNo, literGreater, literAmount, amountGreater, priceAmount, model);
+        (0, helper_1.default)(res, "detail sale between two date", { data, sumTotalPrice, sumTotalLiter }, model, count);
     }
     catch (e) {
         next(new Error(e));

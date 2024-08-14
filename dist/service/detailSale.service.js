@@ -161,8 +161,9 @@ const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, literGreater, lite
             .select("-__v");
         const countQuery = selectedModel.countDocuments(filter);
         const [data, count] = await Promise.all([dataQuery, countQuery]);
-        // console.log(data);
-        return { data, count };
+        const sumTotalPrice = data.reduce((acc, item) => acc + item.totalPrice, 0);
+        const sumTotalLiter = data.reduce((acc, item) => acc + item.saleLiter, 0);
+        return { data, count, sumTotalPrice, sumTotalLiter };
     }
     catch (error) {
         console.error("Error in detailSaleByDateAndPagi:", error);

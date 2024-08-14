@@ -307,7 +307,7 @@ export const getDetailSaleDatePagiHandler = async (
     const startDate: Date = new Date(sDate);
     const endDate: Date = new Date(eDate);
 
-    let { data, count } = await detailSaleByDateAndPagi(
+    let { data, count, sumTotalPrice, sumTotalLiter } = await detailSaleByDateAndPagi(
       query,
       startDate,
       endDate,
@@ -319,7 +319,7 @@ export const getDetailSaleDatePagiHandler = async (
       model
     );
 
-    fMsg(res, "detail sale between two date", data, model, count);
+    fMsg(res, "detail sale between two date", { data , sumTotalPrice, sumTotalLiter }, model, count);
   } catch (e: any) {
     next(new Error(e));
   }

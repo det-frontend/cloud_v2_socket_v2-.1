@@ -182,7 +182,7 @@ export const detailSaleByDateAndPagi = async (
   amountGreater : string,
   priceAmount : number,
   dbModel: string
-): Promise<{ count: number; data: detailSaleDocument[] }> => {
+): Promise<{ count: number; data: detailSaleDocument[]; sumTotalPrice: number; sumTotalLiter: number  }> => {
   try {
     let selectedModel = dBSelector(
       dbModel,
@@ -234,8 +234,11 @@ export const detailSaleByDateAndPagi = async (
     const countQuery = selectedModel.countDocuments(filter);
 
     const [data, count] = await Promise.all([dataQuery, countQuery]);
-    // console.log(data);
-    return { data, count };
+
+    const sumTotalPrice = data.reduce((acc: any, item: { totalPrice: any; }) => acc + item.totalPrice, 0);
+    const sumTotalLiter = data.reduce((acc: any, item: { saleLiter: any; }) => acc + item.saleLiter, 0);
+
+    return { data, count, sumTotalPrice, sumTotalLiter };
   } catch (error) {
     console.error("Error in detailSaleByDateAndPagi:", error);
     throw error;
