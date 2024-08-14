@@ -219,6 +219,8 @@ export const detailSaleByDateAndPagi = async (
         $lt: d2,
       },
     };
+
+    
     
     const dataQuery = selectedModel
       .find(filter)
@@ -235,8 +237,10 @@ export const detailSaleByDateAndPagi = async (
 
     const [data, count] = await Promise.all([dataQuery, countQuery]);
 
-    const sumTotalPrice = data.reduce((acc: any, item: { totalPrice: any; }) => acc + item.totalPrice, 0);
-    const sumTotalLiter = data.reduce((acc: any, item: { saleLiter: any; }) => acc + item.saleLiter, 0);
+    const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
+    
+    const sumTotalPrice = sumResults.reduce((acc: any, item: { totalPrice: any; }) => acc + item.totalPrice, 0);
+    const sumTotalLiter = sumResults.reduce((acc: any, item: { saleLiter: any; }) => acc + item.saleLiter, 0);
 
     return { data, count, sumTotalPrice, sumTotalLiter };
   } catch (error) {

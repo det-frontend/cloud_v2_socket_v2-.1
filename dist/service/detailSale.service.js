@@ -161,8 +161,9 @@ const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, literGreater, lite
             .select("-__v");
         const countQuery = selectedModel.countDocuments(filter);
         const [data, count] = await Promise.all([dataQuery, countQuery]);
-        const sumTotalPrice = data.reduce((acc, item) => acc + item.totalPrice, 0);
-        const sumTotalLiter = data.reduce((acc, item) => acc + item.saleLiter, 0);
+        const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
+        const sumTotalPrice = sumResults.reduce((acc, item) => acc + item.totalPrice, 0);
+        const sumTotalLiter = sumResults.reduce((acc, item) => acc + item.saleLiter, 0);
         return { data, count, sumTotalPrice, sumTotalLiter };
     }
     catch (error) {
@@ -250,7 +251,7 @@ const sumTodayStationDatasService = async (query, dbModel) => {
         },
         {
             $lookup: {
-                from: "stationdetails",
+                from: "stationdetails", // Name of the collection to perform the lookup
                 localField: "stationDetailId",
                 foreignField: "_id",
                 as: "stationdetails", // Alias for the joined data
