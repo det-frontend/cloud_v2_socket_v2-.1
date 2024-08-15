@@ -658,6 +658,7 @@ export const statementReportHandler = async (
 
       const value = await detailSaleByDate(query, startDate, endDate, model);
       const result = value.reverse();
+      const dep = result.find((e) => e.nozzleNo == noz)?.depNo;
 
       // Organize data by date and include date in each entry
       const dateGroupedData: { [date: string]: any[] } = {};
@@ -668,6 +669,7 @@ export const statementReportHandler = async (
           nozzleNo: noz,
         };
         let lastData = await getLastDetailSale(query, model);
+
         // console.log(
         //   lastData,
         //   "this is last Data....................................................."
@@ -680,6 +682,7 @@ export const statementReportHandler = async (
             station: stationDetail,
             nozzle: noz,
             price: "0",
+            depNo: "-",
             fuelType: lastData?.fuelType,
             totalizer_opening: lastData?.devTotalizar_liter,
             totalizer_closing: lastData?.devTotalizar_liter,
@@ -697,6 +700,7 @@ export const statementReportHandler = async (
             stationId: stationDetail[0].name,
             station: stationDetail,
             nozzle: noz,
+            depNo: "-",
             price: "0",
             fuelType: "-",
             totalizer_opening: "0",
@@ -734,6 +738,7 @@ export const statementReportHandler = async (
             stationId: stationDetail[0].name,
             station: stationDetail,
             nozzle: noz,
+            depNo: dep,
             fuelType: entry.fuelType,
             price: entry.salePrice,
             totalizer_opening: entry.devTotalizar_liter - entry.saleLiter,
@@ -770,6 +775,7 @@ export const statementReportHandler = async (
           stationId: stationDetail[0].name,
           station: stationDetail,
           nozzle: noz,
+          depNo: dep,
           fuelType: dateGroupedData[date][0]?.fuelType || "-",
           price: dateGroupedData[date][0]?.price || "0",
           totalizer_opening: dateGroupedData[date][0]?.totalizer_opening || "0",
