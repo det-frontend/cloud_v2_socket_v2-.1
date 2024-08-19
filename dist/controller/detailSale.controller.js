@@ -517,6 +517,7 @@ const statementReportHandler = async (req, res, next) => {
             };
             const value = await (0, detailSale_service_1.detailSaleByDate)(query, startDate, endDate, model);
             const result = value.reverse();
+            const dep = result.find((e) => e.nozzleNo == noz)?.depNo;
             // Organize data by date and include date in each entry
             const dateGroupedData = {};
             let count = result.length;
@@ -537,6 +538,7 @@ const statementReportHandler = async (req, res, next) => {
                         station: stationDetail,
                         nozzle: noz,
                         price: "0",
+                        depNo: "-",
                         fuelType: lastData?.fuelType,
                         totalizer_opening: lastData?.devTotalizar_liter,
                         totalizer_closing: lastData?.devTotalizar_liter,
@@ -554,6 +556,7 @@ const statementReportHandler = async (req, res, next) => {
                         stationId: stationDetail[0].name,
                         station: stationDetail,
                         nozzle: noz,
+                        depNo: "-",
                         price: "0",
                         fuelType: "-",
                         totalizer_opening: "0",
@@ -587,6 +590,7 @@ const statementReportHandler = async (req, res, next) => {
                         stationId: stationDetail[0].name,
                         station: stationDetail,
                         nozzle: noz,
+                        depNo: dep,
                         fuelType: entry.fuelType,
                         price: entry.salePrice,
                         totalizer_opening: entry.devTotalizar_liter - entry.saleLiter,
@@ -610,6 +614,7 @@ const statementReportHandler = async (req, res, next) => {
                     stationId: stationDetail[0].name,
                     station: stationDetail,
                     nozzle: noz,
+                    depNo: dep,
                     fuelType: dateGroupedData[date][0]?.fuelType || "-",
                     price: dateGroupedData[date][0]?.price || "0",
                     totalizer_opening: dateGroupedData[date][0]?.totalizer_opening || "0",
