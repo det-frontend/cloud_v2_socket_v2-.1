@@ -25,6 +25,7 @@ const socketConnect_1 = __importDefault(require("./utils/socketConnect"));
 const casherCode_routes_1 = __importDefault(require("./router/casherCode.routes"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, express_fileupload_1.default)());
 app.use((0, cors_1.default)({ origin: "*" }));
 // app.use(requestLogger);
