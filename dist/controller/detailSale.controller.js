@@ -491,6 +491,7 @@ exports.getDetailSaleDatePagiHandler = getDetailSaleDatePagiHandler;
 //     next(new Error(e));
 //   }
 // };
+//latest
 const statementReportHandler = async (req, res, next) => {
     try {
         const sDate = req.query.sDate;
@@ -531,44 +532,44 @@ const statementReportHandler = async (req, res, next) => {
                 //   lastData,
                 //   "this is last Data....................................................."
                 // );
-                if (lastData) {
-                    let data = {
-                        date: "-",
-                        stationId: stationDetail[0].name,
-                        station: stationDetail,
-                        nozzle: noz,
-                        price: "0",
-                        depNo: "-",
-                        fuelType: lastData?.fuelType,
-                        totalizer_opening: lastData?.devTotalizar_liter,
-                        totalizer_closing: lastData?.devTotalizar_liter,
-                        totalizer_different: 0,
-                        totalSaleLiter: 0,
-                        totalSalePrice: 0,
-                        other: 0,
-                        pumptest: 0,
-                    };
-                    finalData.push(data);
-                }
-                else {
-                    let data = {
-                        date: "-",
-                        stationId: stationDetail[0].name,
-                        station: stationDetail,
-                        nozzle: noz,
-                        depNo: "-",
-                        price: "0",
-                        fuelType: "-",
-                        totalizer_opening: "0",
-                        totalizer_closing: "0",
-                        totalizer_different: 0,
-                        totalSaleLiter: 0,
-                        totalSalePrice: 0,
-                        other: 0,
-                        pumptest: 0,
-                    };
-                    finalData.push(data);
-                }
+                //commented for update
+                // if (lastData) {
+                //   let data = {
+                //     date: "-",
+                //     stationId: stationDetail[0].name,
+                //     station: stationDetail,
+                //     nozzle: noz,
+                //     price: "0",
+                //     depNo: "-",
+                //     fuelType: lastData?.fuelType,
+                //     totalizer_opening: lastData?.devTotalizar_liter,
+                //     totalizer_closing: lastData?.devTotalizar_liter,
+                //     totalizer_different: 0,
+                //     totalSaleLiter: 0,
+                //     totalSalePrice: 0,
+                //     other: 0,
+                //     pumptest: 0,
+                //   };
+                //   finalData.push(data);
+                // } else {
+                //   let data = {
+                //     date: "-",
+                //     stationId: stationDetail[0].name,
+                //     station: stationDetail,
+                //     nozzle: noz,
+                //     depNo: "-",
+                //     price: "0",
+                //     fuelType: "-",
+                //     totalizer_opening: "0",
+                //     totalizer_closing: "0",
+                //     totalizer_different: 0,
+                //     totalSaleLiter: 0,
+                //     totalSalePrice: 0,
+                //     other: 0,
+                //     pumptest: 0,
+                //   };
+                //   finalData.push(data);
+                // }
             }
             else {
                 for (const entry of result) {

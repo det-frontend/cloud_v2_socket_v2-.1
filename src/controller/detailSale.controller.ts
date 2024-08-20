@@ -618,6 +618,7 @@ export const getDetailSaleDatePagiHandler = async (
 //   }
 // };
 
+//latest
 export const statementReportHandler = async (
   req: Request,
   res: Response,
@@ -675,45 +676,47 @@ export const statementReportHandler = async (
         //   "this is last Data....................................................."
         // );
 
-        if (lastData) {
-          let data = {
-            date: "-",
-            stationId: stationDetail[0].name,
-            station: stationDetail,
-            nozzle: noz,
-            price: "0",
-            depNo: "-",
-            fuelType: lastData?.fuelType,
-            totalizer_opening: lastData?.devTotalizar_liter,
-            totalizer_closing: lastData?.devTotalizar_liter,
-            totalizer_different: 0,
-            totalSaleLiter: 0,
-            totalSalePrice: 0,
-            other: 0,
-            pumptest: 0,
-          };
+        //commented for update
+        // if (lastData) {
+        //   let data = {
+        //     date: "-",
+        //     stationId: stationDetail[0].name,
+        //     station: stationDetail,
+        //     nozzle: noz,
+        //     price: "0",
+        //     depNo: "-",
+        //     fuelType: lastData?.fuelType,
+        //     totalizer_opening: lastData?.devTotalizar_liter,
+        //     totalizer_closing: lastData?.devTotalizar_liter,
+        //     totalizer_different: 0,
+        //     totalSaleLiter: 0,
+        //     totalSalePrice: 0,
+        //     other: 0,
+        //     pumptest: 0,
+        //   };
 
-          finalData.push(data);
-        } else {
-          let data = {
-            date: "-",
-            stationId: stationDetail[0].name,
-            station: stationDetail,
-            nozzle: noz,
-            depNo: "-",
-            price: "0",
-            fuelType: "-",
-            totalizer_opening: "0",
-            totalizer_closing: "0",
-            totalizer_different: 0,
-            totalSaleLiter: 0,
-            totalSalePrice: 0,
-            other: 0,
-            pumptest: 0,
-          };
+        //   finalData.push(data);
+        // } else {
+        //   let data = {
+        //     date: "-",
+        //     stationId: stationDetail[0].name,
+        //     station: stationDetail,
+        //     nozzle: noz,
+        //     depNo: "-",
+        //     price: "0",
+        //     fuelType: "-",
+        //     totalizer_opening: "0",
+        //     totalizer_closing: "0",
+        //     totalizer_different: 0,
+        //     totalSaleLiter: 0,
+        //     totalSalePrice: 0,
+        //     other: 0,
+        //     pumptest: 0,
+        //   };
 
-          finalData.push(data);
-        }
+        //   finalData.push(data);
+        // }
+
       } else {
         for (const entry of result) {
           const entryDate = new Date(entry.dailyReportDate)
