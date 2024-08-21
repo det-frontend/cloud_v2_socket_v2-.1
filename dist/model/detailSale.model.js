@@ -19,12 +19,12 @@ const detailSaleSchema = new mongoose_1.Schema({
     device: { type: String },
     preset: { type: String, default: null },
     asyncAlready: { type: String, required: true, default: "0" },
-    vocono: { type: String, required: true, unique: true },
-    carNo: { type: String, default: null },
-    vehicleType: { type: String, default: "car" },
+    vocono: { type: String, required: true, unique: true }, //g
+    carNo: { type: String, default: null }, //g
+    vehicleType: { type: String, default: "car" }, //g
     depNo: { type: String, default: '0' },
-    nozzleNo: { type: String, required: true },
-    fuelType: { type: String, required: true },
+    nozzleNo: { type: String, required: true }, //g
+    fuelType: { type: String, required: true }, //g
     //update
     cashType: {
         type: String,
