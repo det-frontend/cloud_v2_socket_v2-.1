@@ -225,9 +225,9 @@ export const tankDataSchema = object({
     stationDetailId: string({
       required_error: "No data with that id!"
     }).regex(/^[0-9a-fA-F]{24}$/, "invlid id!"),
-    vocono: string({
-      required_error:"Vocono is required!"
-    }),
+    // vocono: string({
+    //   required_error:"Vocono is required!"
+    // }),
     nozzleNo: string({
       required_error:"Nozzle no is required!"
     }),
