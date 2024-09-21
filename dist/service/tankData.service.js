@@ -23,7 +23,7 @@ const addTankDataService = async (body, dbModel) => {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
         const tankObject = {
             stationDetailId: body.stationDetailId,
-            vocono: body.vocono,
+            // vocono: body.vocono,
             nozzleNo: body.nozzleNo,
             data: body.data,
             dailyReportDate: body.dateOfDay,
@@ -43,7 +43,7 @@ const updateExistingTankData = async (id, body, dbModel) => {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
         const tankObject = {
             stationDetailId: body.stationDetailId,
-            vocono: body.vocono,
+            // vocono: body.vocono,
             nozzleNo: body.nozzleNo,
             data: body.data,
             dailyReportDate: body.dateOfDay,
