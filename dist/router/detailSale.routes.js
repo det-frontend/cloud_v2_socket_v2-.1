@@ -10,6 +10,8 @@ const detailSaleRoute = require("express").Router();
 detailSaleRoute.get("/pagi/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.getDetailSaleHandler);
 detailSaleRoute.get("/by-date", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.getDetailSaleByDateHandler);
 detailSaleRoute.get("/pagi/by-date/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.getDetailSaleDatePagiHandler);
+// get detail sales with pagination route
+detailSaleRoute.get("/without-pagi/by-date", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, detailSale_controller_1.getDetailSaleWithoutPagiHandler);
 // //that for only device
 detailSaleRoute.post("/", (0, validator_1.validateAll)(scheama_1.detailSaleSchema), modelControl_1.locSevModelControl, detailSale_controller_1.addDetailSaleHandler);
 detailSaleRoute.patch("/", validator_1.validateToken, (0, validator_1.validateAll)(scheama_1.detailSaleUpdateSchema), (0, roleValidator_1.roleValidator)(["det"]), (0, permitValidator_1.hasAnyPermit)(["edit"]), modelControl_1.modelController, detailSale_controller_1.updateDetailSaleHandler);

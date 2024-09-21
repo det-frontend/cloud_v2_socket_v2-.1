@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDailyReportDateForEachDayHandler = exports.calcualteDatasForEachDayHanlder = exports.sevenDayPreviousTotalHandler = exports.calculateStationTotalHandler = exports.calculateCategoriesTotalHandler = exports.calculateTotalPerDayHandler = exports.statementReportHandler = exports.getDetailSaleDatePagiHandler = exports.getDetailSaleByDateHandler = exports.deleteDetailSaleHandler = exports.updateDetailSaleHandler = exports.addDetailSaleHandler = exports.getDetailSaleHandler = void 0;
+exports.getDailyReportDateForEachDayHandler = exports.calcualteDatasForEachDayHanlder = exports.sevenDayPreviousTotalHandler = exports.calculateStationTotalHandler = exports.calculateCategoriesTotalHandler = exports.calculateTotalPerDayHandler = exports.statementReportHandler = exports.getDetailSaleWithoutPagiHandler = exports.getDetailSaleDatePagiHandler = exports.getDetailSaleByDateHandler = exports.deleteDetailSaleHandler = exports.updateDetailSaleHandler = exports.addDetailSaleHandler = exports.getDetailSaleHandler = void 0;
 const helper_1 = __importStar(require("../utils/helper"));
 const detailSale_service_1 = require("../service/detailSale.service");
 const fuelBalance_service_1 = require("../service/fuelBalance.service");
@@ -249,6 +249,48 @@ const getDetailSaleDatePagiHandler = async (req, res, next) => {
     }
 };
 exports.getDetailSaleDatePagiHandler = getDetailSaleDatePagiHandler;
+// get detail sale with pagination handler
+const getDetailSaleWithoutPagiHandler = async (req, res, next) => {
+    try {
+        let sDate = req.query.sDate;
+        let eDate = req.query.eDate;
+        const literGreater = req.query.literGreate;
+        const amountGreater = req.query.amountGreate;
+        const literAmount = parseInt(req.query.literAmount);
+        const priceAmount = parseInt(req.query.priceAmount);
+        delete req.query.sDate;
+        delete req.query.eDate;
+        delete req.query.literGreate;
+        delete req.query.amountGreate;
+        delete req.query.literAmount;
+        delete req.query.priceAmount;
+        let query = req.query;
+        if (!sDate) {
+            throw new Error("You need to provide a start date.");
+        }
+        if (!eDate) {
+            eDate = new Date();
+        }
+        let model;
+        if (req.query.accessDb) {
+            model = req.query.accessDb;
+        }
+        else {
+            model = req.body.accessDb;
+        }
+        // Parse dates
+        const startDate = new Date(sDate);
+        const endDate = new Date(eDate);
+        // Call the non-paginated function
+        let { data, sumTotalPrice, sumTotalLiter } = await (0, detailSale_service_1.detailSaleWithoutPagiByDate)(query, startDate, endDate, literGreater, literAmount, amountGreater, priceAmount, model);
+        // Respond with the data
+        (0, helper_1.default)(res, "Detail sale between two dates", data, model, sumTotalPrice, sumTotalLiter);
+    }
+    catch (e) {
+        next(new Error(e));
+    }
+};
+exports.getDetailSaleWithoutPagiHandler = getDetailSaleWithoutPagiHandler;
 //old version
 // export const statementReportHandler = async (
 //   req: Request,

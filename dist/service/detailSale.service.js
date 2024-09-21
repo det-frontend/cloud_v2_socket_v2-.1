@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDailyReportDateForEachDayService = exports.sumSevenDayPrevious = exports.sumTodayStationDatasService = exports.sumTodayFuelTypeService = exports.sumTodayCategoryDatasService = exports.sumTodayDatasService = exports.getTodayVechicleCount = exports.getLastDetailSale = exports.detailSaleByDateAndPagi = exports.detailSaleByDate = exports.detailSalePaginate = exports.getDetailSaleByFuelType = exports.deleteDetailSale = exports.updateDetailSale = exports.addDetailSale = exports.getDetailSale = void 0;
+exports.getDailyReportDateForEachDayService = exports.sumSevenDayPrevious = exports.sumTodayStationDatasService = exports.sumTodayFuelTypeService = exports.sumTodayCategoryDatasService = exports.sumTodayDatasService = exports.getTodayVechicleCount = exports.getLastDetailSale = exports.detailSaleWithoutPagiByDate = exports.detailSaleByDateAndPagi = exports.detailSaleByDate = exports.detailSalePaginate = exports.getDetailSaleByFuelType = exports.deleteDetailSale = exports.updateDetailSale = exports.addDetailSale = exports.getDetailSale = void 0;
 const detailSale_model_1 = require("../model/detailSale.model");
 const config_1 = __importDefault(require("config"));
 const helper_1 = require("../utils/helper");
@@ -115,6 +115,7 @@ const detailSaleByDate = async (query, d1, d2, dbModel) => {
     return result;
 };
 exports.detailSaleByDate = detailSaleByDate;
+// get detail sales with pagination and filter by date 
 const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, literGreater, literAmount, amountGreater, priceAmount, dbModel) => {
     try {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
@@ -172,6 +173,58 @@ const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, literGreater, lite
     }
 };
 exports.detailSaleByDateAndPagi = detailSaleByDateAndPagi;
+// get detail sales without pagination and filter by date
+const detailSaleWithoutPagiByDate = async (query, d1, d2, literGreater, literAmount, amountGreater, priceAmount, dbModel) => {
+    try {
+        let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
+        if (literAmount) {
+            if (literGreater === "greate") {
+                query.saleLiter = { $gt: literAmount };
+            }
+            else if (literGreater === "less") {
+                query.saleLiter = { $lt: literAmount };
+            }
+            else if (literGreater === "equal") {
+                query.saleLiter = { $eq: literAmount };
+            }
+        }
+        if (priceAmount) {
+            if (amountGreater === "greate") {
+                query.totalPrice = { $gt: priceAmount };
+            }
+            else if (amountGreater === "less") {
+                query.totalPrice = { $lt: priceAmount };
+            }
+            else if (amountGreater === "equal") {
+                query.totalPrice = { $eq: priceAmount };
+            }
+        }
+        const filter = {
+            ...query,
+            createAt: {
+                $gt: d1,
+                $lt: d2,
+            },
+        };
+        const data = await selectedModel
+            .find(filter)
+            .sort({ createAt: -1 })
+            .populate({
+            path: "stationDetailId",
+            model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
+        })
+            .select("-__v");
+        const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
+        const sumTotalPrice = sumResults.reduce((acc, item) => acc + item.totalPrice, 0);
+        const sumTotalLiter = sumResults.reduce((acc, item) => acc + item.saleLiter, 0);
+        return { data, sumTotalPrice, sumTotalLiter };
+    }
+    catch (error) {
+        console.error("Error in detailSaleByDate:", error);
+        throw error;
+    }
+};
+exports.detailSaleWithoutPagiByDate = detailSaleWithoutPagiByDate;
 const getLastDetailSale = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
     return await selectedModel.findOne(query).sort({ _id: -1, createAt: -1 });
@@ -251,7 +304,7 @@ const sumTodayStationDatasService = async (query, dbModel) => {
         },
         {
             $lookup: {
-                from: "stationdetails",
+                from: "stationdetails", // Name of the collection to perform the lookup
                 localField: "stationDetailId",
                 foreignField: "_id",
                 as: "stationdetails", // Alias for the joined data
