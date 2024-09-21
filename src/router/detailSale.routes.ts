@@ -8,6 +8,7 @@ import {
   getDetailSaleByDateHandler,
   getDetailSaleDatePagiHandler,
   getDetailSaleHandler,
+  getDetailSaleWithoutPagiHandler,
   sevenDayPreviousTotalHandler,
   statementReportHandler,
   updateDetailSaleHandler,
@@ -50,6 +51,15 @@ detailSaleRoute.get(
   hasAnyPermit(["view"]),
   modelController,
   getDetailSaleDatePagiHandler
+);
+
+// get detail sales with pagination route
+detailSaleRoute.get(
+  "/without-pagi/by-date",
+  validateToken,
+  hasAnyPermit(["view"]),
+  modelController,
+  getDetailSaleWithoutPagiHandler
 );
 
 // //that for only device

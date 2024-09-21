@@ -15,6 +15,7 @@ import {
   sumTodayStationDatasService,
   sumSevenDayPrevious,
   getDailyReportDateForEachDayService,
+  detailSaleWithoutPagiByDate,
   // detailSaleByDate,
 } from "../service/detailSale.service";
 import {
@@ -332,6 +333,73 @@ export const getDetailSaleDatePagiHandler = async (
     next(new Error(e));
   }
 };
+
+// get detail sale with pagination handler
+export const getDetailSaleWithoutPagiHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate: any = req.query.sDate;
+    let eDate: any = req.query.eDate;
+    const literGreater: string = req.query.literGreate as string;
+    const amountGreater: string = req.query.amountGreate as string;
+    const literAmount: number = parseInt(req.query.literAmount as string);
+    const priceAmount: number = parseInt(req.query.priceAmount as string);
+
+    delete req.query.sDate;
+    delete req.query.eDate;
+    delete req.query.literGreate;
+    delete req.query.amountGreate;
+    delete req.query.literAmount;
+    delete req.query.priceAmount;
+
+    let query = req.query;
+
+    if (!sDate) {
+      throw new Error("You need to provide a start date.");
+    }
+    if (!eDate) {
+      eDate = new Date();
+    }
+
+    let model: any;
+    if (req.query.accessDb) {
+      model = req.query.accessDb;
+    } else {
+      model = req.body.accessDb;
+    }
+
+    // Parse dates
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
+
+    // Call the non-paginated function
+    let { data, sumTotalPrice, sumTotalLiter } = await detailSaleWithoutPagiByDate(
+      query,
+      startDate,
+      endDate,
+      literGreater,
+      literAmount,
+      amountGreater,
+      priceAmount,
+      model
+    );
+
+    // Respond with the data
+    fMsg(
+      res,
+      "Detail sale between two dates",
+      data,
+      model,
+      sumTotalPrice,
+      sumTotalLiter
+    );
+  } catch (e: any) {
+    next(new Error(e));
+  }
+}
 
 //old version
 // export const statementReportHandler = async (

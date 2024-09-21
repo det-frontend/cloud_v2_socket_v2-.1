@@ -172,6 +172,7 @@ export const detailSaleByDate = async (
   return result;
 };
 
+// get detail sales with pagination and filter by date 
 export const detailSaleByDateAndPagi = async (
   query: FilterQuery<detailSaleDocument>,
   d1: Date,
@@ -248,6 +249,73 @@ export const detailSaleByDateAndPagi = async (
     throw error;
   }
 };
+
+// get detail sales without pagination and filter by date
+export const detailSaleWithoutPagiByDate = async (
+  query: FilterQuery<detailSaleDocument>,
+  d1: Date,
+  d2: Date,
+  literGreater: string,
+  literAmount: number,
+  amountGreater: string,
+  priceAmount: number,
+  dbModel: string
+): Promise<{ data: detailSaleDocument[]; sumTotalPrice: number; sumTotalLiter: number }> => {
+  try {
+    let selectedModel = dBSelector(
+      dbModel,
+      ksDetailSaleModel,
+      csDetailSaleModel
+    );
+
+    if (literAmount) {
+      if (literGreater === "greate") {
+        query.saleLiter = { $gt: literAmount };
+      } else if (literGreater === "less") {
+        query.saleLiter = { $lt: literAmount };
+      } else if (literGreater === "equal") {
+        query.saleLiter = { $eq: literAmount };
+      }
+    }
+
+    if (priceAmount) {
+      if (amountGreater === "greate") {
+        query.totalPrice = { $gt: priceAmount };
+      } else if (amountGreater === "less") {
+        query.totalPrice = { $lt: priceAmount };
+      } else if (amountGreater === "equal") {
+        query.totalPrice = { $eq: priceAmount };
+      }
+    }
+
+    const filter: FilterQuery<detailSaleDocument> = {
+      ...query,
+      createAt: {
+        $gt: d1,
+        $lt: d2,
+      },
+    };
+
+    const data = await selectedModel
+      .find(filter)
+      .sort({ createAt: -1 })
+      .populate({
+        path: "stationDetailId",
+        model: dbDistribution({ accessDb: dbModel }),
+      })
+      .select("-__v");
+
+    const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
+    
+    const sumTotalPrice = sumResults.reduce((acc: any, item: { totalPrice: any }) => acc + item.totalPrice, 0);
+    const sumTotalLiter = sumResults.reduce((acc: any, item: { saleLiter: any }) => acc + item.saleLiter, 0);
+
+    return { data, sumTotalPrice, sumTotalLiter };
+  } catch (error) {
+    console.error("Error in detailSaleByDate:", error);
+    throw error;
+  }
+}
 
 export const getLastDetailSale = async (
   query: FilterQuery<detailSaleDocument>,
