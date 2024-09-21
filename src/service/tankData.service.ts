@@ -29,7 +29,7 @@ export const addTankDataService = async (body: any, dbModel: string) => {
 
         const tankObject = {
             stationDetailId: body.stationDetailId,
-            vocono: body.vocono,
+            // vocono: body.vocono,
             nozzleNo: body.nozzleNo,
             data: body.data,
             dailyReportDate: body.dateOfDay,
@@ -56,7 +56,7 @@ export const updateExistingTankData = async (
         
         const tankObject = {
             stationDetailId: body.stationDetailId,
-            vocono: body.vocono,
+            // vocono: body.vocono,
             nozzleNo: body.nozzleNo,
             data: body.data,
             dailyReportDate: body.dateOfDay,

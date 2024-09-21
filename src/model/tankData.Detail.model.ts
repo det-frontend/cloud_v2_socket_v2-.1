@@ -27,11 +27,11 @@ const tankDataSchema = new Schema({
         ref: dbDistribution(this),
         required: true
     },
-    vocono: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    // vocono: {
+    //     type: String,
+    //     required: true,
+    //     unique: true
+    // },
     nozzleNo: {
         type: String,
         required:true,
