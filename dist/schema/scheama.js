@@ -200,9 +200,9 @@ exports.tankDataSchema = (0, zod_1.object)({
         stationDetailId: (0, zod_1.string)({
             required_error: "No data with that id!"
         }).regex(/^[0-9a-fA-F]{24}$/, "invlid id!"),
-        vocono: (0, zod_1.string)({
-            required_error: "Vocono is required!"
-        }),
+        // vocono: string({
+        //   required_error:"Vocono is required!"
+        // }),
         nozzleNo: (0, zod_1.string)({
             required_error: "Nozzle no is required!"
         }),

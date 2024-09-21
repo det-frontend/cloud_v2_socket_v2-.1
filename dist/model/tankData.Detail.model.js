@@ -18,11 +18,11 @@ const tankDataSchema = new mongoose_1.Schema({
         ref: (0, helper_1.dbDistribution)(this),
         required: true
     },
-    vocono: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    // vocono: {
+    //     type: String,
+    //     required: true,
+    //     unique: true
+    // },
     nozzleNo: {
         type: String,
         required: true,
