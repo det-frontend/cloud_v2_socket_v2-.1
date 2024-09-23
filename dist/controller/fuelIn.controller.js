@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAtgFuelInHandler = exports.getFuelInByDateHandler = exports.deleteFuelInHandler = exports.updateFuelInHandler = exports.addFuelInHandler = exports.getFuelInHandler = void 0;
+exports.addAtgFuelInHandler = exports.getFuelInWithoutPagiByDateHandler = exports.getFuelInByDateHandler = exports.deleteFuelInHandler = exports.updateFuelInHandler = exports.addFuelInHandler = exports.getFuelInHandler = void 0;
 const helper_1 = __importDefault(require("../utils/helper"));
 const fuelIn_service_1 = require("../service/fuelIn.service");
 const getFuelInHandler = async (req, res, next) => {
@@ -84,6 +84,39 @@ const getFuelInByDateHandler = async (req, res, next) => {
     }
 };
 exports.getFuelInByDateHandler = getFuelInByDateHandler;
+const getFuelInWithoutPagiByDateHandler = async (req, res, next) => {
+    try {
+        let sDate = req.query.sDate;
+        let eDate = req.query.eDate;
+        // Remove the pageNo variable as pagination is not needed
+        delete req.query.sDate;
+        delete req.query.eDate;
+        let query = req.query;
+        if (!sDate) {
+            throw new Error("you need a start date");
+        }
+        if (!eDate) {
+            eDate = new Date(); // default to current date if no end date provided
+        }
+        const startDate = new Date(sDate);
+        const endDate = new Date(eDate);
+        let model;
+        if (req.query.accessDb) {
+            model = req.query.accessDb;
+        }
+        else {
+            model = req.body.accessDb;
+        }
+        delete req.query.accessDb;
+        // Modify the fuelInByDate function call to exclude pagination
+        let { data, count } = await (0, fuelIn_service_1.fuelInWithoutByDate)(query, startDate, endDate, model);
+        (0, helper_1.default)(res, "fuel balance between two dates", data, model, count);
+    }
+    catch (e) {
+        next(new Error(e));
+    }
+};
+exports.getFuelInWithoutPagiByDateHandler = getFuelInWithoutPagiByDateHandler;
 const addAtgFuelInHandler = async (req, res, next) => {
     try {
         let model = req.body.accessDb;

@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTankDataController = exports.deleteTankDataIdController = exports.getTankDataByDate = exports.getAllTankDataController = exports.addTankDataController = void 0;
+exports.updateTankDataController = exports.deleteTankDataIdController = exports.getTankDataWithoutPagiByDate = exports.getTankDataByDate = exports.getAllTankDataController = exports.addTankDataController = void 0;
 const tankData_service_1 = require("../service/tankData.service");
 const helper_1 = __importStar(require("../utils/helper"));
 const fuelBalance_service_1 = require("../service/fuelBalance.service");
@@ -240,6 +240,32 @@ const getTankDataByDate = async (req, res, next) => {
     }
 };
 exports.getTankDataByDate = getTankDataByDate;
+const getTankDataWithoutPagiByDate = async (req, res, next) => {
+    try {
+        let sDate = req.query.sDate;
+        delete req.query.sDate;
+        let query = req.query;
+        if (!query.dailyReportDate) {
+            throw new Error("you need date");
+        }
+        let model;
+        if (req.query.accessDb) {
+            model = req.query.accessDb;
+        }
+        else {
+            model = req.body.accessDb;
+        }
+        delete req.query.accessDb;
+        const startDate = new Date(sDate);
+        // Call tankDataByDate without pageNo (since pagination is removed)
+        let { data, count } = await (0, tankData_service_1.tankDataWithoutPagiByDate)(query, startDate, model);
+        (0, helper_1.default)(res, "tank", data, model, count);
+    }
+    catch (e) {
+        next(new Error(e));
+    }
+};
+exports.getTankDataWithoutPagiByDate = getTankDataWithoutPagiByDate;
 const deleteTankDataIdController = async (req, res, next) => {
     try {
         let model = req.body.accessDb;

@@ -8,6 +8,7 @@ import {
   deleteFuelBalance,
   fuelBalancePaginate,
   fuelBalanceByDate,
+  fuelBalanceWithoutPagi,
 } from "../service/fuelBalance.service";
 import { tankDataByDates } from "../service/tankData.service";
 const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
@@ -66,6 +67,46 @@ export const getFuelBalanceHandler = async (
     next(new Error(e));
   }
 };
+
+export const getFuelBalanceWithoutPagiHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate = req.query.sDate?.toString();
+
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
+
+    if (!sDate) {
+      throw new Error("you need date");
+    }
+
+    let model: any;
+    if (req.query.accessDb) {
+      model = req.query.accessDb;
+    } else {
+      model = req.body.accessDb;
+    }
+
+    // Call the fuelBalance function instead of fuelBalancePaginate to remove pagination
+    let { count, data } = await fuelBalanceWithoutPagi(
+      {
+        ...query,
+        createAt: sDate,
+      },
+      model
+    );
+
+    fMsg(res, "fuelBalance find", data, model, count);
+  } catch (e: any) {
+    next(new Error(e));
+  }
+};
+
 
 export const addFuelBalanceHandler = async (
   req: Request,

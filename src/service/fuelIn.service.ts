@@ -167,6 +167,37 @@ export const fuelInByDate = async (
   return { data, count };
 };
 
+export const fuelInWithoutByDate = async (
+  query: FilterQuery<fuelInDocument>,
+  d1: Date,
+  d2: Date,
+  dbModel: string
+): Promise<{ count: number; data: fuelInDocument[] }> => {
+  let selectedModel = dBSelector(dbModel, ksFuelInModel, csFuelInModel);
+
+  const filter: FilterQuery<fuelInDocument> = {
+    ...query,
+    createAt: {
+      $gt: d1,
+      $lt: d2,
+    },
+  };
+
+  // Fetch all data without skip and limit (no pagination)
+  const data = await selectedModel
+    .find(filter)
+    .sort({ createAt: -1 })
+    .populate({
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
+    })
+    .select("-__v");
+
+  const count = await selectedModel.countDocuments(filter);
+  return { data, count };
+};
+
+
 export const addAtgFuelIn = async (body: any, dbModel: string) => {
   console.log(body);
   try {

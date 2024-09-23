@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.latestTankDataByStationId = exports.updateTankDataService = exports.deleteTankDataById = exports.getAllTankDataService = exports.tankDataByDates = exports.tankDataByDate = exports.updateExistingTankData = exports.addTankDataService = exports.getTankData = void 0;
+exports.latestTankDataByStationId = exports.updateTankDataService = exports.deleteTankDataById = exports.getAllTankDataService = exports.tankDataByDates = exports.tankDataWithoutPagiByDate = exports.tankDataByDate = exports.updateExistingTankData = exports.addTankDataService = exports.getTankData = void 0;
 const tankData_Detail_model_1 = require("../model/tankData.Detail.model");
 const helper_1 = require("../utils/helper");
 const config_1 = __importDefault(require("config"));
@@ -77,6 +77,20 @@ const tankDataByDate = async (query, d1, pageNo, dbModel) => {
     return { data, count };
 };
 exports.tankDataByDate = tankDataByDate;
+const tankDataWithoutPagiByDate = async (query, d1, dbModel) => {
+    let selectedModel = (0, helper_1.dBSelector)(dbModel, tankData_Detail_model_1.ksTankDataModel, tankData_Detail_model_1.csTankDataModel);
+    const data = await selectedModel
+        .find(query)
+        .sort({ createdAt: -1 }) // Sorting by creation date, descending
+        .populate({
+        path: `stationDetailId`,
+        model: (0, helper_1.dbDistribution)({ accessDb: dbModel })
+    })
+        .select("-__v"); // Exclude the version field
+    const count = await selectedModel.countDocuments();
+    return { data, count };
+};
+exports.tankDataWithoutPagiByDate = tankDataWithoutPagiByDate;
 const tankDataByDates = async (query, d1, d2, dbModel) => {
     try {
         const filter = {

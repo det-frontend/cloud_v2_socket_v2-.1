@@ -3,6 +3,7 @@ import {
   deleteTankDataIdController,
   getAllTankDataController,
   getTankDataByDate,
+  getTankDataWithoutPagiByDate,
   updateTankDataController,
 } from "../controller/tankData.controller";
 import {
@@ -39,6 +40,14 @@ tankDataRouter.get(
   hasAnyPermit(["view"]),
   modelController,
   getTankDataByDate
+);
+
+tankDataRouter.get(
+  "/without-pagi/by-date",
+  validateToken,
+  hasAnyPermit(["view"]),
+  modelController,
+  getTankDataWithoutPagiByDate
 );
 
 tankDataRouter.delete(

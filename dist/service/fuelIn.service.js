@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAtgFuelIn = exports.fuelInByDate = exports.deleteFuelIn = exports.updateFuelIn = exports.addFuelIn = exports.fuelInPaginate = exports.getFuelIn = void 0;
+exports.addAtgFuelIn = exports.fuelInWithoutByDate = exports.fuelInByDate = exports.deleteFuelIn = exports.updateFuelIn = exports.addFuelIn = exports.fuelInPaginate = exports.getFuelIn = void 0;
 const fuelIn_model_1 = require("../model/fuelIn.model");
 const fuelBalance_service_1 = require("./fuelBalance.service");
 const config_1 = __importDefault(require("config"));
@@ -128,6 +128,28 @@ const fuelInByDate = async (query, d1, d2, pageNo, dbModel) => {
     return { data, count };
 };
 exports.fuelInByDate = fuelInByDate;
+const fuelInWithoutByDate = async (query, d1, d2, dbModel) => {
+    let selectedModel = (0, helper_1.dBSelector)(dbModel, fuelIn_model_1.ksFuelInModel, fuelIn_model_1.csFuelInModel);
+    const filter = {
+        ...query,
+        createAt: {
+            $gt: d1,
+            $lt: d2,
+        },
+    };
+    // Fetch all data without skip and limit (no pagination)
+    const data = await selectedModel
+        .find(filter)
+        .sort({ createAt: -1 })
+        .populate({
+        path: "stationId",
+        model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
+    })
+        .select("-__v");
+    const count = await selectedModel.countDocuments(filter);
+    return { data, count };
+};
+exports.fuelInWithoutByDate = fuelInWithoutByDate;
 const addAtgFuelIn = async (body, dbModel) => {
     console.log(body);
     try {

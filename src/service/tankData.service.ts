@@ -107,6 +107,32 @@ export const tankDataByDate = async (
     return { data, count };
 };
 
+export const tankDataWithoutPagiByDate = async (
+    query: FilterQuery<tankDataDocument>,
+    d1: Date,
+    dbModel: string
+) => {
+    let selectedModel = dBSelector(
+        dbModel,
+        ksTankDataModel,
+        csTankDataModel
+    );
+
+    const data = await selectedModel
+        .find(query)
+        .sort({ createdAt: -1 })  // Sorting by creation date, descending
+        .populate({
+            path: `stationDetailId`,
+            model: dbDistribution({ accessDb: dbModel })
+        })
+        .select("-__v");  // Exclude the version field
+
+    const count = await selectedModel.countDocuments();
+
+    return { data, count };
+};
+
+
 export const tankDataByDates = async (
     query: FilterQuery<tankDataDocument>,
     d1: Date,

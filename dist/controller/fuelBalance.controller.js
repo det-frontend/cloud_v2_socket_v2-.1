@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFuelBalanceByDateHandler = exports.deleteFuelBalanceHandler = exports.updateFuelBalanceHandler = exports.addFuelBalanceHandler = exports.getFuelBalanceHandler = exports.getAllFuelBalanceHandler = void 0;
+exports.getFuelBalanceByDateHandler = exports.deleteFuelBalanceHandler = exports.updateFuelBalanceHandler = exports.addFuelBalanceHandler = exports.getFuelBalanceWithoutPagiHandler = exports.getFuelBalanceHandler = exports.getAllFuelBalanceHandler = void 0;
 const helper_1 = __importDefault(require("../utils/helper"));
 const moment_timezone_1 = __importDefault(require("moment-timezone"));
 const fuelBalance_service_1 = require("../service/fuelBalance.service");
@@ -47,6 +47,34 @@ const getFuelBalanceHandler = async (req, res, next) => {
     }
 };
 exports.getFuelBalanceHandler = getFuelBalanceHandler;
+const getFuelBalanceWithoutPagiHandler = async (req, res, next) => {
+    try {
+        let sDate = req.query.sDate?.toString();
+        delete req.query.sDate;
+        delete req.query.eDate;
+        let query = req.query;
+        if (!sDate) {
+            throw new Error("you need date");
+        }
+        let model;
+        if (req.query.accessDb) {
+            model = req.query.accessDb;
+        }
+        else {
+            model = req.body.accessDb;
+        }
+        // Call the fuelBalance function instead of fuelBalancePaginate to remove pagination
+        let { count, data } = await (0, fuelBalance_service_1.fuelBalanceWithoutPagi)({
+            ...query,
+            createAt: sDate,
+        }, model);
+        (0, helper_1.default)(res, "fuelBalance find", data, model, count);
+    }
+    catch (e) {
+        next(new Error(e));
+    }
+};
+exports.getFuelBalanceWithoutPagiHandler = getFuelBalanceWithoutPagiHandler;
 const addFuelBalanceHandler = async (req, res, next) => {
     try {
         let model = req.body.accessDb;

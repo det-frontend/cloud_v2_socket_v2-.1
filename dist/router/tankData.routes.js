@@ -11,6 +11,7 @@ tankDataRouter.post("/",
 (0, validator_1.validateAll)(scheama_1.tankDataSchema), modelControl_1.locSevModelControl, tankData_controller_1.addTankDataController);
 tankDataRouter.get("/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, tankData_controller_1.getAllTankDataController);
 tankDataRouter.get("/by-date/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, tankData_controller_1.getTankDataByDate);
+tankDataRouter.get("/without-pagi/by-date", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, tankData_controller_1.getTankDataWithoutPagiByDate);
 tankDataRouter.delete("/", validator_1.validateToken, 
 // roleValidator(["det"]),
 (0, permitValidator_1.hasAnyPermit)(["delete"]), modelControl_1.modelController, tankData_controller_1.deleteTankDataIdController);

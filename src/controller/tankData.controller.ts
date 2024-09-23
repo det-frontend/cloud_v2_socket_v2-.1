@@ -7,6 +7,7 @@ import {
   getTankData,
   latestTankDataByStationId,
   tankDataByDate,
+  tankDataWithoutPagiByDate,
   updateExistingTankData,
   updateTankDataService,
 } from "../service/tankData.service";
@@ -307,6 +308,41 @@ export const getTankDataByDate = async (
     next(new Error(e));
   }
 };
+
+export const getTankDataWithoutPagiByDate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate: any = req.query.sDate;
+    delete req.query.sDate;
+
+    let query = req.query;
+    if (!query.dailyReportDate) {
+      throw new Error("you need date");
+    }
+
+    let model: any;
+    if (req.query.accessDb) {
+      model = req.query.accessDb;
+    } else {
+      model = req.body.accessDb;
+    }
+
+    delete req.query.accessDb;
+
+    const startDate: Date = new Date(sDate);
+    
+    // Call tankDataByDate without pageNo (since pagination is removed)
+    let { data, count } = await tankDataWithoutPagiByDate(query, startDate, model);
+    
+    fMsg(res, "tank", data, model, count);
+  } catch (e: any) {
+    next(new Error(e));
+  }
+};
+
 
 export const deleteTankDataIdController = async (
   req: Request,

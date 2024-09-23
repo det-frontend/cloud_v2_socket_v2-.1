@@ -4,6 +4,7 @@ import {
   deleteFuelInHandler,
   getFuelInByDateHandler,
   getFuelInHandler,
+  getFuelInWithoutPagiByDateHandler,
   updateFuelInHandler,
 } from "../controller/fuelIn.controller";
 import {
@@ -30,6 +31,14 @@ fuelInRoute.get(
   hasAnyPermit(["view"]),
   modelController,
   getFuelInByDateHandler
+);
+
+fuelInRoute.get(
+  "/without-pagi/by-date/",
+  validateToken,
+  hasAnyPermit(["view"]),
+  modelController,
+  getFuelInWithoutPagiByDateHandler
 );
 
 

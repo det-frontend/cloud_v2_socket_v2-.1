@@ -186,6 +186,33 @@ export const fuelBalancePaginate = async (
   return { data, count };
 };
 
+export const fuelBalanceWithoutPagi = async (
+  query: FilterQuery<fuelBalanceDocument>,
+  dbModel: string
+): Promise<{ count: number; data: fuelBalanceDocument[] }> => {
+  let selectedModel = dBSelector(
+    dbModel,
+    ksFuelBalanceModel,
+    csFuelBalanceModel
+  );
+
+  // Fetch all data without skip and limit (no pagination)
+  const data = await selectedModel
+    .find(query)
+    .sort({ realTime: -1 })
+    .lean()
+    .populate({
+      path: "stationId",
+      model: dbDistribution({ accessDb: dbModel }),
+    })
+    .select("-__v");
+
+  const count = await selectedModel.countDocuments(query);
+
+  return { data, count };
+};
+
+
 export const fuelBalanceByDate = async (
   query: FilterQuery<fuelBalanceDocument>,
   d1: Date,

@@ -9,6 +9,7 @@ const scheama_1 = require("../schema/scheama");
 const fuelBalanceRoute = require("express").Router();
 fuelBalanceRoute.get("/all", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, fuelBalance_controller_1.getAllFuelBalanceHandler);
 fuelBalanceRoute.get("/pagi/:page", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, fuelBalance_controller_1.getFuelBalanceHandler);
+fuelBalanceRoute.get("/without-pagi/by-date", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, fuelBalance_controller_1.getFuelBalanceWithoutPagiHandler);
 fuelBalanceRoute.get("/by-date", validator_1.validateToken, (0, permitValidator_1.hasAnyPermit)(["view"]), modelControl_1.modelController, fuelBalance_controller_1.getFuelBalanceByDateHandler);
 fuelBalanceRoute.post("/", validator_1.validateToken, (0, validator_1.validateAll)(scheama_1.fuelBalanceSchema), 
 // roleValidator(["det"]),

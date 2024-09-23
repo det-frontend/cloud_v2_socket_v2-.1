@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fuelBalanceForStockBalance = exports.fuelBalanceByDate = exports.fuelBalancePaginate = exports.calcFuelBalance = exports.deleteFuelBalance = exports.updateFuelBalance = exports.addFuelBalance = exports.getFuelBalance = void 0;
+exports.fuelBalanceForStockBalance = exports.fuelBalanceByDate = exports.fuelBalanceWithoutPagi = exports.fuelBalancePaginate = exports.calcFuelBalance = exports.deleteFuelBalance = exports.updateFuelBalance = exports.addFuelBalance = exports.getFuelBalance = void 0;
 const fuelBalance_model_1 = require("../model/fuelBalance.model");
 const config_1 = __importDefault(require("config"));
 const helper_1 = require("../utils/helper");
@@ -121,6 +121,22 @@ const fuelBalancePaginate = async (pageNo, query, dbModel) => {
     return { data, count };
 };
 exports.fuelBalancePaginate = fuelBalancePaginate;
+const fuelBalanceWithoutPagi = async (query, dbModel) => {
+    let selectedModel = (0, helper_1.dBSelector)(dbModel, fuelBalance_model_1.ksFuelBalanceModel, fuelBalance_model_1.csFuelBalanceModel);
+    // Fetch all data without skip and limit (no pagination)
+    const data = await selectedModel
+        .find(query)
+        .sort({ realTime: -1 })
+        .lean()
+        .populate({
+        path: "stationId",
+        model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
+    })
+        .select("-__v");
+    const count = await selectedModel.countDocuments(query);
+    return { data, count };
+};
+exports.fuelBalanceWithoutPagi = fuelBalanceWithoutPagi;
 const fuelBalanceByDate = async (query, d1, d2, dbModel) => {
     const filter = {
         ...query,

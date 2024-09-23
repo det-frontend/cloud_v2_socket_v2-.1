@@ -8,6 +8,7 @@ import {
   fuelInPaginate,
   fuelInByDate,
   addAtgFuelIn,
+  fuelInWithoutByDate,
 } from "../service/fuelIn.service";
 import { csFuelInModel, ksFuelInModel } from "../model/fuelIn.model";
 
@@ -119,6 +120,50 @@ export const getFuelInByDateHandler = async (
     next(new Error(e));
   }
 };
+
+export const getFuelInWithoutPagiByDateHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let sDate: any = req.query.sDate;
+    let eDate: any = req.query.eDate;
+
+    // Remove the pageNo variable as pagination is not needed
+    delete req.query.sDate;
+    delete req.query.eDate;
+
+    let query = req.query;
+
+    if (!sDate) {
+      throw new Error("you need a start date");
+    }
+    if (!eDate) {
+      eDate = new Date(); // default to current date if no end date provided
+    }
+
+    const startDate: Date = new Date(sDate);
+    const endDate: Date = new Date(eDate);
+
+    let model: any;
+    if (req.query.accessDb) {
+      model = req.query.accessDb;
+    } else {
+      model = req.body.accessDb;
+    }
+
+    delete req.query.accessDb;
+
+    // Modify the fuelInByDate function call to exclude pagination
+    let { data, count } = await fuelInWithoutByDate(query, startDate, endDate, model);
+    
+    fMsg(res, "fuel balance between two dates", data, model, count);
+  } catch (e: any) {
+    next(new Error(e));
+  }
+};
+
 
 export const addAtgFuelInHandler = async (
   req: Request,

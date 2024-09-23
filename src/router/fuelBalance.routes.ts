@@ -4,6 +4,7 @@ import {
   getAllFuelBalanceHandler,
   getFuelBalanceByDateHandler,
   getFuelBalanceHandler,
+  getFuelBalanceWithoutPagiHandler,
   updateFuelBalanceHandler,
 } from "../controller/fuelBalance.controller";
 import { modelController } from "../middleware/modelControl";
@@ -28,6 +29,15 @@ fuelBalanceRoute.get(
   modelController,
   getFuelBalanceHandler
 );
+
+fuelBalanceRoute.get(
+  "/without-pagi/by-date",
+  validateToken,
+  hasAnyPermit(["view"]),
+  modelController,
+  getFuelBalanceWithoutPagiHandler
+);
+
 
 fuelBalanceRoute.get(
   "/by-date",
