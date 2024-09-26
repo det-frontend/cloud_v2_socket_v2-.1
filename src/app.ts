@@ -21,6 +21,8 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import setupSocket from "./utils/socketConnect";
 import casherCodeRoute from "./router/casherCode.routes";
 import { requestLogger, dbLogger, errorLogger } from './middleware/logMiddleware';
+import { getAccessToken, getFormattedDetailSales, sendDetailSalesToMpta } from "./utils/mpta";
+import cron from 'node-cron';
 
 const app = express();
 app.use(express.json());
@@ -85,6 +87,20 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     msg: err.message,
   });
 });
+
+cron.schedule("0 * * * *", async () => {
+  const getToken = await getAccessToken();
+
+  const detailSales = await getFormattedDetailSales();
+
+  if (getToken) {
+     const results = await sendDetailSalesToMpta(getToken.access_token, detailSales);
+
+     console.log(results);
+  } else {
+    console.log('Auth failed');
+  }
+})
 
 //migrate
 // migrate();

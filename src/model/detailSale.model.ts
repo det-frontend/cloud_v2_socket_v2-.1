@@ -33,6 +33,7 @@ export interface detailSaleDocument extends mongoose.Document {
   tankNo: number,
   createAt: Date;
   asyncAlready: string,
+  isSent: number,
 }
 
 const detailSaleSchema = new Schema({
@@ -68,7 +69,8 @@ const detailSaleSchema = new Schema({
   devTotalizar_liter: {type:Number},
   totalizer_amount: { type: Number, required: true },
   tankBalance: { type: Number, default: 0},
-  tankNo: { type: Number, default: 0},
+  tankNo: { type: Number, default: 0 },
+  isSent: { type: Number, default: 0 },
   dailyReportDate: {
     type: String,
     default: new Date().toLocaleDateString(`fr-CA`),
