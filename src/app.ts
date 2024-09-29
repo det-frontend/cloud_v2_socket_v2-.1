@@ -39,14 +39,6 @@ const server = require("http").createServer(app);
 const port = config.get<number>("port");
 const host = config.get<string>("host");
 
-// Tempory use  Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../../cloud_10.1.7')));
-
-// Tempory use Define a route to serve index.html
-app.get('/', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../../cloud_10.1.7', 'index.html'));
-});
-
 // request routes
 
 app.get("/api", (req: Request, res: Response, next: NextFunction) => {
