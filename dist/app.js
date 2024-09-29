@@ -23,6 +23,7 @@ const stockbalance_routes_1 = __importDefault(require("./router/stockbalance.rou
 const closePermission_routes_1 = __importDefault(require("./router/closePermission.routes"));
 const socketConnect_1 = __importDefault(require("./utils/socketConnect"));
 const casherCode_routes_1 = __importDefault(require("./router/casherCode.routes"));
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -35,6 +36,12 @@ const server = require("http").createServer(app);
 //require data
 const port = config_1.default.get("port");
 const host = config_1.default.get("host");
+// Tempory use  Serve static files from the React app
+app.use(express_1.default.static(path_1.default.join(__dirname, 'cloud_10.1.7')));
+// Tempory use Define a route to serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, 'cloud_10.1.7', 'index.html'));
+});
 // request routes
 app.get("/api", (req, res, next) => {
     res.send("ok");
