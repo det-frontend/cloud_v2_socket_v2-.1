@@ -206,7 +206,7 @@ const detailSaleWithoutPagiByDate = async (query, d1, d2, literGreater, literAmo
                 $lt: d2,
             },
         };
-        const data = await selectedModel
+        const dataQuery = await selectedModel
             .find(filter)
             .sort({ createAt: -1 })
             .populate({
@@ -214,10 +214,12 @@ const detailSaleWithoutPagiByDate = async (query, d1, d2, literGreater, literAmo
             model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
         })
             .select("-__v");
+        const countQuery = selectedModel.countDocuments(filter);
+        const [data, count] = await Promise.all([dataQuery, countQuery]);
         const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
         const sumTotalPrice = sumResults.reduce((acc, item) => acc + item.totalPrice, 0);
         const sumTotalLiter = sumResults.reduce((acc, item) => acc + item.saleLiter, 0);
-        return { data, sumTotalPrice, sumTotalLiter };
+        return { data, count, sumTotalPrice, sumTotalLiter };
     }
     catch (error) {
         console.error("Error in detailSaleByDate:", error);

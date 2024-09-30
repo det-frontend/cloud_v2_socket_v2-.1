@@ -59,15 +59,6 @@ export const addDetailSaleHandler = async (
 ) => {
   const start = moment().format("YYYY-MM-DD HH:mm:ss");
 
-  // logger.warn(`
-  // ========== start ==========
-  // Function: Request In DetailSale
-  // Request Date: ${start}
-  // Request Method: ${req.method}
-  // Request URL: ${req.originalUrl}
-  // Request Body: ${JSON.stringify(req.body)}
-  // ========== ended ==========
-  // `, { file: 'detailsale.log' });
 
   try {
     // //that is remove after pos updated
@@ -376,7 +367,7 @@ export const getDetailSaleWithoutPagiHandler = async (
     const endDate: Date = new Date(eDate);
 
     // Call the non-paginated function
-    let { data, sumTotalPrice, sumTotalLiter } = await detailSaleWithoutPagiByDate(
+    let { data, count, sumTotalPrice, sumTotalLiter } = await detailSaleWithoutPagiByDate(
       query,
       startDate,
       endDate,
@@ -386,13 +377,14 @@ export const getDetailSaleWithoutPagiHandler = async (
       priceAmount,
       model
     );
-
+    
     // Respond with the data
     fMsg(
       res,
       "Detail sale between two dates",
       data,
       model,
+      count,
       sumTotalPrice,
       sumTotalLiter
     );
