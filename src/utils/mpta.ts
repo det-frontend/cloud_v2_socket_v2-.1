@@ -3,7 +3,8 @@ import config from "config";
 import { csDetailSaleModel, ksDetailSaleModel } from "../model/detailSale.model";
 import moment from "moment";
 import { dbDistribution } from "./helper";
-
+import { getCategory, getFuelType } from "./categories";
+import mongoose from "mongoose";
 
 // GET Kyaw San Detail Sales
 const getKsDetailSales = async (query: any) => {
@@ -67,13 +68,17 @@ const groupAndFormatByLicenseNo = (detailSales: any[]) => {
             if (!acc[lienseNo]) {
                 acc[lienseNo] = [];
             }
+
+            const categoryId = getCategory(detailSale.vehicleType);
+            const fuelType = getFuelType(detailSale.fuelType);
+
             acc[lienseNo].push({
                 car_number: detailSale.carNo,
                 amount: detailSale.amount,
                 time: detailSale.createAt,
                 liter: detailSale.saleLiter,
-                category_type: 1, // Static field
-                fuel_type: 1, // Static field
+                category_type: categoryId, 
+                fuel_type: fuelType,
                 invoice_id: detailSale.vocono,
                 today_price: detailSale.totalPrice
             });
@@ -95,12 +100,13 @@ const groupAndFormatByLicenseNo = (detailSales: any[]) => {
 
 // GET FORMATTED DETAIL SALES
 export const getFormattedDetailSales = async () => {
-    //const today = moment().tz('Asia/Yangon').format('YYYY-MM-DD');
+    const today = moment().tz('Asia/Yangon').format('YYYY-MM-DD');
 
-    const today = '2024-09-19';
+    // const today = '2024-09-19';
     const query = {
         // isSent: 0,
-        dailyReportDate: today
+        dailyReportDate: today,
+        stationDetailId: new mongoose.Types.ObjectId("65f4b0f64e0a38b089be6813")
     }
 
     const ksDetailSales = await getKsDetailSales(query);
@@ -157,6 +163,7 @@ export const getAccessToken = async () => {
         }
     }
 }
+
 
 export const sendDetailSalesToMpta = async (
     token: string,

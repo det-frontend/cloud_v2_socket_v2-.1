@@ -7,7 +7,10 @@ exports.sendDetailSalesToMpta = exports.getAccessToken = exports.getFormattedDet
 const axios_1 = __importDefault(require("axios"));
 const config_1 = __importDefault(require("config"));
 const detailSale_model_1 = require("../model/detailSale.model");
+const moment_1 = __importDefault(require("moment"));
 const helper_1 = require("./helper");
+const categories_1 = require("./categories");
+const mongoose_1 = __importDefault(require("mongoose"));
 // GET Kyaw San Detail Sales
 const getKsDetailSales = async (query) => {
     const ksDetailSales = await detailSale_model_1.ksDetailSaleModel.find(query)
@@ -61,13 +64,15 @@ const groupAndFormatByLicenseNo = (detailSales) => {
             if (!acc[lienseNo]) {
                 acc[lienseNo] = [];
             }
+            const categoryId = (0, categories_1.getCategory)(detailSale.vehicleType);
+            const fuelType = (0, categories_1.getFuelType)(detailSale.fuelType);
             acc[lienseNo].push({
                 car_number: detailSale.carNo,
                 amount: detailSale.amount,
                 time: detailSale.createAt,
                 liter: detailSale.saleLiter,
-                category_type: 1, // Static field
-                fuel_type: 1, // Static field
+                category_type: categoryId,
+                fuel_type: fuelType,
                 invoice_id: detailSale.vocono,
                 today_price: detailSale.totalPrice
             });
@@ -85,11 +90,12 @@ const groupAndFormatByLicenseNo = (detailSales) => {
 };
 // GET FORMATTED DETAIL SALES
 const getFormattedDetailSales = async () => {
-    //const today = moment().tz('Asia/Yangon').format('YYYY-MM-DD');
-    const today = '2024-09-19';
+    const today = (0, moment_1.default)().tz('Asia/Yangon').format('YYYY-MM-DD');
+    // const today = '2024-09-19';
     const query = {
         // isSent: 0,
-        dailyReportDate: today
+        dailyReportDate: today,
+        stationDetailId: new mongoose_1.default.Types.ObjectId("65f4b0f64e0a38b089be6813")
     };
     const ksDetailSales = await getKsDetailSales(query);
     const csDetailSales = await getCsDetailSales(query);
