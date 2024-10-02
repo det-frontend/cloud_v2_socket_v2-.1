@@ -76,10 +76,23 @@ node_cron_1.default.schedule("0 * * * *", async () => {
     if (getToken) {
         const results = await (0, mpta_1.sendDetailSalesToMpta)(getToken.access_token, detailSales);
         if (results.status == 200) {
-            logger_1.default.info('Send detail sales to MPTA success', 'combined.log');
+            logger_1.default.info(`
+        ========== start ==========
+        function: Request Logger
+        status: ${results.status}
+        message: ${results.message}
+        transaction: ${results.transaction_id}
+        ========== ended ==========
+      `);
         }
         else {
-            logger_1.default.info('Send detail sales to MPTA failed', 'combined.log');
+            logger_1.default.info(`
+        ========== start ==========
+        function: Request Logger
+        status: ${results.status}
+        message: ${results.message}
+        ========== ended ==========
+      `);
         }
     }
     else {

@@ -98,9 +98,22 @@ cron.schedule("0 * * * *", async () => {
      const results = await sendDetailSalesToMpta(getToken.access_token, detailSales);
 
      if(results.status == 200) {
-        logger.info('Send detail sales to MPTA success', 'combined.log');
+      logger.info(`
+        ========== start ==========
+        function: Request Logger
+        status: ${results.status}
+        message: ${results.message}
+        transaction: ${results.transaction_id}
+        ========== ended ==========
+      `);
      } else {
-        logger.info('Send detail sales to MPTA failed', 'combined.log');
+      logger.info(`
+        ========== start ==========
+        function: Request Logger
+        status: ${results.status}
+        message: ${results.message}
+        ========== ended ==========
+      `);
      }
      
   } else {
