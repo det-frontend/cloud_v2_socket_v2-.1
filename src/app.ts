@@ -23,6 +23,7 @@ import casherCodeRoute from "./router/casherCode.routes";
 import { requestLogger, dbLogger, errorLogger } from './middleware/logMiddleware';
 import { getAccessToken, getFormattedDetailSales, sendDetailSalesToMpta } from "./utils/mpta";
 import cron from 'node-cron';
+import logger from "./utils/logger";
 
 const app = express();
 app.use(express.json());
@@ -96,7 +97,12 @@ cron.schedule("0 * * * *", async () => {
   if (getToken) {
      const results = await sendDetailSalesToMpta(getToken.access_token, detailSales);
 
-     console.log(results);
+     if(results.status == 200) {
+        logger.info('Send detail sales to MPTA success', 'combined.log');
+     } else {
+        logger.info('Send detail sales to MPTA failed', 'combined.log');
+     }
+     
   } else {
     console.log('Auth failed');
   }

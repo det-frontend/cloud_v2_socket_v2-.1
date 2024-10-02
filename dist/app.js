@@ -25,6 +25,7 @@ const socketConnect_1 = __importDefault(require("./utils/socketConnect"));
 const casherCode_routes_1 = __importDefault(require("./router/casherCode.routes"));
 const mpta_1 = require("./utils/mpta");
 const node_cron_1 = __importDefault(require("node-cron"));
+const logger_1 = __importDefault(require("./utils/logger"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -74,7 +75,12 @@ node_cron_1.default.schedule("0 * * * *", async () => {
     const detailSales = await (0, mpta_1.getFormattedDetailSales)();
     if (getToken) {
         const results = await (0, mpta_1.sendDetailSalesToMpta)(getToken.access_token, detailSales);
-        console.log(results);
+        if (results.status == 200) {
+            logger_1.default.info('Send detail sales to MPTA success', 'combined.log');
+        }
+        else {
+            logger_1.default.info('Send detail sales to MPTA failed', 'combined.log');
+        }
     }
     else {
         console.log('Auth failed');
