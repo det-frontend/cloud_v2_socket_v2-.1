@@ -23,9 +23,6 @@ const stockbalance_routes_1 = __importDefault(require("./router/stockbalance.rou
 const closePermission_routes_1 = __importDefault(require("./router/closePermission.routes"));
 const socketConnect_1 = __importDefault(require("./utils/socketConnect"));
 const casherCode_routes_1 = __importDefault(require("./router/casherCode.routes"));
-const mpta_1 = require("./utils/mpta");
-const node_cron_1 = __importDefault(require("node-cron"));
-const logger_1 = __importDefault(require("./utils/logger"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -69,35 +66,6 @@ app.use((err, req, res, next) => {
         con: false,
         msg: err.message,
     });
-});
-node_cron_1.default.schedule("0 * * * *", async () => {
-    const getToken = await (0, mpta_1.getAccessToken)();
-    const detailSales = await (0, mpta_1.getFormattedDetailSales)();
-    if (getToken) {
-        const results = await (0, mpta_1.sendDetailSalesToMpta)(getToken.access_token, detailSales);
-        if (results.status == 200) {
-            logger_1.default.info(`
-        ========== start ==========
-        function: Request Logger
-        status: ${results.status}
-        message: ${results.message}
-        transaction: ${results.transaction_id}
-        ========== ended ==========
-      `);
-        }
-        else {
-            logger_1.default.info(`
-        ========== start ==========
-        function: Request Logger
-        status: ${results.status}
-        message: ${results.message}
-        ========== ended ==========
-      `);
-        }
-    }
-    else {
-        console.log('Auth failed');
-    }
 });
 //migrate
 // migrate();
