@@ -37,7 +37,7 @@ const findByVoconoAndUpdate = async (detailSale: any) => {
     await Promise.all(parsedDetailSales.map(async (sale: any) => {
         const query = {
             vocono: sale.invoice_id, // Use invoice_id as vocono to query the sale
-            // isSent: 0 // Uncomment this if you want to update only unsent sales
+            isSent: 0 // Uncomment this if you want to update only unsent sales
         };
 
         // Try to find and update the sale in ksDetailSaleModel
