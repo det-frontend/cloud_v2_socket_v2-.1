@@ -23,6 +23,7 @@ const stockbalance_routes_1 = __importDefault(require("./router/stockbalance.rou
 const closePermission_routes_1 = __importDefault(require("./router/closePermission.routes"));
 const socketConnect_1 = __importDefault(require("./utils/socketConnect"));
 const casherCode_routes_1 = __importDefault(require("./router/casherCode.routes"));
+const mpta_1 = require("./utils/mpta");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -36,8 +37,14 @@ const server = require("http").createServer(app);
 const port = config_1.default.get("port");
 const host = config_1.default.get("host");
 // request routes
-app.get("/api", (req, res, next) => {
+app.get("/api", async (req, res, next) => {
     res.send("ok");
+});
+app.post('/api/errors/detail-sales', async (req, res, next) => {
+    const api_key = req.headers['api-key'];
+    const payload = req.body;
+    const result = await (0, mpta_1.resendErrorDetailSales)(api_key, payload);
+    res.json(result);
 });
 //app => routes => controller => service => model
 //control db

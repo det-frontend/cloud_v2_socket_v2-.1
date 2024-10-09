@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDbs = void 0;
+exports.connectDbs = connectDbs;
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = __importDefault(require("config"));
 const connectionOptions = {
@@ -31,5 +31,4 @@ function connectDbs(dbUrl) {
     });
     return cachedDb;
 }
-exports.connectDbs = connectDbs;
 exports.default = connectDbs;

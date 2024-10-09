@@ -19,7 +19,9 @@ export default {
   mpta_username: "hakhant21@gmail.com",
   mpta_password: "P4%L6mNxnE",
   mpta_client_id: 6,
-  mpta_client_secret: "L9dgq5awa7bBwK62BoIuRJCu56xtyAcgV166zqOi"
+  mpta_client_secret: "L9dgq5awa7bBwK62BoIuRJCu56xtyAcgV166zqOi",
+  mpta_secret_key: "r0pdwukiqimdx69ne0b2w7q0cckp1gp07re7i4a0", // To generate api key for mpta
+  mpta_api_key: "$2a$10$xVngNXjIaqYBRDizK0T4EuUWC4K8D94sRNVVpneeMEpmw6iTpIhuG", // to give this api key to mpta
 };
 
 // controlDbUrl mongodb+srv://ksdbfms:Tpd7iFyquVJrh4u8@controller.zabfxgj.mongodb.net/?retryWrites=true&w=majority

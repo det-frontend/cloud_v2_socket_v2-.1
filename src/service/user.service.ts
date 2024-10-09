@@ -1,6 +1,6 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 import userModel, { UserInput, UserDocument } from "../model/user.model";
-import { compass, createToken, dBSelector } from "../utils/helper";
+import { compass, createToken } from "../utils/helper";
 import { permitDocument } from "../model/permit.model";
 
 export const registerUser = async (payload: UserInput) => {
@@ -141,3 +141,5 @@ export const userRemovePermit = async (
     throw new Error(e);
   }
 };
+
+

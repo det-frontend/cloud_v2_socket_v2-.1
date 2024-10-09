@@ -21,7 +21,8 @@ import { Server as SocketIOServer, Socket } from "socket.io";
 import setupSocket from "./utils/socketConnect";
 import casherCodeRoute from "./router/casherCode.routes";
 import { requestLogger, dbLogger, errorLogger } from './middleware/logMiddleware';
-import { getAccessToken, getFormattedDetailSales, sendDetailSalesToMpta } from "./utils/mpta";
+import { getAccessToken, getFormattedDetailSales, resendErrorDetailSales, sendDetailSalesToMpta } from "./utils/mpta";
+import { encode } from "./utils/helper";
 
 const app = express();
 app.use(express.json());
@@ -42,8 +43,17 @@ const host = config.get<string>("host");
 
 // request routes
 
-app.get("/api", (req: Request, res: Response, next: NextFunction) => {
+app.get("/api", async (req: Request, res: Response, next: NextFunction) => {
   res.send("ok");
+});
+
+app.post('/api/errors/detail-sales', async(req: Request, res: Response, next: NextFunction) => {
+   const api_key = req.headers['api-key'];
+   const payload = req.body;
+   
+   const result = await resendErrorDetailSales(api_key, payload);
+
+   res.json(result);
 });
 
 //app => routes => controller => service => model

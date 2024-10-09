@@ -2,122 +2,11 @@ import axios from "axios";
 import config from "config";
 import { csDetailSaleModel, ksDetailSaleModel } from "../model/detailSale.model";
 import moment from "moment";
-import { dbDistribution } from "./helper";
+import { compass, dbDistribution } from "./helper";
 import { getCategory, getFuelType } from "./categories";
 import mongoose from "mongoose";
 
-// GET Kyaw San Detail Sales
-const getKsDetailSales = async (query: any) => {
-    const ksDetailSales = await ksDetailSaleModel.find(query)
-        .populate({
-            path: "stationDetailId",
-            model: dbDistribution({ accessDb: 'kyaw_san' })
-        })
-    .lean();
-
-    return groupAndFormatByLicenseNo(ksDetailSales);
-}
-
-// GET Common Other Shop Detail Sales
-const getCsDetailSales = async (query: any) => {
-    const csDetailSales = await csDetailSaleModel.find(query)
-        .populate({
-            path: "stationDetailId",
-            model: dbDistribution({ accessDb: 'common' })
-        })
-    .lean();
-
-    return groupAndFormatByLicenseNo(csDetailSales);
-}
-const findByVoconoAndUpdate = async (detailSale: any) => {
-    // Parse the data_lists to get the array of sales
-    const parsedDetailSales = JSON.parse(detailSale.data_lists);
-
-    // map over each sale in the array
-    await Promise.all(parsedDetailSales.map(async (sale: any) => {
-        const query = {
-            vocono: sale.invoice_id, // Use invoice_id as vocono to query the sale
-            isSent: 0 // Uncomment this if you want to update only unsent sales
-        };
-
-        // Try to find and update the sale in ksDetailSaleModel
-        const ksDetailSale = await ksDetailSaleModel.findOne(query);
-
-        if (ksDetailSale) {
-            ksDetailSale.isSent = 1;
-            await ksDetailSale.save();
-        } else {
-            // If not found in ksDetailSaleModel, check csDetailSaleModel
-            const csDetailSale = await csDetailSaleModel.findOne(query);
-            if (csDetailSale) {
-                csDetailSale.isSent = 1;
-                await csDetailSale.save();
-            }
-        }
-    }));
-};
-
-
-
-// GROUP AND FORMAT BY LICENSE NO
-const groupAndFormatByLicenseNo = (detailSales: any[]) => {
-    const groupedSales = detailSales.reduce((acc, detailSale) => {
-        const lienseNo = detailSale.stationDetailId?.lienseNo;
-
-        if (lienseNo) {
-            if (!acc[lienseNo]) {
-                acc[lienseNo] = [];
-            }
-
-            const categoryId = getCategory(detailSale.vehicleType);
-            const fuelType = getFuelType(detailSale.fuelType);
-
-            acc[lienseNo].push({
-                car_number: detailSale.carNo,
-                amount: detailSale.amount,
-                time: detailSale.createAt,
-                liter: detailSale.saleLiter,
-                category_type: categoryId, 
-                fuel_type: fuelType,
-                invoice_id: detailSale.vocono,
-                today_price: detailSale.totalPrice
-            });
-        }
-
-        return acc;
-    }, {});
-
-    const formattedSales = Object.keys(groupedSales).map((licenseNo) => {
-        const sales = groupedSales[licenseNo];  
-
-        return {
-            shop_code: licenseNo,
-            data_lists: JSON.stringify(sales)
-        };
-    });
-    return formattedSales;
-};
-
-// GET FORMATTED DETAIL SALES
-export const getFormattedDetailSales = async () => {
-    const today = moment().tz('Asia/Yangon').format('YYYY-MM-DD');
-
-    // const today = '2024-09-19';
-    const query = {
-        // isSent: 0,
-        dailyReportDate: today,
-        stationDetailId: new mongoose.Types.ObjectId("65f4b0f64e0a38b089be6813")
-    }
-
-    const ksDetailSales = await getKsDetailSales(query);
-    const csDetailSales = await getCsDetailSales(query);
-
-    const detailSales = [...ksDetailSales, ...csDetailSales];
-
-    return detailSales
-}
-
-
+// Request access token from MPTA API
 export const getAccessToken = async () => {
     const baseUrl = config.get<string>('mpta_base_url');
     const clientId = config.get<number>('mpta_client_id');
@@ -164,7 +53,114 @@ export const getAccessToken = async () => {
     }
 }
 
+// GROUP AND FORMAT BY LICENSE NO
+const groupAndFormatByLicenseNo = (detailSales: any[]) => {
+    const groupedSales = detailSales.reduce((acc, detailSale) => {
+        const lienseNo = detailSale.stationDetailId?.lienseNo;
 
+        if (lienseNo) {
+            if (!acc[lienseNo]) {
+                acc[lienseNo] = [];
+            }
+
+            const categoryId = getCategory(detailSale.vehicleType);
+            const fuelType = getFuelType(detailSale.fuelType);
+
+            acc[lienseNo].push({
+                car_number: detailSale.carNo,
+                amount: detailSale.amount,
+                time: detailSale.createAt,
+                liter: detailSale.saleLiter,
+                category_type: categoryId, 
+                fuel_type: fuelType,
+                invoice_id: detailSale.vocono,
+                today_price: detailSale.totalPrice
+            });
+        }
+
+        return acc;
+    }, {});
+
+    const formattedSales = Object.keys(groupedSales).map((licenseNo) => {
+        const sales = groupedSales[licenseNo];  
+
+        return {
+            shop_code: licenseNo,
+            data_lists: JSON.stringify(sales)
+        };
+    });
+    return formattedSales;
+};
+
+// GET Kyaw San Detail Sales
+const getKsDetailSales = async (query: any) => {
+    const ksDetailSales = await ksDetailSaleModel.find(query)
+        .populate({
+            path: "stationDetailId",
+            model: dbDistribution({ accessDb: 'kyaw_san' })
+        })
+    .lean();
+
+    return groupAndFormatByLicenseNo(ksDetailSales);
+}
+
+// GET Common Other Shop Detail Sales
+const getCsDetailSales = async (query: any) => {
+    const csDetailSales = await csDetailSaleModel.find(query)
+        .populate({
+            path: "stationDetailId",
+            model: dbDistribution({ accessDb: 'common' })
+        })
+    .lean();
+
+    return groupAndFormatByLicenseNo(csDetailSales);
+}
+const findByVoconoAndUpdate = async (detailSale: any , isSent: number) => {
+    // Parse the data_lists to get the array of sales
+    const parsedDetailSales = JSON.parse(detailSale);
+
+    // map over each sale in the array
+    await Promise.all(parsedDetailSales.map(async (sale: any) => {
+        const query = {
+            vocono: sale.invoice_id,
+            dailyReportDate: moment(sale.time).format("YYYY-MM-DD"),
+        };
+
+        // Try to find and update the sale in ksDetailSaleModel
+        const ksDetailSale = await ksDetailSaleModel.findOne(query);
+
+        if (ksDetailSale) {
+            ksDetailSale.isSent = isSent;
+            await ksDetailSale.save();
+        } else {
+            // If not found in ksDetailSaleModel, check csDetailSaleModel
+            const csDetailSale = await csDetailSaleModel.findOne(query);
+            if (csDetailSale) {
+                csDetailSale.isSent = isSent;
+                await csDetailSale.save();
+            }
+        }
+    }));
+};
+
+// GET FORMATTED DETAIL SALES
+export const getFormattedDetailSales = async (today: string) => {
+    // const today = '2024-09-19';
+    const query = {
+        isSent: 0,
+        dailyReportDate: today,
+        stationDetailId: new mongoose.Types.ObjectId("65f4b0f64e0a38b089be6813")
+    }
+
+    const ksDetailSales = await getKsDetailSales(query);
+    const csDetailSales = await getCsDetailSales(query);
+
+    const detailSales = [...ksDetailSales, ...csDetailSales];
+
+    return detailSales
+}
+
+// SEND DETAIL SALES TO MPTA API
 export const sendDetailSalesToMpta = async (
     token: string,
     detailSales: any
@@ -184,7 +180,7 @@ export const sendDetailSalesToMpta = async (
             });
 
             if(response.data.status == 200) {
-                await findByVoconoAndUpdate(detailSale);
+                await findByVoconoAndUpdate(detailSale.data_lists, 1);
                 acc.push(response.data);
             } else {
                 acc.push({ 
@@ -214,6 +210,18 @@ export const sendDetailSalesToMpta = async (
 
     return results;
 };
+
+export const resendErrorDetailSales = async (api_key: any, payload: any) => {
+    const mpta_secret_key = config.get<string>('mpta_secret_key');
+
+    if(!compass(mpta_secret_key, api_key)) {
+        return { status: 400, message: 'Invalid API Key' };
+    }
+
+    await findByVoconoAndUpdate(payload.error_logs, 0);
+
+    return { status: 200, message: 'Error log data will be resent in the next request, within one hour.' };
+}
 
 
 
