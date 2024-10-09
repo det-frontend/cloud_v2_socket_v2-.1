@@ -1,6 +1,5 @@
 import { getAccessToken, getFormattedDetailSales, sendDetailSalesToMpta } from '../utils/mpta';  
 import logger from '../utils/logger';
-import moment from 'moment';
 
 function logResults(results: any ) {  
   if (results.status === 200) {  
@@ -32,9 +31,8 @@ function cronJob() {
     .then(getToken => {  
       if (!getToken) {  
         throw new Error('Auth failed');  
-      }
-      const today = moment().tz('Asia/Yangon').format('YYYY-MM-DD');  
-      return getFormattedDetailSales(today).then(detailSales => ({ getToken, detailSales }));  
+      }  
+      return getFormattedDetailSales().then(detailSales => ({ getToken, detailSales }));  
     })  
     .then(({ getToken, detailSales }) => sendDetailSalesToMpta(getToken.access_token, detailSales))  
     .then(logResults)  

@@ -132,11 +132,10 @@ const findByVoconoAndUpdate = async (detailSale, isSent) => {
     }));
 };
 // GET FORMATTED DETAIL SALES
-const getFormattedDetailSales = async (today) => {
+const getFormattedDetailSales = async () => {
     // const today = '2024-09-19';
     const query = {
         isSent: 0,
-        dailyReportDate: today,
         stationDetailId: new mongoose_1.default.Types.ObjectId("65f4b0f64e0a38b089be6813")
     };
     const ksDetailSales = await getKsDetailSales(query);
