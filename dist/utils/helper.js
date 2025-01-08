@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.realTankCalculationForStockBalance = exports.fuelBalanceCalculationForStockBalance = exports.dbDistribution = exports.dBSelector = exports.fMsg2 = exports.previous = exports.checkToken = exports.createToken = exports.compass = exports.encode = void 0;
+exports.virtualFormat = exports.formatPrice = exports.formatDecimal = exports.realTankCalculationForStockBalance = exports.fuelBalanceCalculationForStockBalance = exports.dbDistribution = exports.dBSelector = exports.fMsg2 = exports.previous = exports.checkToken = exports.createToken = exports.compass = exports.encode = void 0;
 const config_1 = __importDefault(require("config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const stationDetail_model_1 = require("../model/stationDetail.model");
+const mongoose_lean_virtuals_1 = __importDefault(require("mongoose-lean-virtuals"));
 const saltWorkFactor = config_1.default.get("saltWorkFactor");
 const secretKey = config_1.default.get("secretKey");
 const salt = bcryptjs_1.default.genSaltSync(saltWorkFactor);
@@ -161,4 +162,32 @@ const realTankCalculationForStockBalance = (data) => {
     return { ron92, ron95, diesel, pDiesel };
 };
 exports.realTankCalculationForStockBalance = realTankCalculationForStockBalance;
+const formatDecimal = (value) => {
+    // decimal value with 3 decimal points
+    return value ? parseFloat(value.toString()).toFixed(3) : '0.000';
+};
+exports.formatDecimal = formatDecimal;
+const formatPrice = (value) => {
+    // only comma separated value 
+    return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
+};
+exports.formatPrice = formatPrice;
+// helpers function for all model format decimal 
+const virtualFormat = (model, fields) => {
+    model.virtual("formatted").get(function () {
+        const formattedFields = {};
+        fields.map((field) => {
+            if (this[field] !== undefined) {
+                formattedFields[field] = (0, exports.formatDecimal)(this[field]);
+            }
+        });
+        return formattedFields;
+    });
+    // Ensure virtuals are included in JSON and Object outputs
+    model.set("toJSON", { virtuals: true });
+    model.set("toObject", { virtuals: true });
+    // Add lean virtuals plugin for performance
+    model.plugin(mongoose_lean_virtuals_1.default);
+};
+exports.virtualFormat = virtualFormat;
 exports.default = fMsg;

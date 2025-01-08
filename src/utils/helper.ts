@@ -6,6 +6,8 @@ import {
   csStationDetailModel,
   ksStationDetailModel,
 } from "../model/stationDetail.model";
+import mongooseLeanVirtuals from "mongoose-lean-virtuals";
+import { Schema } from "mongoose";
 
 const saltWorkFactor = config.get<number>("saltWorkFactor");
 const secretKey = config.get<string>("secretKey");
@@ -191,6 +193,38 @@ export const realTankCalculationForStockBalance = (data: any[]) => {
   });
 
   return { ron92, ron95, diesel, pDiesel };
+};
+
+export const formatDecimal = (value: string | number | undefined): string => {
+  // decimal value with 3 decimal points
+  return value ? parseFloat(value.toString()).toFixed(3) : '0.000';
+}
+
+export const formatPrice = (value: string | number | undefined): string => {
+  // only comma separated value 
+  return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
+}
+
+// helpers function for all model format decimal 
+export const virtualFormat = (model: Schema, fields: string[]) => {
+  model.virtual("formatted").get(function () {
+    const formattedFields: Record<string, string> = {};
+
+    fields.map((field) => {
+      if (this[field] !== undefined) {
+        formattedFields[field] = formatDecimal(this[field]);
+      }
+    });
+
+    return formattedFields;
+  });
+
+  // Ensure virtuals are included in JSON and Object outputs
+  model.set("toJSON", { virtuals: true });
+  model.set("toObject", { virtuals: true });
+
+  // Add lean virtuals plugin for performance
+  model.plugin(mongooseLeanVirtuals);
 };
 
 export default fMsg;

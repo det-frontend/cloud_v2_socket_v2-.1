@@ -2,7 +2,7 @@ import mongoose, { Connection } from "mongoose";
 import { Schema } from "mongoose";
 import moment, { MomentTimezone } from "moment-timezone";
 import connectDbs from "../utils/connect";
-import { dbDistribution } from "../utils/helper";
+import { dbDistribution, virtualFormat } from "../utils/helper";
 
 const kyawsanDb: Connection = connectDbs("kyawsan_DbUrl");
 const commonDb: Connection = connectDbs("common_DbUrl");
@@ -43,6 +43,14 @@ const fuelInSchema = new Schema({
   receive_date: { type: String, required:true },
   createAt: { type: Date, default: new Date() },
 });
+
+virtualFormat(fuelInSchema, [
+  "tank_balance",
+  "opening",
+  "current_balance",
+  "send_balance",
+  "receive_balance",
+]);
 
 // fuelInSchema.pre("save", function (next) {
 //   const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");

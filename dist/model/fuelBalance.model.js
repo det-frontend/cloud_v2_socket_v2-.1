@@ -19,6 +19,7 @@ const fuelBalanceSchema = new mongoose_1.Schema({
     accessDb: { type: String, required: true },
     fuelType: { type: String, required: true },
     capacity: { type: String, required: true },
+    terminal: { type: Number, default: 0 },
     opening: { type: Number, default: 0 },
     tankNo: { type: Number, require: true },
     fuelIn: { type: Number, default: 0 },
@@ -28,6 +29,13 @@ const fuelBalanceSchema = new mongoose_1.Schema({
     realTime: { type: Date, default: new Date() },
     createAt: { type: String, default: new Date().toLocaleDateString(`fr-CA`) },
 });
+(0, helper_1.virtualFormat)(fuelBalanceSchema, [
+    'terminal',
+    'opening',
+    'fuelIn',
+    'balance',
+    'todayTank'
+]);
 fuelBalanceSchema.pre("save", function (next) {
     const currentDate = (0, moment_timezone_1.default)().tz("Asia/Yangon").format("YYYY-MM-DD");
     if (this.realTime) {

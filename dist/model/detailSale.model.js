@@ -49,6 +49,13 @@ const detailSaleSchema = new mongoose_1.Schema({
     },
     createAt: { type: Date, default: new Date() },
 });
+(0, helper_1.virtualFormat)(detailSaleSchema, [
+    'saleLiter',
+    'totalizer_liter',
+    'devTotalizar_liter',
+    'devTotalizar_amount',
+    'tankBalance',
+]);
 // detailSaleSchema.pre("save", function (next) {
 //  console.log(this);
 //  if (this.createAt) {

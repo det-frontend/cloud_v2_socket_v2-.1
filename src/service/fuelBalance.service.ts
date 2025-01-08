@@ -23,7 +23,7 @@ export const getFuelBalance = async (
       .find(query)
       .sort({ $natural: -1 })
       .limit(Number(tankCount))
-      .lean()
+      .lean({ virtuals: true })
       // .populate({
       //   path: "stationId",
       //   model: dbDistribution({ accessDb: dbModel }),
@@ -148,7 +148,7 @@ export const calcFuelBalance = async (
     };
 
     await selectedModel.updateMany({ _id: gg?._id }, obj);
-    return await selectedModel.find({ _id: gg?._id }).lean();
+    return await selectedModel.find({ _id: gg?._id }).lean({ virtuals: true});
   } catch (e: any) {
     throw new Error(e); // Rethrow the error with the actual error message
   }
@@ -174,7 +174,7 @@ export const fuelBalancePaginate = async (
     .sort({ realTime: -1 })
     .skip(skipCount)
     .limit(limitNo)
-    .lean()
+    .lean({ virtuals: true })
     .populate({
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
@@ -200,7 +200,7 @@ export const fuelBalanceWithoutPagi = async (
   const data = await selectedModel
     .find(query)
     .sort({ realTime: -1 })
-    .lean()
+    .lean({ virtuals: true })
     .populate({
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
@@ -244,6 +244,7 @@ export const fuelBalanceByDate = async (
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
     })
+    .lean({ virtuals: true })
     .select("-__v");
 };
 
@@ -269,5 +270,6 @@ export const fuelBalanceForStockBalance = async (
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
     })
+    .lean({ virtuals: true })
     .select("-__v");
 };

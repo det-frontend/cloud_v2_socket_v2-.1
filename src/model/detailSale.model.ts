@@ -5,7 +5,7 @@ import {
   csStationDetailModel,
   ksStationDetailModel,
 } from "./stationDetail.model";
-import { dbDistribution } from "../utils/helper";
+import { dbDistribution, virtualFormat } from "../utils/helper";
 
 const kyawsanDb: Connection = connectDbs("kyawsan_DbUrl");
 const commonDb: Connection = connectDbs("common_DbUrl");
@@ -77,6 +77,14 @@ const detailSaleSchema = new Schema({
   },
   createAt: { type: Date, default: new Date() },
 });
+
+virtualFormat(detailSaleSchema, [
+  'saleLiter',
+  'totalizer_liter',
+  'devTotalizar_liter',
+  'devTotalizar_amount',
+  'tankBalance',
+]);
 
 // detailSaleSchema.pre("save", function (next) {
 //  console.log(this);

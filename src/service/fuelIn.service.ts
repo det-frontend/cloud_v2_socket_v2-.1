@@ -18,7 +18,7 @@ export const getFuelIn = async (
     let selectedModel = dBSelector(dbModel, ksFuelInModel, csFuelInModel);
     return await selectedModel
       .find(query)
-      .lean()
+      .lean({ virtuals: true })
       .populate({
         path: "stationId",
         model: dbDistribution({ accessDb: dbModel }),
@@ -45,7 +45,7 @@ export const fuelInPaginate = async (
     .sort({ createAt: -1 })
     .skip(skipCount)
     .limit(limitNo)
-    .lean()
+    .lean({ virtuals: true })
     .populate({
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
@@ -161,6 +161,7 @@ export const fuelInByDate = async (
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
     })
+    .lean({ virtuals: true })
     .select("-__v");
 
   const count = await selectedModel.countDocuments(filter);
@@ -191,6 +192,7 @@ export const fuelInWithoutByDate = async (
       path: "stationId",
       model: dbDistribution({ accessDb: dbModel }),
     })
+    .lean({ virtuals: true })
     .select("-__v");
 
   const count = await selectedModel.countDocuments(filter);

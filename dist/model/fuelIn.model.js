@@ -29,6 +29,13 @@ const fuelInSchema = new mongoose_1.Schema({
     receive_date: { type: String, required: true },
     createAt: { type: Date, default: new Date() },
 });
+(0, helper_1.virtualFormat)(fuelInSchema, [
+    "tank_balance",
+    "opening",
+    "current_balance",
+    "send_balance",
+    "receive_balance",
+]);
 // fuelInSchema.pre("save", function (next) {
 //   const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");
 //   const options = { timeZone: "Asia/Yangon", hour12: false };

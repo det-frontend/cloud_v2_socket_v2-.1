@@ -14,7 +14,7 @@ const getFuelIn = async (query, dbModel) => {
         let selectedModel = (0, helper_1.dBSelector)(dbModel, fuelIn_model_1.ksFuelInModel, fuelIn_model_1.csFuelInModel);
         return await selectedModel
             .find(query)
-            .lean()
+            .lean({ virtuals: true })
             .populate({
             path: "stationId",
             model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
@@ -36,7 +36,7 @@ const fuelInPaginate = async (pageNo, query, dbModel) => {
         .sort({ createAt: -1 })
         .skip(skipCount)
         .limit(limitNo)
-        .lean()
+        .lean({ virtuals: true })
         .populate({
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
@@ -123,6 +123,7 @@ const fuelInByDate = async (query, d1, d2, pageNo, dbModel) => {
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
+        .lean({ virtuals: true })
         .select("-__v");
     const count = await selectedModel.countDocuments(filter);
     return { data, count };
@@ -145,6 +146,7 @@ const fuelInWithoutByDate = async (query, d1, d2, dbModel) => {
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
+        .lean({ virtuals: true })
         .select("-__v");
     const count = await selectedModel.countDocuments(filter);
     return { data, count };

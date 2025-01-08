@@ -17,6 +17,7 @@ const getDetailSale = async (query, dbModel) => {
             path: "stationDetailId",
             model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
         })
+            .lean({ virtuals: true })
             .select("-__v");
     }
     catch (e) {
@@ -90,6 +91,7 @@ const detailSalePaginate = async (pageNo, query, dbModel) => {
         path: "stationDetailId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
+        .lean({ virtuals: true })
         .select("-__v");
     const count = await selectedModel.countDocuments(query);
     return { data, count };
@@ -111,6 +113,7 @@ const detailSaleByDate = async (query, d1, d2, dbModel) => {
         path: "stationDetailId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
+        .lean({ virtuals: true })
         .select("-__v");
     return result;
 };
@@ -159,10 +162,11 @@ const detailSaleByDateAndPagi = async (query, d1, d2, pageNo, literGreater, lite
             path: "stationDetailId",
             model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
         })
+            .lean({ virtuals: true })
             .select("-__v");
         const countQuery = selectedModel.countDocuments(filter);
         const [data, count] = await Promise.all([dataQuery, countQuery]);
-        const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
+        const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").lean({ virtuals: true }).exec();
         const sumTotalPrice = sumResults.reduce((acc, item) => acc + item.totalPrice, 0);
         const sumTotalLiter = sumResults.reduce((acc, item) => acc + item.saleLiter, 0);
         return { data, count, sumTotalPrice, sumTotalLiter };
@@ -213,8 +217,9 @@ const detailSaleWithoutPagiByDate = async (query, d1, d2, literGreater, literAmo
             path: "stationDetailId",
             model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
         })
+            .lean({ virtuals: true })
             .select("-__v");
-        const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").exec();
+        const sumResults = await selectedModel.find(filter).select("saleLiter totalPrice").lean({ virtuals: true }).exec();
         const sumTotalPrice = sumResults.reduce((acc, item) => acc + item.totalPrice, 0);
         const sumTotalLiter = sumResults.reduce((acc, item) => acc + item.saleLiter, 0);
         return { data, sumTotalPrice, sumTotalLiter };
@@ -227,7 +232,7 @@ const detailSaleWithoutPagiByDate = async (query, d1, d2, literGreater, literAmo
 exports.detailSaleWithoutPagiByDate = detailSaleWithoutPagiByDate;
 const getLastDetailSale = async (query, dbModel) => {
     let selectedModel = (0, helper_1.dBSelector)(dbModel, detailSale_model_1.ksDetailSaleModel, detailSale_model_1.csDetailSaleModel);
-    return await selectedModel.findOne(query).sort({ _id: -1, createAt: -1 });
+    return await selectedModel.findOne(query).sort({ _id: -1, createAt: -1 }).lean({ virtuals: true });
 };
 exports.getLastDetailSale = getLastDetailSale;
 const getTodayVechicleCount = async (query, dbModel) => {

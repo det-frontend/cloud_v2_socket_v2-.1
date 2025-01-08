@@ -1,7 +1,7 @@
 import mongoose, { Schema, Connection } from "mongoose";
 import moment, { MomentTimezone } from "moment-timezone";
 import connectDbs from "../utils/connect";
-import { dbDistribution } from "../utils/helper";
+import { dbDistribution, virtualFormat } from "../utils/helper";
 
 const kyawsanDb: Connection = connectDbs("kyawsan_DbUrl");
 const commonDb: Connection = connectDbs("common_DbUrl");
@@ -10,6 +10,7 @@ export interface fuelBalanceDocument extends mongoose.Document {
   stationId: string;
   fuelType: string;
   capacity: string;
+  terminal: string;
   opening: number;
   fuelIn: number;
   tankNo: number;
@@ -31,6 +32,7 @@ const fuelBalanceSchema = new Schema({
   accessDb: { type: String, required: true },
   fuelType: { type: String, required: true },
   capacity: { type: String, required: true },
+  terminal: { type: Number, default: 0 },
   opening: { type: Number, default: 0 },
   tankNo: { type: Number, require: true },
   fuelIn: { type: Number, default: 0 },
@@ -40,6 +42,14 @@ const fuelBalanceSchema = new Schema({
   realTime: { type: Date, default: new Date() },
   createAt: { type: String, default: new Date().toLocaleDateString(`fr-CA`) },
 });
+
+virtualFormat(fuelBalanceSchema, [
+  'terminal',
+  'opening',
+  'fuelIn',
+  'balance',
+  'todayTank'
+]);
 
 fuelBalanceSchema.pre("save", function (next) {
   const currentDate = moment().tz("Asia/Yangon").format("YYYY-MM-DD");

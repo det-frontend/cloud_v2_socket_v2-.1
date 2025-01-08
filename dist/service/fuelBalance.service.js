@@ -15,7 +15,7 @@ const getFuelBalance = async (query, dbModel, tankCount) => {
             .find(query)
             .sort({ $natural: -1 })
             .limit(Number(tankCount))
-            .lean()
+            .lean({ virtuals: true })
             // .populate({
             //   path: "stationId",
             //   model: dbDistribution({ accessDb: dbModel }),
@@ -94,7 +94,7 @@ const calcFuelBalance = async (query, body, payload, dbModel) => {
             balance: gg.opening + gg.fuelIn - cashLiter,
         };
         await selectedModel.updateMany({ _id: gg?._id }, obj);
-        return await selectedModel.find({ _id: gg?._id }).lean();
+        return await selectedModel.find({ _id: gg?._id }).lean({ virtuals: true });
     }
     catch (e) {
         throw new Error(e); // Rethrow the error with the actual error message
@@ -111,7 +111,7 @@ const fuelBalancePaginate = async (pageNo, query, dbModel) => {
         .sort({ realTime: -1 })
         .skip(skipCount)
         .limit(limitNo)
-        .lean()
+        .lean({ virtuals: true })
         .populate({
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
@@ -127,7 +127,7 @@ const fuelBalanceWithoutPagi = async (query, dbModel) => {
     const data = await selectedModel
         .find(query)
         .sort({ realTime: -1 })
-        .lean()
+        .lean({ virtuals: true })
         .populate({
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
@@ -157,6 +157,7 @@ const fuelBalanceByDate = async (query, d1, d2, dbModel) => {
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
+        .lean({ virtuals: true })
         .select("-__v");
 };
 exports.fuelBalanceByDate = fuelBalanceByDate;
@@ -172,6 +173,7 @@ const fuelBalanceForStockBalance = async (d1, id, dbModel) => {
         path: "stationId",
         model: (0, helper_1.dbDistribution)({ accessDb: dbModel }),
     })
+        .lean({ virtuals: true })
         .select("-__v");
 };
 exports.fuelBalanceForStockBalance = fuelBalanceForStockBalance;
