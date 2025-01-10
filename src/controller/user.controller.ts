@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import {
   deleteUser,
+  getStationUser,
   getUser,
   loginUser,
   registerUser,
@@ -56,6 +57,20 @@ export const getUserHandler = async (
     next(new Error(e));
   }
 };
+
+export const getStationUserHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let query = req.params;
+    let result = await getStationUser(query);
+    fMsg(res, "Station user", result);
+  } catch (e: any) {
+    next(new Error(e));
+  }
+}
 
 export const updateUserHandler = async (
   req: Request,

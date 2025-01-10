@@ -4,6 +4,7 @@ import { roleValidator } from "../middleware/roleValidator";
 import { validateAll, validateToken } from "../middleware/validator";
 import {
   deleteUserHandler,
+  getStationUserHandler,
   getUserByAdminHandler,
   getUserHandler,
   loginUserHandler,
@@ -38,6 +39,8 @@ userRoute.patch(
 
 //getuser
 userRoute.get("/", getUserHandler);
+
+userRoute.get('/station/:id', getStationUserHandler);
 
 //delete each user
 

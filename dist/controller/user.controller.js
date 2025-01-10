@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRemovePermitHandler = exports.userAddPermitHandler = exports.userRemoveRoleHandler = exports.userAddRoleHandler = exports.deleteUserHandler = exports.getUserByAdminHandler = exports.updateUserHandler = exports.getUserHandler = exports.loginUserHandler = exports.registerUserHandler = void 0;
+exports.userRemovePermitHandler = exports.userAddPermitHandler = exports.userRemoveRoleHandler = exports.userAddRoleHandler = exports.deleteUserHandler = exports.getUserByAdminHandler = exports.updateUserHandler = exports.getStationUserHandler = exports.getUserHandler = exports.loginUserHandler = exports.registerUserHandler = void 0;
 const user_service_1 = require("../service/user.service");
 const helper_1 = __importDefault(require("../utils/helper"));
 const role_service_1 = require("../service/role.service");
@@ -39,6 +39,17 @@ const getUserHandler = async (req, res, next) => {
     }
 };
 exports.getUserHandler = getUserHandler;
+const getStationUserHandler = async (req, res, next) => {
+    try {
+        let query = req.params;
+        let result = await (0, user_service_1.getStationUser)(query);
+        (0, helper_1.default)(res, "Station user", result);
+    }
+    catch (e) {
+        next(new Error(e));
+    }
+};
+exports.getStationUserHandler = getStationUserHandler;
 const updateUserHandler = async (req, res, next) => {
     try {
         let result = await (0, user_service_1.updateUser)(req.query, req.body);

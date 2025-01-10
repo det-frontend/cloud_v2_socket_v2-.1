@@ -8,7 +8,7 @@ import { stationDetailDocument } from "./stationDetail.model";
 import connectDbs from "../utils/connect";
 import roleModel from "./role.model";
 import PermitModel from "./permit.model";
-import collectionModel from "./collection.model";
+import collectionModel, { collectionDocument } from "./collection.model";
 
 const controlDb = connectDbs("controlDbUrl");
 
@@ -24,6 +24,7 @@ export interface UserDocument extends UserInput, mongoose.Document {
   roles: roleDocument["_id"];
   permits: permitDocument["_id"];
   stationId: stationDetailDocument["_id"];
+  collectionId: collectionDocument["_id"];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,7 +1,10 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
 import userModel, { UserInput, UserDocument } from "../model/user.model";
-import { compass, createToken } from "../utils/helper";
+import { compass, createToken, dBSelector } from "../utils/helper";
 import { permitDocument } from "../model/permit.model";
+import collectionModel from "../model/collection.model";
+import { getStationDetail } from "./stationDetail.service";
+import { csStationDetailModel, ksStationDetailModel } from "../model/stationDetail.model";
 
 export const registerUser = async (payload: UserInput) => {
   try {
@@ -50,12 +53,41 @@ export const getUser = async (query: FilterQuery<UserDocument>) => {
     return await userModel
       .find(query)
       .lean()
-      .populate({ path: "roles permits" })
+      .populate({ path: "roles permits collectionId" })
       .select("-password -__v");
   } catch (e: any) {
     throw new Error(e);
   }
 };
+
+export const getStationUser = async (query: FilterQuery<UserDocument>) => {
+  try {
+    const user = await userModel.findOne({ stationId: query.id });
+
+    if(!user){
+      throw new Error("No User Found")
+    }
+
+    const collection = await collectionModel.findOne(user.collectionId)
+
+    if(!collection){
+      throw new Error("No Collection Found")
+    }
+
+    let selectedModel = dBSelector(
+      collection.collectionName,
+      ksStationDetailModel,
+      csStationDetailModel
+    );
+
+    const stationDetail = await selectedModel.findOne({ _id: user.stationId }).select("-__v");
+
+    return stationDetail;
+
+  } catch (e: any) {
+    throw new Error(e);
+  }
+}
 
 export const getCredentialUser = async (query: FilterQuery<UserDocument>) => {
   try {

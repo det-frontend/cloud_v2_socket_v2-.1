@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRemovePermit = exports.userAddPermit = exports.userRemoveRole = exports.userAddRole = exports.deleteUser = exports.updateUser = exports.getCredentialUser = exports.getUser = exports.loginUser = exports.registerUser = void 0;
+exports.userRemovePermit = exports.userAddPermit = exports.userRemoveRole = exports.userAddRole = exports.deleteUser = exports.updateUser = exports.getCredentialUser = exports.getStationUser = exports.getUser = exports.loginUser = exports.registerUser = void 0;
 const user_model_1 = __importDefault(require("../model/user.model"));
 const helper_1 = require("../utils/helper");
+const collection_model_1 = __importDefault(require("../model/collection.model"));
+const stationDetail_model_1 = require("../model/stationDetail.model");
 const registerUser = async (payload) => {
     try {
         let result = await user_model_1.default.create(payload);
@@ -44,7 +46,7 @@ const getUser = async (query) => {
         return await user_model_1.default
             .find(query)
             .lean()
-            .populate({ path: "roles permits" })
+            .populate({ path: "roles permits collectionId" })
             .select("-password -__v");
     }
     catch (e) {
@@ -52,6 +54,25 @@ const getUser = async (query) => {
     }
 };
 exports.getUser = getUser;
+const getStationUser = async (query) => {
+    try {
+        const user = await user_model_1.default.findOne({ stationId: query.id });
+        if (!user) {
+            throw new Error("No User Found");
+        }
+        const collection = await collection_model_1.default.findOne(user.collectionId);
+        if (!collection) {
+            throw new Error("No Collection Found");
+        }
+        let selectedModel = (0, helper_1.dBSelector)(collection.collectionName, stationDetail_model_1.ksStationDetailModel, stationDetail_model_1.csStationDetailModel);
+        const stationDetail = await selectedModel.findOne({ _id: user.stationId }).select("-__v");
+        return stationDetail;
+    }
+    catch (e) {
+        throw new Error(e);
+    }
+};
+exports.getStationUser = getStationUser;
 const getCredentialUser = async (query) => {
     try {
         let result = await user_model_1.default

@@ -14,6 +14,7 @@ userRoute.post("/login", (0, validator_1.validateAll)(scheama_1.loginUserSchema)
 userRoute.patch("/", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det"]), (0, permitValidator_1.hasAnyPermit)(["edit"]), user_controller_1.updateUserHandler);
 //getuser
 userRoute.get("/", user_controller_1.getUserHandler);
+userRoute.get('/station/:id', user_controller_1.getStationUserHandler);
 //delete each user
 userRoute.delete("/", validator_1.validateToken, (0, roleValidator_1.roleValidator)(["det", "admin"]), (0, permitValidator_1.hasAnyPermit)(["delete"]), user_controller_1.deleteUserHandler);
 //admin routes
