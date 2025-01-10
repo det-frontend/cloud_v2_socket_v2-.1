@@ -12,7 +12,9 @@ export interface stationDetailDocument extends mongoose.Document {
   deviceCount: number;
   nozzleCount: number;
   tankCount: number;
-  permission:[]
+  permission:[],
+  startDate: Date;
+  expireDate: Date;
 }
 
 const stationDetailSchema = new Schema({
@@ -22,7 +24,9 @@ const stationDetailSchema = new Schema({
   deviceCount: { type: Number, required: true },
   nozzleCount: { type: Number, required: true },
   tankCount: { type: Number, required: true},
-  permission:[]
+  permission:[],
+  startDate: { type: Date, required: true },
+  expireDate: { type: Date, required: true }
 });
 
 const ksStationDetailModel = kyawsanDb.model<stationDetailDocument>(

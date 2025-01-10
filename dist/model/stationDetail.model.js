@@ -15,7 +15,9 @@ const stationDetailSchema = new mongoose_1.Schema({
     deviceCount: { type: Number, required: true },
     nozzleCount: { type: Number, required: true },
     tankCount: { type: Number, required: true },
-    permission: []
+    permission: [],
+    startDate: { type: Date, required: true },
+    expireDate: { type: Date, required: true }
 });
 const ksStationDetailModel = kyawsanDb.model("stationDetail", stationDetailSchema);
 exports.ksStationDetailModel = ksStationDetailModel;
