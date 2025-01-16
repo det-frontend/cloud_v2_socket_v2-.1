@@ -24,9 +24,12 @@ export default {
   mpta_api_key: "$2a$10$xVngNXjIaqYBRDizK0T4EuUWC4K8D94sRNVVpneeMEpmw6iTpIhuG", // to give this api key to mpta
 };
 
+// Before Password Change
 // controlDbUrl mongodb+srv://ksdbfms:Tpd7iFyquVJrh4u8@controller.zabfxgj.mongodb.net/?retryWrites=true&w=majority
-//kyawsan mongodb+srv://ksdbfms:Asdffdsa-4580@ksfms.tfk72hu.mongodb.net/?retryWrites=true&w=majority
+// kyawsan mongodb+srv://ksdbfms:Asdffdsa-4580@ksfms.tfk72hu.mongodb.net/?retryWrites=true&w=majority
 // common mongodb+srv://ksdbfms:C9GADG2k0tLRl95C@common.advclns.mongodb.net/?retryWrites=true&w=majority
-// "mongodb://localhost:27017/control",
-// "mongodb://localhost:27017/kyawsan",
-// "mongodb://localhost:27017/chawsu",
+
+// After Password Change
+// controlDbUrl  "mongodb+srv://ksdbfms:Ok5mh7QG2w8s@controller.zabfxgj.mongodb.net/?retryWrites=true&w=majority",
+// kyawsan_DbUrl "mongodb+srv://ksdbfms:U2d7D1to0VFu@ksfms.tfk72hu.mongodb.net/?retryWrites=true&w=majority",
+// common_DbUrl  "mongodb+srv://ksdbfms:Fi9TZTZq10C1@common.advclns.mongodb.net/?retryWrites=true&w=majority", 
